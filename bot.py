@@ -10,6 +10,7 @@ import discord
 from discord.ext import commands
 import configparser
 import datetime
+import shutil
 
 #Bot initialisation:
 description = '''Manages characters, rolls, and moves
@@ -45,6 +46,16 @@ async def testing(ctx):
        await sendmsg(ctx, ctx.message.author.name)
     else:
         await sendmsg(ctx, '`You are not a moderator`')
+
+    me = ctx.guild.me
+    everyone = get_everyone_role(ctx)
+    bots = get_bot_role(ctx)
+    mods = get_mod_role(ctx)
+
+    print(str(me))
+    print(str(everyone))
+    print(str(bots))
+    print(str(mods))
     
 
 
@@ -243,9 +254,11 @@ async def confirm(ctx):
         author = author,
         rolename = game_name,
         time = time()))
+    
 
     
     #set new permissions in overwrite dict
+    overwrites = {}
     if (game_type == 'private'):
         overwrites = {
             serv.me: discord.PermissionOverwrite(view_channel=True),
@@ -268,10 +281,9 @@ async def confirm(ctx):
         overwrites = {
             serv.me: discord.PermissionOverwrite(send_messages=True),
             get_bot_role(ctx): discord.PermissionOverwrite(send_messages=True),
-            new_role: discord.PermissionOverwrite(send_messages=True),
-            new_role: discord.PermissionOverwrite(speak=True),
-            get_everyone_role(ctx): discord.PermissionOverwrite(send_messages=False),
-            get_everyone_role(ctx): discord.PermissionOverwrite(speak = False)
+            get_everyone_role(ctx): discord.PermissionOverwrite(send_messages=False, speak=False),
+            get_mod_role(ctx): discord.PermissionOverwrite(send_messages=True, speak=True),
+            new_role: discord.PermissionOverwrite(send_messages=True, speak=True)
             }
         """
         Perms of Public:
@@ -296,7 +308,7 @@ async def confirm(ctx):
     
 
     #create new channels
-    for channel in channels
+    for channel in channels:
         if(channel[1] == 'voice'): #if voice channel
             temp = await serv.create_voice_channel(channel[0], category = new_cat)
             created_channels.append(temp)
@@ -320,6 +332,10 @@ async def confirm(ctx):
     if(len(members) > 0):
         for member in members:
             await member.add_roles(new_role, reason = author.name + ' told me to.')
+
+    shutil.move('waiting_for_confirmation/' + game_name + '.txt'
+                , 'confirmed/' + game_name + time(True) + +'_' + str(author) + '.txt')
+    
 
     #Tell people what you did:
     s = strings['og_created_info'].format(
@@ -383,7 +399,9 @@ def readToken():
         token = f.readlines()[1]
     return token
 
-def time():
+def time(simple=False):
+    if(simple):
+        return str(datetime.datetime.now().strftime('%d-%m-%Y--%H_%M_%S'))
     return str(datetime.datetime.now())
 
 def get_admin(ctx):
@@ -400,7 +418,7 @@ def get_everyone_role(ctx):
     
 
 def is_mention(arg):
-    if(arg[0] == '<' and arg[-1] == '>'):
+    if(arg[0] == '<' and arg[-1] == '>' and '@' in arg):
         return True
     else:
         return False
