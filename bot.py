@@ -46,6 +46,10 @@ async def testing(ctx):
     else:
         await sendmsg(ctx, '`You are not a moderator`')
     
+
+
+    
+    
 """
 @bot.command()
 async def opentext(ctx):
@@ -129,12 +133,12 @@ async def opengame(ctx):
     tups = []
     for channel in channels:
         if(channel.startswith('v-')):
-            tups.append((channel, 'voice'))
+            tups.append((channel[2:], 'voice'))
         else:
             tups.append((channel, 'text'))
 
     #save in file, wait for confirmation
-    with open('waiting_for_confirmation//' + game_name + '.txt', 'w') as f:
+    with open('waiting_for_confirmation//' + game_name + '.txt', 'w+') as f:
         f.write(game_name + '\n')
         f.write(str(author) + '\n')
         f.write(game_type + '\n')
@@ -146,7 +150,8 @@ async def opengame(ctx):
     #Sum for user:
     s = ""
     s += strings['og_game_waiting_for_confirmation_1'].format(
-        gamename = game_name)
+        gamename = game_name,
+        gametype = game_type)
     s += '\n' 
 
     for tup in tups:
@@ -179,10 +184,17 @@ async def confirm(ctx):
 
     game_name = args[1]
     try:
-        with open('waiting_for_confirmation/' + game_name + '.txt', 'w') as f:
+        with open('waiting_for_confirmation/' + game_name + '.txt', 'r') as f:
             lines = f.readlines()
     except:
-        print("Couldn't read the desired file!")
+        print(strings['cant_open_file'].format(
+            fname = 'waiting_for_confirmation/' + game_name + '.txt',
+            owner = get_admin().mention
+            ))
+        await sendmsg(strings['cant_open_file'].format(
+            fname = 'waiting_for_confirmation/' + game_name + '.txt',
+            owner = get_admin().mention
+            ))
         return
 
     """
@@ -203,26 +215,129 @@ async def confirm(ctx):
     """
     
     data = lines[3:] #gets only the channels and members
+    game_type = lines[2][:-1]
     channels = []
     member_ids = []
     members = []
     
     #parse members and channels
+    #tuple: (name:type\n). the \n has to be considered
     for dat in data:
         temp = dat.split(':')
-        if(temp[1] == 'member'):
-            member_ids.append(temp[0])
+        if('member' in temp[1]):
+            member_ids.append(int(temp[0]))
         else:
-            channels.append((temp[0], temp[1]))
+            channels.append((temp[0], temp[1][:-1]))
 
     #get members from server by ID
     if len(member_ids) > 0:
         for id in member_ids:
-            members.append(serv.get_member(id))
-
+            mem = serv.get_member(id)
+            members.append(mem)
+            
     #create role
-    await serv.create_role(name=game_name, colour = discord.Colour.gold())
+    new_role = await serv.create_role(
+        name=game_name,
+        colour = discord.Colour.gold())
+    print(strings['role_created'].format(
+        author = author,
+        rolename = game_name,
+        time = time()))
+
     
+    #set new permissions in overwrite dict
+    if (game_type == 'private'):
+        overwrites = {
+            serv.me: discord.PermissionOverwrite(view_channel=True),
+            get_mod_role(ctx): discord.PermissionOverwrite(view_channel=True),
+            get_bot_role(ctx): discord.PermissionOverwrite(view_channel=True),
+            new_role: discord.PermissionOverwrite(view_channel=True),
+            get_everyone_role(ctx): discord.PermissionOverwrite(view_channel=False)
+            }
+        """
+        Perms of private:
+
+        Cinderbot: read True
+        Mod: read True
+        Bots: read True
+        new_role: read True
+
+        @everyone: read false 
+        """
+    else:
+        overwrites = {
+            serv.me: discord.PermissionOverwrite(send_messages=True),
+            get_bot_role(ctx): discord.PermissionOverwrite(send_messages=True),
+            new_role: discord.PermissionOverwrite(send_messages=True),
+            new_role: discord.PermissionOverwrite(speak=True),
+            get_everyone_role(ctx): discord.PermissionOverwrite(send_messages=False),
+            get_everyone_role(ctx): discord.PermissionOverwrite(speak = False)
+            }
+        """
+        Perms of Public:
+
+        Cinderbot: send true
+        Mod: Send true
+        new_role: send true
+        new_role: speak true
+
+        @everyone: send false
+        @everyone: speak false
+        """
+
+    #create new category with proper overwrites
+    new_cat = await serv.create_category(game_name, overwrites = overwrites)
+    print(strings['category_created'].format(
+        author = author,
+        category = game_name,
+        time = time()))
+
+    created_channels = []
+    
+
+    #create new channels
+    for channel in channels
+        if(channel[1] == 'voice'): #if voice channel
+            temp = await serv.create_voice_channel(channel[0], category = new_cat)
+            created_channels.append(temp)
+        elif(channel[1] == 'text'):#Text channel
+            if('visitor' in channel[0]): #if 'visitor' in channel name
+                temp = await serv.create_text_channel(
+                    channel[0],
+                    category = new_cat,
+                    overwrites ={serv.default_role: discord.PermissionOverwrite(send_messages=True)})
+            else:#regular text channel
+                temp = await serv.create_text_channel(channel[0], category = new_cat)
+            created_channels.append(temp)
+            print(strings['channel_created'].format(
+                author = author,
+                channelname = channel[1],
+                categoryname = game_name,
+                time = time()))
+            
+
+    #assign roles
+    if(len(members) > 0):
+        for member in members:
+            await member.add_roles(new_role, reason = author.name + ' told me to.')
+
+    #Tell people what you did:
+    s = strings['og_created_info'].format(
+        auth_mention = author.mention,
+        cat_name = new_cat.name
+        )
+    s += '\n'
+    for channel in created_channels:
+        s += strings['og_channel_created'].format(channelname = channel.mention)
+        s += '\n'
+
+    if(len(members) > 0):         
+        s += strings['og_members_assigned_info'].format(role_mention = new_role.mention)
+        s += '\n'
+        for member in members:
+                 s += member.mention + ' \n'
+
+    await sendmsg(ctx, s)
         
         
 
@@ -237,16 +352,16 @@ async def on_command(ctx):
         channel = ctx.channel,
         author = ctx.author,
         message = ctx.message.content,
-        times = time()))
+        time = time()))
     
 
 
 async def check_mod(ctx):
     """Checks if a user that sent a message has the role <Moderator>"""
     author = ctx.author
-    roles = ctx.message.guild.roles
+    roles = author.roles
     message = ctx.message.content
-    mod_role = ctx.message.guild.get_role(679618112122912887) #ID for mod
+    mod_role = get_mod_role(ctx) #ID for mod = 679618112122912887
     
     is_mod = False
     if(mod_role in roles):
@@ -270,6 +385,19 @@ def readToken():
 
 def time():
     return str(datetime.datetime.now())
+
+def get_admin(ctx):
+    return ctx.guild.owner
+
+def get_mod_role(ctx):
+    return ctx.guild.get_role(679618112122912887)
+
+def get_bot_role(ctx):
+    return ctx.guild.get_role(679620725526888581)
+
+def get_everyone_role(ctx):
+    return ctx.guild.get_role(679614550286663721)
+    
 
 def is_mention(arg):
     if(arg[0] == '<' and arg[-1] == '>'):
