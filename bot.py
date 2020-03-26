@@ -11,6 +11,8 @@ from discord.ext import commands
 import configparser
 import datetime
 import shutil
+import requests
+import json
 
 #Bot initialisation:
 description = '''Manages characters, rolls, and moves
@@ -334,7 +336,7 @@ async def confirm(ctx):
             await member.add_roles(new_role, reason = author.name + ' told me to.')
 
     shutil.move('waiting_for_confirmation/' + game_name + '.txt'
-                , 'confirmed/' + game_name + time(True) + +'_' + str(author) + '.txt')
+                , 'confirmed/' + game_name + time(True) +'_' + str(author) + '.txt')
     
 
     #Tell people what you did:
@@ -360,6 +362,36 @@ async def confirm(ctx):
 @bot.command()
 async def opengamehelp(ctx):
     await sendmsg(ctx, strings['og_format'])
+
+@bot.command()
+async def dadjoke(ctx):
+    headers = {'Accept':'text/plain'}
+    r = requests.get('https://icanhazdadjoke.com/', headers = headers)
+    await sendmsg(ctx, r.text)
+
+@bot.command()
+async def catpic(ctx):
+    r = requests.get('http://aws.random.cat/meow')
+    j = r.json()
+    await sendmsg(ctx, j['file'])
+
+@bot.command()
+async def catfact(ctx):
+    r = requests.get('https://cat-fact.herokuapp.com/facts/random')
+    j = r.json()
+    await sendmsg(ctx, j['text']) 
+
+@bot.command()
+async def dogpic(ctx):
+    r = requests.get('https://dog.ceo/api/breeds/image/random')
+    j = r.json()
+    await sendmsg(ctx, j['message'])
+
+@bot.command()
+async def dogfact(ctx):
+    r = requests.get('http://dog-api.kinduff.com/api/facts?number=1')
+    j = r.json()
+    await sendmsg(ctx, j['facts'][0])
 
 @bot.event
 async def on_command(ctx):
