@@ -17,10 +17,36 @@
 		"desc": "If you spend a String on someone willing, you can bring them across the veil into a faery realm. The spell lasts for a scene or two, before you're both returned to the mundane world."
 	  },
 	  "Beyond the Veil": {
-		"desc": "To seek audience with the Faery King/Queen, *Gaze Into the Abyss*: Name what you're looking for, and *roll with Dark*"
-		"success": "The Faery King/Queen shows you lucid visions, and you take *1 Forward* to adressing them. They also reveal a *hidden String* on someone to you. Gain it."
+		"desc": "To seek audience with the Faery King/Queen, *Gaze Into the Abyss*: Name what you're looking for, and *roll with Dark*",
+		"success": "The Faery King/Queen shows you lucid visions, and you take *1 Forward* to adressing them. They also reveal a *hidden String* on someone to you. Gain it.",
 		"complication": "The Faery King/Queen shows you confusing and alarming visions, but you get your answer nonetheless. Additionally, they demand a favor of you**."
 	  }
-    } 
-  } 
+    },
+    "Ghost":{
+      
+    },
+    "Ghoul":{
+      
+    },
+    "Hollow":{
+      
+    },
+    "Infernal":{
+      
+    },
+    "Mortal":{
+      
+    },
+    "Queen":{
+      
+    },
+    "Vampire":{
+      
+    },
+    "Werewolf":{
+      
+    },
+    "Witch":{
+    }
+  }
 }
