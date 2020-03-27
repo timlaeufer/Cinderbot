@@ -679,12 +679,19 @@ async def helpme(ctx):
 
 @bot.event
 async def on_command(ctx):
-    print(strings['called'].format(
+    s = strings['called'].format(
         category = ctx.channel.category,
         channel = ctx.channel,
         author = ctx.author,
         message = ctx.message.content,
-        time = time()))
+        time = time())
+    print(s)
+    await post_log(ctx, s)
+
+
+async def post_log(ctx, msg):
+    ch = ctx.guild.get_channel(693116058575306795) #log channel
+    await ch.send(msg)
     
 
 
@@ -701,12 +708,13 @@ async def check_mod(ctx):
     else:
         is_mod = False
 
-    print(strings['ismod'].format(author = author.name,
+    s = strings['ismod'].format(author = author.name,
                                 result = str(is_mod),
                                 msg = message,
                                 channel = ctx.channel,
                                 category = ctx.channel.category,
-                                time = time()) + "\n")
+                                time = time()) + "\n"
+    print(s)
     return is_mod
 
 async def check_player(ctx):
@@ -722,12 +730,13 @@ async def check_player(ctx):
     else:
         is_player = False
 
-    print(strings['isplayer'].format(author = author.name,
+    s = strings['isplayer'].format(author = author.name,
                                 result = str(is_player),
                                 msg = message,
                                 channel = ctx.channel,
                                 category = ctx.channel.category,
-                                time = time()) + "\n")
+                                time = time()) + "\n"
+    print(s)
     return is_player
     
    
@@ -830,11 +839,13 @@ def is_mention(arg):
 
 async def sendmsg(ctx, msg):
     await ctx.send(msg)
-    print(strings['sendmsg'].format(
-        category = ctx.channel.category,
-        channel = ctx.channel,
-        message = msg,
-        time = time()) + "\n\n")
+    s = strings['sendmsg'].format(
+            category = ctx.channel.category,
+            channel = ctx.channel,
+            message = msg,
+            time = time()) + "\n\n"
+    print(s)
+    await post_log(ctx, s)
     
 
 get_move('Beyond the Veil')
