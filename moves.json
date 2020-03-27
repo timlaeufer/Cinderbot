@@ -1,5 +1,13 @@
 {
   "Skins":{
+	"Player":{
+		"Turn Someone on":{
+			"keywords": ["turn", "turnon", "on"],
+			"desc": "When you **turn someone on**, roll with *Hot*",
+			"success": "You gain a string on the target, and they choose a reaction from below: $-*I give myself to you*,$-*I promise something I think you want*, or $*I get embarrassed and act awkward*. $*For rules on asexuality and non-attraction, turn to page 49.*
+			"complication": "The target can either **give you a string on them**, or choose a reaction from below: $-*I give myself to you*,$-*I promise something I think you want*, or $*I get embarrassed and act awkward*. $*For rules on asexuality and non-attraction, turn to page 49.*
+		}
+	},
     "Fae":{
       "Faery Contract":{
 		"keywords": ["contract"],
