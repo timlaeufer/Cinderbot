@@ -13,6 +13,8 @@ import datetime
 import shutil
 import requests
 import json
+import string
+import random
 
 #Bot initialisation:
 description = '''Manages characters, rolls, and moves
@@ -28,6 +30,11 @@ strings = {}
 for section in config.sections():
     for tup in config.items(section):
         strings.update({tup[0]: tup[1]})
+
+with open('moves.json', 'r') as f:
+    dic = json.load(f)
+
+
 
 
 @bot.event
@@ -48,6 +55,7 @@ async def testing(ctx):
        await sendmsg(ctx, ctx.message.author.name)
     else:
         await sendmsg(ctx, '`You are not a moderator`')
+    print(ctx.message.content)
 
     me = ctx.guild.me
     everyone = get_everyone_role(ctx)
@@ -58,29 +66,6 @@ async def testing(ctx):
     print(str(everyone))
     print(str(bots))
     print(str(mods))
-    
-
-
-    
-    
-"""
-@bot.command()
-async def opentext(ctx):
-    msg = ctx.message.content.split()[1]
-    channels = ctx.message.content.split()
-    del channels[0]
-    del channels[1]
-    serv = ctx.message.guild
-    
-    
-    new_role = await serv.create_role(name = msg, mentionable = True)
-    await ctx.send("Created the role " + new_role.mention + "`")
-    new_cat = await serv.create_category(name = msg)
-    await ctx.send("`Created the category... `" + msg + "`")
-    for channel in channels:
-        await serv.create_text_channel(name = channel, category = new_cat)
-    await ctx.send("`I created your " + len(channels) + " text channels!`")
-"""
 
 @bot.command()
 async def opengame(ctx):
@@ -356,7 +341,117 @@ async def confirm(ctx):
                  s += member.mention + ' \n'
 
     await sendmsg(ctx, s)
+
+@bot.command()
+async def move(ctx):
+    author = ctx.author
+    s = ''
+    if(not await check_player(ctx)):
+        sendmsg(ctx, strings['move_only_players'])
+        return
+
+    numeric = None
+
+    
+
+    message = ctx.message.content[6:] #removes '.move ' from the message
+    
+    """
+    Check all chars if they're a numeric.
+    If so, it takes the numeric and saves it
+    """
+    for i, char in enumerate(message):
+        if char in string.digits:
+            if('-' in message):
+                numeric = - int(char)
+            else:
+                numeric = + int(char)
+            break
+    replace = string.punctuation + string.digits
+    #No punctuation in the command, numeric is already checked.
+    
+
+    #delete all punctuation and digits, except whitespaces
+    for element in replace:
+        if(element != ' '):
+            message = message.replace(element, '')
+
+    #Split message
+    args = message.split(' ')
+
+    for i in range(len(args)):
+        args[i] = args[i].lower()
+
+    #Delete empty strings, in case the caller has written '.move    +'
+    data  = [x for x in args if x != '']
+
+    #get raw_string
+    raw_string = ''
+    for element in data:
+        raw_string += element + ' '
         
+    raw_string = raw_string[:-1]
+    candidates = get_move(raw_string)
+    if(len(candidates) == 1): #If match is found by whole phrase
+        move = candidates[0]
+    elif(len(candidates) > 1):#If multiple matches are found by whole phrase
+        s = ''
+        s += strings['multiple_moves_found'].format(
+            raw = raw_string,
+            comm = message) + '\n'
+        for element in candidates:
+            s += strings['multiple_moves_single'].format(
+                move = str(element),
+                skin = get_skin(move),
+                call = str(element).lower()) + '\n'
+        await sendmsg(ctx, s)
+        return
+    else: #If no match is found by whole phrase
+        for arg in data.split(' '):
+            candidates += get_move(arg)
+        candidates = list(set(candidates)) #removes duplicates
+        if(len(candidates) == 1): #if 1 match is found by keywords
+            move = candidates[0]
+        elif(len(candidates) > 1): #if multiple matches are found by keywords
+            s = ''
+            s += strings['multiple_moves_found'].format(
+                raw = raw_string,
+                comm = message) + '\n'
+            for element in candidates:
+                s += strings['multiple_moves_single'].format(
+                    move = str(element),
+                    skin = get_skin(move),
+                    call = str(element).lower()) + '\n'
+            await sendmsg(ctx, s)
+            return
+        else:
+            await sendmsg(ctx, strings['move_not_found'].format(
+                raw = raw_string,
+                comm = message))
+            return
+    print(move)
+
+    if(numeric): #If there is a numeric in it
+        pass
+    else: #If there is no numeric in the command
+        pass
+        
+    #Check if Message has a numeric in it
+    #   if so: Save the numeric and process the rest
+    #Check if the message.lowercase matches a move.lowercase
+    #   True:
+    #       If(numeric): roll, print desc and result
+    #       Else: Give Desc and Success/Complication if available
+    #   Else:
+    #       Try if message.lowercase is a substring of a skin
+    #           True: sendmsg with results and Move names.
+    
+
+@bot.command()
+async def movehelp(ctx):
+    #TODO
+    print("!")
+    
         
 
 @bot.command()
@@ -396,8 +491,7 @@ async def dogfact(ctx):
     await sendmsg(ctx, j['facts'][0])
 
 
-#oncommand and help functions
-
+#on_command and help functions
 @bot.event
 async def on_command(ctx):
     print(strings['called'].format(
@@ -429,6 +523,27 @@ async def check_mod(ctx):
                                 category = ctx.channel.category,
                                 time = time()) + "\n")
     return is_mod
+
+async def check_player(ctx):
+    """Checks if a user that sent a message has the role <Player>"""
+    author = ctx.author
+    roles = author.roles
+    message = ctx.message.content
+    player_role = get_player_role(ctx)
+    
+    is_player = False
+    if(player_role in roles):
+        is_player = True
+    else:
+        is_player = False
+
+    print(strings['isplayer'].format(author = author.name,
+                                result = str(is_player),
+                                msg = message,
+                                channel = ctx.channel,
+                                category = ctx.channel.category,
+                                time = time()) + "\n")
+    return is_player
     
    
 def readToken():
@@ -452,6 +567,55 @@ def get_bot_role(ctx):
 
 def get_everyone_role(ctx):
     return ctx.guild.get_role(679614550286663721)
+
+def get_player_role(ctx):
+    return ctx.guild.get_role(679618147384295444)
+
+def get_overview(ctx, move_with_roll):
+    #TODO
+    return
+
+def get_move(keyword_or_name):
+    """Searches for a move with the given name as a list, may return multiple"""
+    candidates = []
+
+    #Search for move
+    for src in dic:
+        for skin in dic[src]:
+            for move in dic[src][skin]:
+                #If name matches Exactly, return move as array
+                if(str(move).lower() == keyword_or_name.lower()):
+                    return [dic[src][skin][move]]
+                #If name is substring of move, add to candidates
+                elif(keyword_or_name.lower() in str(move).lower()):
+                    candidates.append(move)
+                elif(keyword_or_name in dic[src][skin][move]['keywords']):
+                    candidates.append(move)
+
+    #If has only 1 entry, return candidates. Else, return whole array
+    if(len(candidates) == 1):
+        return candidates
+    else:
+        return candidates
+
+    return [None]
+
+def get_skin(search_move):
+    """Returns the skin dict when given a move dict"""
+    for src in dic:
+        for skin in dic[src]:
+            for move in dic[src][skin]:
+                if dic[src][skin][move] == search_move:
+                    return dic[src][skin]
+    return None
+
+def get_src(search_skin):
+    """Returns the src dict when given a skin"""
+    for src in dic:
+        for skin in dic[src]:
+            if dic[src][skin] == search_skin:
+                return dic[src]
+    
     
 
 def is_mention(arg):
@@ -469,6 +633,6 @@ async def sendmsg(ctx, msg):
         time = time()) + "\n\n")
     
 
-
+get_move('Beyond the Veil')
 
 bot.run(readToken())
