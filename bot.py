@@ -435,7 +435,9 @@ async def move(ctx):
     if(numeric): #If there is a numeric in it
         dice[0] = random.randint(1,6)
         dice[1] = random.randint(1,6)
-        pass
+        if(dice[0] == dice[1] == 6):
+            lucky = True
+        
     else: #If there is no numeric in the command
         pass
         
@@ -453,7 +455,7 @@ async def move(ctx):
 @bot.command()
 async def movehelp(ctx):
     #TODO
-    print("!")
+    await sendmsg(ctx, "Not here yet, sorry! Bad " + get_admin(ctx).mention)
     
         
 
@@ -464,31 +466,108 @@ async def opengamehelp(ctx):
 
 #Random Commands:
 @bot.command()
+async def gib(ctx):
+    """Gib fun please"""
+    choices = []
+    choices.append('Cat picture') #0
+    choices.append('Cat fact') #1
+    choices.append('Dog picture') #2
+    choices.append('Dog fact')#3
+    choices.append('Dad joke')#4
+
+    choice = 0
+    
+    if(not await check_player(ctx)):
+        sendmsg(ctx, strings['fun_only_players'])
+        return
+    message = ctx.message.content
+    if ('fun' in message):
+        choice = random.choice(choices)
+    elif('dad' in message):
+        choice = choice[4]
+    elif('catfact' in message):
+        choice = choice[1]
+    elif('catpic' in message):
+        choice = choice[0]
+    elif('cat' in message):
+        choice = choice[random.randint(1,2)]
+    elif('dogfact' in message):
+        choice = choice[3]
+    elif('dogpic' in message):
+        choice = choice[2]
+    elif('dog' in message):
+        choice = choice[random.randint(2,3)]
+    else:
+        await sendmsg(ctx, strings['gib_what'])
+        return
+
+    await sendmsg(ctx, strings['gib'].format(
+            mention = ctx.author.mention,
+            thing = choice))
+    
+        
+    if(choice == choices[0]):
+        await catpic(ctx)
+    if(choice == choices[1]):
+        await catfact(ctx)
+    if(choice == choices[2]):
+        await dogpic(ctx)
+    if(choice == choices[3]):
+        await dogfact(ctx)
+    if(choice == choices[4]):
+        await dadjoke(ctx)
+    
+    
+@bot.command()
 async def dadjoke(ctx):
     headers = {'Accept':'text/plain'}
     r = requests.get('https://icanhazdadjoke.com/', headers = headers)
     await sendmsg(ctx, r.text)
 
 @bot.command()
+async def dad(ctx):
+    await dadjoke(ctx)
+
+@bot.command()
+async def cat(ctx):
+    await catpic(ctx)
+
+@bot.command()
 async def catpic(ctx):
+    if(not await check_player(ctx)):
+        sendmsg(ctx, strings['fun_only_players'])
+        return
     r = requests.get('http://aws.random.cat/meow')
     j = r.json()
     await sendmsg(ctx, j['file'])
 
 @bot.command()
 async def catfact(ctx):
+    if(not await check_player(ctx)):
+        sendmsg(ctx, strings['fun_only_players'])
+        return
     r = requests.get('https://cat-fact.herokuapp.com/facts/random')
     j = r.json()
     await sendmsg(ctx, j['text']) 
 
 @bot.command()
+async def dog(ctx):
+    await dogpic(ctx)
+
+@bot.command()
 async def dogpic(ctx):
+    if(not await check_player(ctx)):
+        sendmsg(ctx, strings['fun_only_players'])
+        return
     r = requests.get('https://dog.ceo/api/breeds/image/random')
     j = r.json()
     await sendmsg(ctx, j['message'])
 
 @bot.command()
 async def dogfact(ctx):
+    if(not await check_player(ctx)):
+        sendmsg(ctx, strings['fun_only_players'])
+        return
     r = requests.get('http://dog-api.kinduff.com/api/facts?number=1')
     j = r.json()
     await sendmsg(ctx, j['facts'][0])
