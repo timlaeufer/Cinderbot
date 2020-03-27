@@ -15,6 +15,7 @@ import requests
 import json
 import string
 import random
+import inspect
 
 #Bot initialisation:
 description = '''Manages characters, rolls, and moves
@@ -23,26 +24,32 @@ bot = commands.Bot(command_prefix='.', description=description)
 
 #Read bot.ini
 print('Loading bot.ini ....')
+a = datetime.datetime.now()
 config = configparser.ConfigParser()
 config.read('bot.ini')
-print('bot.ini loaded! \n')
+b = datetime.datetime.now()
+print('bot.ini loaded! in ' + str((b-a).microseconds) + 'ms!')
 
 #Convert config to simple dict for ease of use:
 print('Converting bot.ini to dict .... ')
+a = datetime.datetime.now()
 strings = {}
 for section in config.sections():
     for tup in config.items(section):
         strings.update({tup[0]: tup[1]})
-print('Done converting dot.ini')
+b = datetime.datetime.now()
+print('Done converting dot.ini in ' + str((b-a).microseconds) + 'ms!')
 
         
 print('Loading moves.json ...')
+a = datetime.datetime.now()
 with open('moves.json', 'r') as f:
     dic = json.load(f)
+b = datetime.datetime.now()
+print('Loading moves.json done in ' + str((b-a).microseconds) + 'ms!')
 
-print('Loading moves.json done!')
-
-
+print('Initializing bot...')
+a = datetime.datetime.now()
 
 
 @bot.event
@@ -50,12 +57,8 @@ async def on_ready():
     print('Logged in as')
     print(bot.user.name)
     print(bot.user.id)
-    print('------')
-    print('I read the following bot.ini sections: \n')
-    
-    for section in config.sections():
-        print(str(section))
-    print('-----------------------')
+    b = datetime.datetime.now()
+    print('Bot is initialized after ' + str((b-a).microseconds) + 'ms!')
     
 @bot.command()
 async def testing(ctx):
@@ -262,16 +265,6 @@ async def confirm(ctx):
             new_role: discord.PermissionOverwrite(view_channel=True),
             get_everyone_role(ctx): discord.PermissionOverwrite(view_channel=False)
             }
-        """
-        Perms of private:
-
-        Cinderbot: read True
-        Mod: read True
-        Bots: read True
-        new_role: read True
-
-        @everyone: read false 
-        """
     else:
         overwrites = {
             serv.me: discord.PermissionOverwrite(send_messages=True),
@@ -280,18 +273,6 @@ async def confirm(ctx):
             get_mod_role(ctx): discord.PermissionOverwrite(send_messages=True, speak=True),
             new_role: discord.PermissionOverwrite(send_messages=True, speak=True)
             }
-        """
-        Perms of Public:
-
-        Cinderbot: send true
-        Mod: Send true
-        new_role: send true
-        new_role: speak true
-
-        @everyone: send false
-        @everyone: speak false
-        """
-
     #create new category with proper overwrites
     new_cat = await serv.create_category(game_name, overwrites = overwrites)
     print(strings['category_created'].format(
@@ -351,20 +332,63 @@ async def confirm(ctx):
     await sendmsg(ctx, s)
 
 @bot.command()
+async def skin(ctx):
+    """Lists all moves a skin has. Alias for moves(ctx)"""
+    await moves(ctx)
+
+
+@bot.command()
 async def moves(ctx):
+    """Lists all moves of a certain skin"""
     author = ctx.author
     s = ''
     if(not await check_player(ctx)):
-        sendmsg(ctx, strings['move_only_players'])
+        await sendmsg(ctx, strings['move_only_players'])
         return
-    
+
+    first_space = ctx.message.content.find(' ')
+    skin_name = ctx.message.content[first_space:].lower().strip()
+    skins = []
+    s = ''
+    for src in dic:
+        for skin in dic[src]:
+            if(skin.lower() == skin_name):
+                s += 'Skin: ' + skin + '\n'
+                for move in dic[src][skin]:
+                    s += '\t' + move
+                    s += '\n'
+                await sendmsg(ctx, s)
+                return
+
+    for src in dic:
+        s += 'Source: ' + src + '\n'
+        for skin in dic[src]:
+            s += '\tSkin: ' + skin + '\n'
+
+    ret =strings['skin_not_found'].format(searched = skin_name) + '\n' + s
+            
+    await sendmsg(ctx, ret)
+
+@bot.command()
+async def skins(ctx):
+    """Lists all skins"""
+    author = ctx.author
+    s = ''
+    if(not await check_player(ctx)):
+        await sendmsg(ctx, strings['move_only_players'])
+        return
+    for src in dic:
+        s += 'Source: ' + src + '\n'
+        for skin in dic[src]:
+            s += '\tSkin: ' + skin + '\n'
+    await sendmsg(ctx, s)
 
 @bot.command()
 async def move(ctx):
     author = ctx.author
     s = ''
     if(not await check_player(ctx)):
-        sendmsg(ctx, strings['move_only_players'])
+        await sendmsg(ctx, strings['move_only_players'])
         return
 
     numeric = None
@@ -384,6 +408,7 @@ async def move(ctx):
             else:
                 numeric = + int(char)
             break
+        
     replace = string.punctuation + string.digits
     #No punctuation in the command, numeric is already checked.
     
@@ -413,32 +438,39 @@ async def move(ctx):
         move = candidates[0]
     elif(len(candidates) > 1):#If multiple matches are found by whole phrase
         s = ''
+        #"Found multiple matches" to s
         s += strings['multiple_moves_found'].format(
             raw = raw_string,
             comm = message) + '\n'
         for element in candidates:
-            s += strings['multiplDe_moves_single'].format(
-                mov = str(element),
-                skin = get_skin(move),
-                call = str(element).lower()) + '\n'
+            #Append every match to s
+            temp = strings['multiple_moves_single'].format(
+                move = str(element['name']),
+                skin = get_skin_by_name(str(element['raw']), True),
+                call = str(element['raw']).lower()) + '\n'
+            if(len(s) + len(temp) > 2000):
+                pass
+            else:
+                s += temp
         await sendmsg(ctx, s)
         return
     else: #If no match is found by whole phrase
         for arg in data:
             candidates += get_move(arg)
-        candidates = list(set(candidates)) #removes duplicates
         if(len(candidates) == 1): #if 1 match is found by keywords
             move = candidates[0]
         elif(len(candidates) > 1): #if multiple matches are found by keywords
+            candidates = remove_dupes(candidates)
             s = ''
             s += strings['multiple_moves_found'].format(
                 raw = raw_string,
                 comm = message) + '\n'
             for element in candidates:
+                print("Element: " + str(element))
                 temp = strings['multiple_moves_single'].format(
-                    move = str(element),
-                    skin = str(get_skin(element, True)),
-                    call = str(element).lower()) + '\n'
+                    move = str(element['name']),
+                    skin = str(get_skin_by_name(element['raw'], True)),
+                    call = str(element['raw']).lower()) + '\n'
                 if(len(s) + len(temp) >= 2000):
                     pass
                 else:
@@ -451,8 +483,9 @@ async def move(ctx):
                 comm = ctx.message.content))
             return
         
-    if(numeric): #If there is a numeric in it
+    if(numeric is not None): #If there is a numeric in it
         #check if move is actually one to roll for
+        print("has numeric!")
         if(is_roll_move(move)):
             await sendmsg(ctx, strings['move_rolled'].format(
                 mention = ctx.author.mention,
@@ -491,14 +524,6 @@ async def move(ctx):
         
     else: #If there is no numeric in the command
         await sendmsg(ctx, get_move_overview(move))
-        
-
-    
-
-@bot.command()
-async def movehelp(ctx):
-    await sendmsg(ctx, strings['move_help'].format(
-        me = ctx.guild.me.mention))
 
 @bot.command()
 async def movelist(ctx):
@@ -520,11 +545,8 @@ async def npc(ctx):
     with open('npcquestions.questions', 'r') as f:
         questions= f.readlines()
     data = random.choice(questions).split('---')
-    print(data)
     question = data[1]
     num = data[0]
-    print(question)
-    print(num)
     await sendmsg(ctx, strings['send_question'].format(
         question = question,
         num = num))
@@ -551,12 +573,6 @@ async def addnpc(ctx):
         mention = ctx.author.mention,
         question = ctx.message.content[8:],
         num = num))
-    
-
-@bot.command()
-async def opengamehelp(ctx):
-    await sendmsg(ctx, strings['og_format'])
-
 
 #Random Commands:
 @bot.command()
@@ -572,7 +588,7 @@ async def gib(ctx):
     choice = 0
     
     if(not await check_player(ctx)):
-        sendmsg(ctx, strings['fun_only_players'])
+        await sendmsg(ctx, strings['fun_only_players'])
         return
     message = ctx.message.content
     if ('fun' in message):
@@ -673,8 +689,18 @@ async def dogfact(ctx):
 async def helpme(ctx):
     await sendmsg(ctx, strings['general_help'].format(
         me = ctx.guild.me.mention,
-        tim = ctx.guild.owner.mention,
-        annie = ctx.guild.get_member(132240553013280768).nick))
+        tim = ctx.guild.owner.nick,
+        annie = ctx.guild.get_member(132240553013280768).nick,
+        ollie = ctx.guild.get_member(131352795444936704).nick))
+
+@bot.command()
+async def opengamehelp(ctx):
+    await sendmsg(ctx, strings['og_format'])
+
+@bot.command()
+async def movehelp(ctx):
+    await sendmsg(ctx, strings['move_help'].format(
+        me = ctx.guild.me.mention))
     
 
 @bot.event
@@ -693,7 +719,6 @@ async def post_log(ctx, msg):
     ch = ctx.guild.get_channel(693116058575306795) #log channel
     await ch.send(msg.replace('@', 'at'))
     
-
 
 async def check_mod(ctx):
     """Checks if a user that sent a message has the role <Moderator>"""
@@ -733,7 +758,7 @@ async def check_player(ctx):
     s = strings['isplayer'].format(author = author.name,
                                 result = str(is_player),
                                 msg = message,
-                                channel = ctx.channel,
+                                channel = ctx.channel.mention,
                                 category = ctx.channel.category,
                                 time = time()) + "\n"
     print(s)
@@ -744,6 +769,13 @@ def readToken():
     with open('token.txt') as f:
         token = f.readlines()[1]
     return token
+
+def remove_dupes(lis):
+    new_list = []
+    for i, element in enumerate(lis):
+        if(element not in new_list):
+            new_list.append(lis[i])
+    return new_list
 
 def time(simple=False):
     if(simple):
@@ -765,6 +797,9 @@ def get_everyone_role(ctx):
 def get_player_role(ctx):
     return ctx.guild.get_role(679618147384295444)
 
+
+
+#Checking Moves:
 def get_move_overview(move):
     s = ''
     s += strings['move_overview'].format(
@@ -781,6 +816,9 @@ def is_roll_move(move):
     if('success' in move): return True
     else: return False
 
+
+
+#JSON commands:
 def get_move(keyword_or_name):
     """Searches for a move with the given name as a list, may return multiple"""
     candidates = []
@@ -790,7 +828,7 @@ def get_move(keyword_or_name):
         for skin in dic[src]:
             for move in dic[src][skin]:
                 #If name matches Exactly, return move as array
-                if(str(move).lower() == keyword_or_name.lower()):
+                if(dic[src][skin][move]['raw'].lower() == keyword_or_name.lower()):
                     candidates = []
                     candidates.append(dic[src][skin][move])
                     return candidates
@@ -808,14 +846,13 @@ def get_move(keyword_or_name):
 
     return [None]
 
-def get_skin(search_move, only_name = False):
-    """Returns the skin dict when given a move dict"""
-    print("Searching for " + search_move)
+def get_skin_by_name(search_move, only_name = False):
+    """Returns the skin dict when given a move name"""
+    
     for src in dic:
         for skin in dic[src]:
             for move in dic[src][skin]:
-                print('\t'+str(move))
-                if (str(move) == search_move):
+                if (move == search_move):
                     if(only_name):
                         return skin
                     else:
@@ -841,13 +878,12 @@ async def sendmsg(ctx, msg):
     await ctx.send(msg)
     s = strings['sendmsg'].format(
             category = ctx.channel.category,
-            channel = ctx.channel,
+            channel = ctx.channel.mention,
             message = msg,
             time = time()) + "\n\n"
     print(s)
     await post_log(ctx, s)
     
 
-get_move('Beyond the Veil')
 
 bot.run(readToken())
