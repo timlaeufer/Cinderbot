@@ -49,7 +49,41 @@
 	  }
     },
     "Ghost":{
-      
+            "Unresolved Trauma":{
+		"name": "Unresolved Truama (Ghost)",
+		"keywords": ["trauma","unresolved"],
+        "desc": "Whenever something brings to mind your death, you choke up and gain the Condition **traumatized** if you don’t have it already. Whenever someone helps you resolve this Condition, you both mark experience."
+      },
+      "Helpful Spirit":{
+		"name": "Helpful Spirit (Ghost)",
+		"keywords": ["helpful"],
+        "desc": "When you help someone resolve a Condition, gain a String on them."
+      },
+      "Transference":{
+	    "name": "Transference (Ghost)",
+		"keywords": ["transference"],
+        "desc": "Whenever you spend time truly listening to someone else’s struggles, they *heal 1 Harm, and then transfer their remaining harm to you.*"
+      },
+      "Lure":{
+		"name": "Projected Blame (Ghost)",
+	    "keywords": ["blame"],
+        "desc": "While you’ve got the Condition **traumatized**, you may act as though others had the Condition at **fault for my death.**"
+      },
+	  "Creep":{
+		"name": "Creep (Ghost)",
+	    "keywords": ["creep"],
+		"desc": "When you silently witness someone in one of their most private moments, perhaps sleeping or putting on makeup, gain a String on them."
+	  },
+	  "Limitless": {
+		"name": "Limitless (Ghost)",
+	    "keywords": ["limitless"],
+		"desc": "You can walk through walls and fly."
+	  },
+	  "Ghost Sex":{
+		"name" : "Sex move (Ghost)",
+		"keywords": ["sex", "ghost"],
+		"desc": "When you have sex with someone, you both get to ask a question of one another. This can be asked in character or player-to-player. They must answer honestly and directly."
+	  }
     },
     "Ghoul":{
       
@@ -67,8 +101,44 @@
       
     },
     "Vampire":{
-      
-    },
+      "Invited":{
+      "name": "Invited (Vampire)",
+	  	"keywords": ["invited"],
+        "desc": "You cannot enter a home without being invited. Whenever someone invites you in, gain a String on them."
+      },
+      "Hypnotic": {
+        "name": "Hypnotic (Vampire)",
+	  	"keywords": ["hypnotic"],
+        "desc": "You can hypnotize people who have no Strings on you. **Roll with Hot.**",
+        "success": "They do exactly what you wish and have no idea that anything is wrong",
+        "complication": "The hypnosis works, but choose one: $`-They realize exactly what you've done to them` $`-They fuck up your commands` $`-Their sanity is unhinged.`"
+      },
+      "Cold As Ice":{
+        "name": "Cold As Ice (Vampire)",
+	  	"keywords": ["cold as ice","ice"],
+        "desc": "When you *Shut Someone Down* and roll a 7 or higher, you may choose an extra option from the list."
+      },
+      "The Feeding":{
+        "name": "The Feeding (Vampire)",
+	  	"keywords": ["feeding"],
+        "desc": "You feed on hot blood, direct from the source. If this is the first time they’ve ever been fed upon, you both mark experience. When you feed, choose two: $`-You heal **1 harm**` $`-You take **1 forward**` $`-They definitely don't die.`"
+      },
+      "Marked For the Hunt":{
+        "name": "Marked For the Hunt (Vampire)",
+	  	"keywords": ["Marked"],
+        "desc": "Feeding on someone establishes a preternatural bond. From that point forward, whenever you *Gaze Into the Abyss* concerning their whereabouts or well-being, roll as if you had **Dark 3.**"
+      },
+      "Inescapable":{
+        "name": "Inescapable (Vampire)",
+	  	"keywords": ["Inescapable"],
+        "desc": "You may spend a String on someone to demand that they remain in your presence. If they still walk out on you, gain **2 Strings** on them."
+      },
+        "Vampire Sex":{
+		"name" : "Sex move (vampire)",
+		"keywords": ["sex", "vampire"],
+		"desc": "When you deny someone sexually, gain a String on them. When you have sex with someone, lose all Strings on them."
+	  }
+	},
     "Werewolf":{
       
     },

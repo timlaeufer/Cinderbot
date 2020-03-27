@@ -448,13 +448,35 @@ async def move(ctx):
         if(is_roll_move(move)):
             await sendmsg(ctx, strings['move_rolled'].format(
                 mention = ctx.author.mention,
-                move = move.name))
+                move = move['name']))
             dice = [0, 0]
             dice[0] = random.randint(1,6)
             dice[1] = random.randint(1,6)
             if(dice[0] == dice[1] == 6):
                 lucky = True
-            result = dice[0] + dice[1] + numeric5
+            result = dice[0] + dice[1] + numeric
+
+
+            if(result < 7):
+                await sendmsg(ctx, strings['move_failed'].format(
+                    d1 = dice[0],
+                    d2 = dice[1],
+                    mod = numeric,
+                    res = result).replace('$', '\n'))
+            elif(result < 10):
+                await sendmsg(ctx, strings['move_roll'].format(
+                    d1 = dice[0],
+                    d2 = dice[1],
+                    mod = numeric,
+                    res = result,
+                    event = move['complication']).replace('$', '\n'))
+            else:
+                await sendmsg(ctx, strings['move_roll'].format(
+                    d1 = dice[0],
+                    d2 = dice[1],
+                    mod = numeric,
+                    res = result,
+                    event = move['success']).replace('$', '\n'))
             
         else:
             await sendmsg(ctx, get_move_overview(move))
@@ -484,10 +506,44 @@ async def movelist(ctx):
 
     await sendmsg(ctx, s)
                 
+@bot.command()
+async def npc(ctx):
+    """Draws a random NPC question"""
+    with open('npcquestions.questions', 'r') as f:
+        questions= f.readlines()
+    data = random.choice(questions).split('---')
+    print(data)
+    question = data[1]
+    num = data[0]
+    print(question)
+    print(num)
+    await sendmsg(ctx, strings['send_question'].format(
+        question = question,
+        num = num))
 
+@bot.command()
+async def addnpc(ctx):
+    """Adds a question"""
+    is_mod = await check_mod(ctx)
+    author = ctx.author
     
+
+    if(not is_mod):
+        await sendmsg(ctx, strings['game_open_only_mods'])
+        return
     
-        
+    with open('npcquestions.questions', 'r') as f:
+        questions = f.readlines()
+    num = len(questions)+1
+    questions.append('\n' + num + '---' + ctx.message.content[8:])
+    with open('npcquestions.questions', 'w+') as f:
+        f.writelines(questions)
+
+    await sendmsg(ctx, strings['added_question'].format(
+        mention = ctx.author.mention,
+        question = ctx.message.content[8:],
+        num = num))
+    
 
 @bot.command()
 async def opengamehelp(ctx):
@@ -604,6 +660,15 @@ async def dogfact(ctx):
 
 
 #on_command and help functions
+
+@bot.command()
+async def helpme(ctx):
+    await sendmsg(ctx, strings['general_help'].format(
+        me = ctx.guild.me.mention,
+        tim = ctx.guild.owner.mention,
+        annie = ctx.guild.get_member(132240553013280768).nick))
+    
+
 @bot.event
 async def on_command(ctx):
     print(strings['called'].format(
