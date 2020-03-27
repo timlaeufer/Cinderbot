@@ -33,12 +33,12 @@
 	  "Guide":{
 		"name": "Guide (Fae)",
 	    "keywords": ["guide"],
-		"desc": "If you spend a String on someone willing, you can bring them across the veil into a faery realm. The spell lasts for a scene or two, before you're both returned to the mundane world."
+		"desc": "If you spend a String on someone willing, you can bring them across the veil into a faery realm. The spell lasts for a scene or two, before youre both returned to the mundane world."
 	  },
 	  "Beyond the Veil": {
 		"name": "Beyond the Veil (Fae)",
 	    "keywords": ["beyond", "veil"],
-		"desc": "To seek audience with the Faery King/Queen, *Gaze Into the Abyss*: Name what you're looking for, and *roll with Dark*",
+		"desc": "To seek audience with the Faery King/Queen, *Gaze Into the Abyss*: Name what youre looking for, and *roll with Dark*",
 		"success": "The Faery King/Queen shows you lucid visions, and you take *1 Forward* to adressing them. They also reveal a *hidden String* on someone to you. Gain it.",
 		"complication": "The Faery King/Queen shows you confusing and alarming visions, but you get your answer nonetheless. Additionally, they demand a favor of you**."
 	  },
@@ -138,9 +138,9 @@
 	  	"keywords": ["Blank Canvas","Canvas"],
         "desc": "When you take an action that embodies one of your Conditions, allowing that Condition to alter your sense of self, cross it off and add 1 to your roll."
       },
-      "Try Harder Next Time":{
-        "name": "Try Harder Next Time (Hollow)",
-	  	"keywords": ["try harder"],
+      "Try Harmer Next Time":{
+        "name": "Try Harmer Next Time (Hollow)",
+	  	"keywords": ["try Harmer"],
         "desc": "When you screw up, give yourself an appropriate Condition and take 1 Forward."
       },
       "Fake":{
@@ -176,13 +176,13 @@
         "desc": "When you bring an innocent soul to the Dark Power, mark experience."
       },
       "Under Pressure":{
-        "name": "Try Harder Next Time (Infernal)",
+        "name": "Try Harmer Next Time (Infernal)",
 	  	"keywords": ["Pressure"],
         "desc": "If someone has 3 or more Strings on you, **add 1** to your rolls to carry out their bidding."
       },
       "Can’t Save Myself":{
-        "name": "Can’t Save Myself (Infernal)",
-	  	"keywords": ["can't save"],
+        "name": "Cant Save Myself (Infernal)",
+	  	"keywords": ["cant save"],
         "desc": "When somebody saves you from forces too powerful for you to reckon with, they mark experience, and you gain a String on them."
       },
       "The Power Flows Through You (Bargin)":{
@@ -306,7 +306,7 @@
 	  	"keywords": ["hypnotic"],
         "desc": "You can hypnotize people who have no Strings on you. **Roll with Hot.**",
         "success": "They do exactly what you wish and have no idea that anything is wrong",
-        "complication": "The hypnosis works, but choose one: $`-They realize exactly what you've done to them` $`-They fuck up your commands` $`-Their sanity is unhinged.`"
+        "complication": "The hypnosis works, but choose one: $`-They realize exactly what youve done to them` $`-They fuck up your commands` $`-Their sanity is unhinged.`"
       },
       "Cold As Ice":{
         "name": "Cold As Ice (Vampire)",
@@ -316,7 +316,7 @@
       "The Feeding":{
         "name": "The Feeding (Vampire)",
 	  	"keywords": ["feeding"],
-        "desc": "You feed on hot blood, direct from the source. If this is the first time they’ve ever been fed upon, you both mark experience. When you feed, choose two: $`-You heal **1 harm**` $`-You take **1 forward**` $`-They definitely don't die.`"
+        "desc": "You feed on hot blood, direct from the source. If this is the first time theyve ever been fed upon, you both mark experience. When you feed, choose two: $`-You heal 1 harm` $`-You take 1 forward` $`-They definitely dont die.`"
       },
       "Marked For the Hunt":{
         "name": "Marked For the Hunt (Vampire)",

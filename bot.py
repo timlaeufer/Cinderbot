@@ -691,7 +691,7 @@ async def on_command(ctx):
 
 async def post_log(ctx, msg):
     ch = ctx.guild.get_channel(693116058575306795) #log channel
-    await ch.send(msg)
+    await ch.send(msg.replace('@', 'at'))
     
 
 
