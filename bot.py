@@ -343,6 +343,15 @@ async def confirm(ctx):
     await sendmsg(ctx, s)
 
 @bot.command()
+async def moves(ctx):
+    author = ctx.author
+    s = ''
+    if(not await check_player(ctx)):
+        sendmsg(ctx, strings['move_only_players'])
+        return
+    
+
+@bot.command()
 async def move(ctx):
     author = ctx.author
     s = ''
@@ -433,8 +442,7 @@ async def move(ctx):
                 raw = raw_string,
                 comm = ctx.message.content))
             return
-    
-    #TODO: EXCHANGE $ AND \n !!!!! in desc, success, and complication
+        
     if(numeric): #If there is a numeric in it
         #check if move is actually one to roll for
         if(is_roll_move(move)):
@@ -459,8 +467,25 @@ async def move(ctx):
 
 @bot.command()
 async def movehelp(ctx):
-    #TODO
-    await sendmsg(ctx, "Not here yet, sorry! Bad " + get_admin(ctx).mention)
+    await sendmsg(ctx, strings['move_help'].format(
+        me = ctx.guild.me.mention))
+
+@bot.command()
+async def movelist(ctx):
+    """Gives Info over the Movelist"""
+    s = ''
+    for src in dic:
+        s += 'Source: ' + src + '\n'
+        for skin in dic[src]:
+            s += '\tSkin: ' + skin + '\n'
+            for move in dic[src][skin]:
+                s += '\t\t' + move
+                s += '\n'
+
+    await sendmsg(ctx, s)
+                
+
+    
     
         
 
