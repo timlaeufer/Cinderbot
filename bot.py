@@ -400,14 +400,14 @@ async def move(ctx):
             raw = raw_string,
             comm = message) + '\n'
         for element in candidates:
-            s += strings['multiple_moves_single'].format(
-                move = str(element),
+            s += strings['multiplDe_moves_single'].format(
+                mov = str(element),
                 skin = get_skin(move),
                 call = str(element).lower()) + '\n'
         await sendmsg(ctx, s)
         return
     else: #If no match is found by whole phrase
-        for arg in data.split(' '):
+        for arg in data:
             candidates += get_move(arg)
         candidates = list(set(candidates)) #removes duplicates
         if(len(candidates) == 1): #if 1 match is found by keywords
@@ -418,38 +418,43 @@ async def move(ctx):
                 raw = raw_string,
                 comm = message) + '\n'
             for element in candidates:
-                s += strings['multiple_moves_single'].format(
+                temp = strings['multiple_moves_single'].format(
                     move = str(element),
-                    skin = get_skin(move),
+                    skin = str(get_skin(element, True)),
                     call = str(element).lower()) + '\n'
+                if(len(s) + len(temp) >= 2000):
+                    pass
+                else:
+                    s += temp
             await sendmsg(ctx, s)
             return
         else:
             await sendmsg(ctx, strings['move_not_found'].format(
                 raw = raw_string,
-                comm = message))
+                comm = ctx.message.content))
             return
-    print(move)
-    #TODO: EXCHANGE $ AND \n !!!!! in desc, success, and complication
     
+    #TODO: EXCHANGE $ AND \n !!!!! in desc, success, and complication
     if(numeric): #If there is a numeric in it
-        dice[0] = random.randint(1,6)
-        dice[1] = random.randint(1,6)
-        if(dice[0] == dice[1] == 6):
-            lucky = True
+        #check if move is actually one to roll for
+        if(is_roll_move(move)):
+            await sendmsg(ctx, strings['move_rolled'].format(
+                mention = ctx.author.mention,
+                move = move.name))
+            dice = [0, 0]
+            dice[0] = random.randint(1,6)
+            dice[1] = random.randint(1,6)
+            if(dice[0] == dice[1] == 6):
+                lucky = True
+            result = dice[0] + dice[1] + numeric5
+            
+        else:
+            await sendmsg(ctx, get_move_overview(move))
         
     else: #If there is no numeric in the command
-        pass
+        await sendmsg(ctx, get_move_overview(move))
         
-    #Check if Message has a numeric in it
-    #   if so: Save the numeric and process the rest
-    #Check if the message.lowercase matches a move.lowercase
-    #   True:
-    #       If(numeric): roll, print desc and result
-    #       Else: Give Desc and Success/Complication if available
-    #   Else:
-    #       Try if message.lowercase is a substring of a skin
-    #           True: sendmsg with results and Move names.
+
     
 
 @bot.command()
@@ -653,9 +658,21 @@ def get_everyone_role(ctx):
 def get_player_role(ctx):
     return ctx.guild.get_role(679618147384295444)
 
-def get_overview(ctx, move_with_roll):
-    #TODO
-    return
+def get_move_overview(move):
+    s = ''
+    s += strings['move_overview'].format(
+        name = move['name'],
+        desc = move['desc'].replace('$','\n')) + '\n'
+
+    if(is_roll_move(move)):
+        s += strings['rollable_overview_addition'].format(
+            success = move['success'].replace('$','\n'),
+            complication = move['complication'].replace('$','\n'))
+    return s
+
+def is_roll_move(move):
+    if('success' in move): return True
+    else: return False
 
 def get_move(keyword_or_name):
     """Searches for a move with the given name as a list, may return multiple"""
@@ -667,12 +684,14 @@ def get_move(keyword_or_name):
             for move in dic[src][skin]:
                 #If name matches Exactly, return move as array
                 if(str(move).lower() == keyword_or_name.lower()):
-                    return [dic[src][skin][move]]
+                    candidates = []
+                    candidates.append(dic[src][skin][move])
+                    return candidates
                 #If name is substring of move, add to candidates
                 elif(keyword_or_name.lower() in str(move).lower()):
-                    candidates.append(move)
+                    candidates.append(dic[src][skin][move])
                 elif(keyword_or_name in dic[src][skin][move]['keywords']):
-                    candidates.append(move)
+                    candidates.append(dic[src][skin][move])
 
     #If has only 1 entry, return candidates. Else, return whole array
     if(len(candidates) == 1):
@@ -682,13 +701,18 @@ def get_move(keyword_or_name):
 
     return [None]
 
-def get_skin(search_move):
+def get_skin(search_move, only_name = False):
     """Returns the skin dict when given a move dict"""
+    print("Searching for " + search_move)
     for src in dic:
         for skin in dic[src]:
             for move in dic[src][skin]:
-                if dic[src][skin][move] == search_move:
-                    return dic[src][skin]
+                print('\t'+str(move))
+                if (str(move) == search_move):
+                    if(only_name):
+                        return skin
+                    else:
+                        return dic[src][skin]
     return None
 
 def get_src(search_skin):

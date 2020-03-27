@@ -2,41 +2,49 @@
   "Skins":{
 	"Player":{
 		"Turn Someone on":{
-			"keywords": ["turn", "turnon", "on"],
+			"name": "Turn Someone On",
+			"keywords": ["turn", "turnon", "on", "turn on"],
 			"desc": "When you **turn someone on**, roll with *Hot*",
-			"success": "You gain a string on the target, and they choose a reaction from below: $-*I give myself to you*,$-*I promise something I think you want*, or $*I get embarrassed and act awkward*. $*For rules on asexuality and non-attraction, turn to page 49.*",
-			"complication": "The target can either **give you a string on them**, or choose a reaction from below: $-*I give myself to you*,$-*I promise something I think you want*, or $*I get embarrassed and act awkward*. $*For rules on asexuality and non-attraction, turn to page 49.*"
+			"success": "You gain a string on the target, and they choose a reaction from below: $$-*I give myself to you*,$-*I promise something I think you want*, or $*-I get embarrassed and act awkward*. $$*For rules on asexuality and non-attraction, turn to page 49.*",
+			"complication": "The target can either **give you a string on them**, or choose a reaction from below: $$-*I give myself to you*,$-*I promise something I think you want*, or $*I get embarrassed and act awkward*. $$*For rules on asexuality and non-attraction, turn to page 49.*"
 		}
 	},
     "Fae":{
       "Faery Contract":{
+		"name": "Faery Contract (Fae)",
 		"keywords": ["contract"],
         "desc": "If someone breaks a promise or contract made to you, **take a String on them**. When spending a String to even out the score and get justice on a broken promise$ add these options to *Pulling Strings*: $`-they fuck up something simple at a crucial moment, **suffering 1 Harm** if appropriate` $`-add 2 to your roll on an act of vengeance.`"
       },
       "Unashamed":{
+		"name": "Unashamed (Fae)",
 		"keywords": ["unashamed"],
         "desc": "You can give someone a String on you to add **3** to your attempt to *turn them on*."
       },
       "The Wild Hunt":{
+	    "name": "The Wild Hunt (Fae)",
 		"keywords": ["wild", "hunt"],
         "desc": "When you draw upon you *most feral manner*, echoing the lithe movements of a cat or the coracity of a wolf, **add 1** to your roll to *Turn Someone On*"
       },
       "Lure":{
+		"name": "Lure (Fae)",
 	    "keywords": ["lure"],
         "desc": "Whenever someone makes a promise to you, they mark experience. $Whenever someone breaks a promise to you, you mark experience."
       },
 	  "Guide":{
+		"name": "Guide (Fae)",
 	    "keywords": ["guide"],
 		"desc": "If you spend a String on someone willing, you can bring them across the veil into a faery realm. The spell lasts for a scene or two, before you're both returned to the mundane world."
 	  },
 	  "Beyond the Veil": {
+		"name": "Beyond the Veil (Fae)",
 	    "keywords": ["beyond", "veil"],
 		"desc": "To seek audience with the Faery King/Queen, *Gaze Into the Abyss*: Name what you're looking for, and *roll with Dark*",
 		"success": "The Faery King/Queen shows you lucid visions, and you take *1 Forward* to adressing them. They also reveal a *hidden String* on someone to you. Gain it.",
 		"complication": "The Faery King/Queen shows you confusing and alarming visions, but you get your answer nonetheless. Additionally, they demand a favor of you**."
 	  },
-	  "Sex":{
-		"keywords": ["sex"],
+	  "Fae Sex":{
+		"name" : "Sex move (Fae)",
+		"keywords": ["sex", "fae"],
 		"desc": "When you lie naked with another, you can ask them for a promise. If they refure, take 2 Strings on them."
 	  }
     },
