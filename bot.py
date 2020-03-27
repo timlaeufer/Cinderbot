@@ -430,8 +430,11 @@ async def move(ctx):
                 comm = message))
             return
     print(move)
-
+    #TODO: EXCHANGE $ AND \n !!!!! in desc, success, and complication
+    
     if(numeric): #If there is a numeric in it
+        dice[0] = random.randint(1,6)
+        dice[1] = random.randint(1,6)
         pass
     else: #If there is no numeric in the command
         pass
