@@ -22,17 +22,25 @@ for the Monstehearts 2 Discord Server of Timmitim#2579.'''
 bot = commands.Bot(command_prefix='.', description=description)
 
 #Read bot.ini
+print('Loading bot.ini ....')
 config = configparser.ConfigParser()
 config.read('bot.ini')
+print('bot.ini loaded! \n')
 
 #Convert config to simple dict for ease of use:
+print('Converting bot.ini to dict .... ')
 strings = {}
 for section in config.sections():
     for tup in config.items(section):
         strings.update({tup[0]: tup[1]})
+print('Done converting dot.ini')
 
+        
+print('Loading moves.json ...')
 with open('moves.json', 'r') as f:
     dic = json.load(f)
+
+print('Loading moves.json done!')
 
 
 
@@ -535,7 +543,7 @@ async def addnpc(ctx):
     with open('npcquestions.questions', 'r') as f:
         questions = f.readlines()
     num = len(questions)+1
-    questions.append('\n' + num + '---' + ctx.message.content[8:])
+    questions.append('\n' + str(num) + '---' + ctx.message.content[8:])
     with open('npcquestions.questions', 'w+') as f:
         f.writelines(questions)
 
