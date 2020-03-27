@@ -363,6 +363,8 @@ async def confirm(ctx):
 async def opengamehelp(ctx):
     await sendmsg(ctx, strings['og_format'])
 
+
+#Random Commands:
 @bot.command()
 async def dadjoke(ctx):
     headers = {'Accept':'text/plain'}
@@ -392,6 +394,9 @@ async def dogfact(ctx):
     r = requests.get('http://dog-api.kinduff.com/api/facts?number=1')
     j = r.json()
     await sendmsg(ctx, j['facts'][0])
+
+
+#oncommand and help functions
 
 @bot.event
 async def on_command(ctx):
