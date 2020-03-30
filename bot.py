@@ -828,13 +828,24 @@ async def gib(ctx):
         await dogfact(ctx)
     if(choice == choices[4]):
         await dadjoke(ctx)
-    
+
+@bot.command()
+async def hammer(ctx):
+    await sendmsg(ctx, 'Nothing to see here...')
+    return
+    msg = ctx.message.content[7:].strip()
+    await sendmsg(ctx,(strings['banhammer'].format(
+                      name = msg.replace('@',''))))
     
 @bot.command()
 async def dadjoke(ctx):
     headers = {'Accept':'text/plain'}
     r = requests.get('https://icanhazdadjoke.com/', headers = headers)
     await sendmsg(ctx, r.text)
+
+@bot.command()
+async def daddyjoke(ctx):
+    await sendmsg(ctx, 'No. Try `.dadjoke`.')
 
 @bot.command()
 async def dad(ctx):
