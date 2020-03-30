@@ -7,7 +7,7 @@ Created on Mon Mar 23 16:03:34 2020
 
 
 import discord
-from discord.ext import commands
+from discord.ext import tasks, commands
 import configparser
 import datetime
 import shutil
@@ -51,6 +51,14 @@ print('Loading moves.json done in ' + str((b-a).microseconds) + 'ms!')
 print('Initializing bot...')
 a = datetime.datetime.now()
 
+messages = []
+"""
+Layout of server message logging:
+Time§~§Category§~§Channel§~§User§~§Length§~§Occurences
+so as a tuple:
+(time,cat,ch,author,length,occurences_array)
+"""
+
 
 @bot.event
 async def on_ready():
@@ -59,6 +67,19 @@ async def on_ready():
     print(bot.user.id)
     b = datetime.datetime.now()
     print('Bot is initialized after ' + str((b-a).microseconds) + 'ms!')
+    #printstats.start()
+
+@bot.listen()
+async def on_message(message):
+    return
+    if('cinderbot' in message.author.name):
+        return
+    ch = message.channel
+    cat = ch.category
+    tup = (time(True), cat.name, ch.name, message.author.name,
+           len(message.content),get_occurence_list(message.content))
+    messages.append(tup)
+    
     
 @bot.command()
 async def testing(ctx):
@@ -538,18 +559,92 @@ async def movelist(ctx):
                 s += '\n'
 
     await sendmsg(ctx, s)
-                
+
+
+# ------------------------- EVENTS -------------------------
+
+#NPCs                
 @bot.command()
 async def npc(ctx):
     """Draws a random NPC question"""
     with open('npcquestions.questions', 'r') as f:
-        questions= f.readlines()
-    data = random.choice(questions).split('---')
-    question = data[1]
-    num = data[0]
+        questions = f.readlines()
+
+    s = ''
+    msg = ctx.message.content[4:].strip()
+    if(msg.isnumeric()):
+        num = int(msg)
+        if(num > len(questions)-1):
+            num = len(questions)-1
+    else:
+        #parse keywords
+        keywords = []
+        if(' ' in msg): #if ' ' in msg: multiple keywords
+            keywords = msg.split(' ')
+        elif(msg == ''): #if msg empty
+            num = random.randint(1, len(questions)-1)
+        else: #single keyword
+            if(msg.lower() == 'random'):
+                num = random.randint(1, len(questions)-1)
+            else:
+                keywords.append(msg)
+
+        indices = []
+        for element in keywords:
+            indices += [i for i in range(len(questions))
+                              if element in questions[i].lower()]
+        if(len(indices) > 1):
+            #found multiple
+            indices = list(set(indices)) #delete duplicates
+            s += strings['multiple_questions_found_prompt']
+            for i in range(len(indices)):
+                if(i > 3):
+                    s += strings['multiple_questions_many_more'].format(
+                        amount = len(indices) - i)
+                    break
+                else:
+                    s += strings['multiple_questions_found_single'].format(
+                        num = indices[i]+1,
+                        question = questions[indices[i]])
+            await sendmsg(ctx, s)
+            return
+        elif(len(indices) == 0 and msg != ''):
+            #found none
+            s += strings['question_not_found'].format(
+                terms = str(keywords))
+            await sendmsg(ctx, s)
+            return
+        elif(len(indices) == 1 and msg != ''):
+            #found single
+            num = indices[0]
+        
+    question = questions[num]
     await sendmsg(ctx, strings['send_question'].format(
         question = question,
         num = num))
+
+@bot.command()
+async def npcs(ctx):
+    """sends all npc questions to the author in pms """
+    if('list' in ctx.message.content):
+        simple = True
+    else:
+        simple = False
+    s = ''
+    with open('npcquestions.questions', 'r') as f:
+        questions = f.readlines()
+    s += strings['questions_list_npc'] + '\n'
+    for i, q in enumerate(questions):
+        s += strings['questions_list_single'].format(
+            num = i+1,
+            question = q).replace('\n', '').strip() + '\n'
+        """
+        if(len(s) > 1500):
+            await sendmsg(ctx, s, pm_to_author = True)
+            s = ''
+        """
+    await sendmsg(ctx, s, pm_to_author = True)
+        
 
 @bot.command()
 async def addnpc(ctx):
@@ -559,13 +654,14 @@ async def addnpc(ctx):
     
 
     if(not is_mod):
-        await sendmsg(ctx, strings['game_open_only_mods'])
+        await sendmsg(ctx, strings['only_mods_add_questions'].format(
+            mention = author.mention))
         return
     
     with open('npcquestions.questions', 'r') as f:
         questions = f.readlines()
-    num = len(questions)+1
-    questions.append('\n' + str(num) + '---' + ctx.message.content[8:])
+    num = len(questions) + 1
+    questions.append('\n' + ctx.message.content[8:]).strip()
     with open('npcquestions.questions', 'w+') as f:
         f.writelines(questions)
 
@@ -574,7 +670,113 @@ async def addnpc(ctx):
         question = ctx.message.content[8:],
         num = num))
 
-#Random Commands:
+@bot.command()
+async def delnpc(ctx):
+    """Delete an npc-question"""
+
+    is_mod = await check_mod(ctx)
+    author = ctx.author
+    
+
+    if(not is_mod):
+        await sendmsg(ctx, strings['only_mods_add_questions'].format(
+            mention = author.mention))
+        return
+
+    with open('npcquestions.questions', 'r') as f:
+        questions = f.readlines()
+
+    s= ''
+
+    msg = ctx.message.content[7:].strip()
+    print(msg)
+    if(msg.isnumeric()):
+        num = int(msg)
+        if(num > len(questions)-1):
+            s = strings['del_given_index_too_high'].format(
+                num1 = num,
+                max_num = len(questions)-1)
+        else:
+            s = strings['del_question_deleted'].format(
+                num = num,
+                question = questions[num])
+            del questions[num]
+            with open('npcquestions.questions', 'w+') as f:
+                f.writelines(questions)
+    else:
+        s = strings['del_argument_not_readable']
+
+    await sendmsg(ctx, s)
+    
+
+
+#Locations:
+@bot.command()
+async def location(ctx):
+    """Draws a random location question"""
+    with open('locationquestions.questions', 'r') as f:
+        questions= f.readlines()
+    msg = ctx.message.content[4:].strip()
+    if(msg.isnumeric()):
+        num = int(msg)
+        if(num > len(questions)-1):
+            num = len(questions)-1
+    else:
+        num = random.randint(1, len(questions)-1)
+    question = questions[num]
+    await sendmsg(ctx, strings['send_location'].format(
+        question = question,
+        num = num))
+
+@bot.command()
+async def locations(ctx):
+    """sends all location questions to the author in pms """
+    if('list' in ctx.message.content):
+        simple = True
+    else:
+        simple = False
+    s = ''
+    with open('locationquestions.questions', 'r') as f:
+        questions = f.readlines()
+    s += strings['questions_list_location']
+    for i, q in enumerate(questions):
+        s += strings['questions_list_single'].format(
+            num = i+1,
+            question = q).replace('\n', '').strip() + '\n'
+        """
+        if(len(s) > 1500):
+            await sendmsg(ctx, s, pm_to_author = True)
+            s = ''
+        """
+
+    await sendmsg(ctx, s, pm_to_author = True)
+    
+@bot.command()
+async def addlocation(ctx):
+    """Adds a question"""
+    is_mod = await check_mod(ctx)
+    author = ctx.author
+    
+
+    if(not is_mod):
+        await sendmsg(ctx, strings['only_mods_add_questions'].format(
+            mention = author.mention))
+        return
+    
+    with open('locationquestions.questions', 'r') as f:
+        questions = f.readlines()
+    num = len(questions)+1
+    questions.append('\n' + ctx.message.content[13:])
+    with open('locationquestions.questions', 'w+') as f:
+        f.writelines(questions)
+
+    await sendmsg(ctx, strings['added_question'].format(
+        mention = ctx.author.mention,
+        question = ctx.message.content[13:],
+        num = num))
+
+
+#-----------------------Fun --------------------
 @bot.command()
 async def gib(ctx):
     """Gib fun please"""
@@ -701,22 +903,80 @@ async def opengamehelp(ctx):
 async def movehelp(ctx):
     await sendmsg(ctx, strings['move_help'].format(
         me = ctx.guild.me.mention))
-    
+
+
+#-------------------Interaction with Server and Stats -----------------
+
+async def sendmsg(ctx, msg, pm_to_author=False):
+    if(len(msg)> 1500):
+        #split into parts that are as long as they can be
+        secs = []
+        section = ''
+
+        #all lines
+        lines = [s for s in msg.split('\n')]
+        cur_length = 0
+        
+        for line in lines:
+            section += line + '\n'
+            cur_length += len(line)
+            if(cur_length >= 1500):
+                secs.append(section)
+                section = ''
+                cur_length = 0
+        secs.append(section)
+    else:
+        secs = [msg]
+    msg = ''
+    for msg in secs:
+        if(pm_to_author):
+            if(ctx.author.dm_channel == None):
+                ch = await ctx.author.create_dm()
+            else:
+                ch = ctx.author.dm_channel
+            await ch.send(msg)
+            s = strings['sendmsg'].format(
+                    category = 'Private Message',
+                    channel = ch,
+                    message = msg,
+                    time = time()) + "\n\n"
+        else:
+            await ctx.send(msg)
+            s = strings['sendmsg'].format(
+                    category = ctx.channel.category,
+                    channel = ctx.channel.mention,
+                    message = msg,
+                    time = time()) + "\n\n"
+        print(s)
+        await post_log(ctx, s, pm_to_author)
 
 @bot.event
 async def on_command(ctx):
-    s = strings['called'].format(
-        category = ctx.channel.category,
-        channel = ctx.channel,
-        author = ctx.author,
-        message = ctx.message.content,
-        time = time())
+    try:
+        s = strings['called'].format(
+            category = ctx.channel.category,
+            channel = ctx.channel,
+            author = ctx.author,
+            message = ctx.message.content,
+            time = time())
+    except AttributeError:
+        s = strings['called'].format(
+            category = 'DM Channel',
+            channel = ctx.channel,
+            author = ctx.author,
+            message = ctx.message.content,
+            time = time())
     print(s)
     await post_log(ctx, s)
 
+async def post_log(ctx, msg, pm_to_author = False):
+    #Server ID: 679614550286663721
+    #Log Channel ID: 693116058575306795
+    serv = bot.get_guild(679614550286663721)
+    log_ch = serv.get_channel(693116058575306795)
 
-async def post_log(ctx, msg):
-    ch = ctx.guild.get_channel(693116058575306795) #log channel
+    ch = log_ch
+    
     await ch.send(msg.replace('@', 'at'))
     
 
@@ -764,23 +1024,7 @@ async def check_player(ctx):
     print(s)
     return is_player
     
-   
-def readToken():
-    with open('token.txt') as f:
-        token = f.readlines()[1]
-    return token
 
-def remove_dupes(lis):
-    new_list = []
-    for i, element in enumerate(lis):
-        if(element not in new_list):
-            new_list.append(lis[i])
-    return new_list
-
-def time(simple=False):
-    if(simple):
-        return str(datetime.datetime.now().strftime('%d-%m-%Y--%H_%M_%S'))
-    return str(datetime.datetime.now())
 
 def get_admin(ctx):
     return ctx.guild.owner
@@ -797,9 +1041,38 @@ def get_everyone_role(ctx):
 def get_player_role(ctx):
     return ctx.guild.get_role(679618147384295444)
 
+@tasks.loop(minutes = 1)
+async def printstats():
+    """Line Layout:
+    (time,cat,ch,author,length,occurences_array)
+    So as a line:
+    >time,cat,ch,author,length,occ
+    occ will be consisting a series of the following:
+    <digit>,<occurence<
+    This way the , can be used as a seperator and the file can be
+    analysed by excel easily
+
+    """
+    if(len(messages)<1):
+        return
+    print(time() + ' Posting Statistics ...')
+    s = ''
+    with open('statistics/' + time(True) + '.csv', 'w+') as f:
+        for el in messages:
+            s = el[0]+','+el[1]+','+el[2]+','+el[3]+','+el[4]
+            for occ in el[5]:
+                s += ','+occ[0]+','+occ[1]
+            f.write(s + '\n')
+            s = ''
+    print(time() + ' Statistics posted')
+    messages = ''
 
 
-#Checking Moves:
+    
+
+
+
+# ------------- Move helper commands ------------------------
 def get_move_overview(move):
     s = ''
     s += strings['move_overview'].format(
@@ -865,25 +1138,44 @@ def get_src(search_skin):
         for skin in dic[src]:
             if dic[src][skin] == search_skin:
                 return dic[src]
+
+
+#Short commands
+def read_token():
+    with open('token.txt') as f:
+        token = f.readlines()[1]
+    return token
+
+def remove_dupes(lis):
+    new_list = []
+    for i, element in enumerate(lis):
+        if(element not in new_list):
+            new_list.append(lis[i])
+    return new_list
+
+def get_occurence_list(message_content):
+    """returns a list of tuples that show the symbol occurences"""
+    #tup = (<digit>, <amount of occurences>)
+    digs = string.digits + string.ascii_lowercase
+    lis = []
+    for element in digs:
+        tup = (element, message_content.count(element))
+        lis.append(tup)
+    return lis
+        
     
-    
+
+def time(simple=False):
+    if(simple):
+        return str(datetime.datetime.now().strftime('%d-%m-%Y--%H_%M_%S'))
+    return str(datetime.datetime.now())
 
 def is_mention(arg):
     if(arg[0] == '<' and arg[-1] == '>' and '@' in arg):
         return True
     else:
-        return False
-
-async def sendmsg(ctx, msg):
-    await ctx.send(msg)
-    s = strings['sendmsg'].format(
-            category = ctx.channel.category,
-            channel = ctx.channel.mention,
-            message = msg,
-            time = time()) + "\n\n"
-    print(s)
-    await post_log(ctx, s)
+        return Fals
     
 
 
-bot.run(readToken())
+bot.run(read_token())

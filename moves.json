@@ -425,7 +425,7 @@
 		"raw" : "The Clique",
         "name": "The Clique (Queen)",
 	  	"keywords": ["Clique"],
-        "desc": "Youre at the head of the toughest, coolest, most powerful clique around. They count as a gang. Choose one of the following strengths for your gang: $`- Theyre armed (with guns and real dangerous stuff)` $`- Theyre connected (with money and designer drugs)- $`- Theyre talented (in a band or sports team) $`-Theyre cultists (with dark oaths and willingness to die).`"
+        "desc": "Youre at the head of the toughest, coolest, most powerful clique around. They count as a gang. Choose one of the following strengths for your gang: $`- Theyre armed (with guns and real dangerous stuff)` $`- Theyre connected (with money and designer drugs)` $`- Theyre talented (in a band or sports team)` $`- Theyre cultists (with dark oaths and willingness to die).`"
       },
           "The Shield":{
 		"raw" : "The Shield",
