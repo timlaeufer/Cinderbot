@@ -8,13 +8,13 @@ Created on Mon Mar 23 16:03:34 2020
 
 import discord
 from discord.ext import tasks, commands
-import configparser
-import datetime
-import shutil
-import requests
-import json
-import string
-import random
+import configparser #reading bot.ini
+import datetime #time and dates
+import shutil #moving files easily
+import requests #for fun moves
+import json #reading moves.json
+import string #string.letters and string.digits
+import random #rolling
 import inspect
 
 #Bot initialisation:
@@ -60,6 +60,8 @@ so as a tuple:
 """
 
 
+#--------------Events ------------------
+
 @bot.event
 async def on_ready():
     print('Logged in as')
@@ -80,7 +82,27 @@ async def on_message(message):
            len(message.content),get_occurence_list(message.content))
     messages.append(tup)
     
+@bot.event
+async def on_command(ctx):
+    try:
+        s = strings['called'].format(
+            category = ctx.channel.category,
+            channel = ctx.channel,
+            author = ctx.author,
+            message = ctx.message.content,
+            time = time())
+    except AttributeError:
+        s = strings['called'].format(
+            category = 'DM Channel',
+            channel = ctx.channel,
+            author = ctx.author,
+            message = ctx.message.content,
+            time = time())
+    print(s)
+    await post_log(ctx, s)    
     
+    
+#-------------------Bot Commands ------------------------
 @bot.command()
 async def testing(ctx):
     if(await check_mod(ctx)):
@@ -357,7 +379,6 @@ async def skin(ctx):
     """Lists all moves a skin has. Alias for moves(ctx)"""
     await moves(ctx)
 
-
 @bot.command()
 async def moves(ctx):
     """Lists all moves of a certain skin"""
@@ -560,9 +581,7 @@ async def movelist(ctx):
 
     await sendmsg(ctx, s)
 
-
-# ------------------------- EVENTS -------------------------
-
+#Event Commands:
 #NPCs                
 @bot.command()
 async def npc(ctx):
@@ -645,7 +664,6 @@ async def npcs(ctx):
         """
     await sendmsg(ctx, s, pm_to_author = True)
         
-
 @bot.command()
 async def addnpc(ctx):
     """Adds a question"""
@@ -708,8 +726,6 @@ async def delnpc(ctx):
 
     await sendmsg(ctx, s)
     
-
-
 #Locations:
 @bot.command()
 async def location(ctx):
@@ -775,8 +791,7 @@ async def addlocation(ctx):
         question = ctx.message.content[13:],
         num = num))
 
-
-#-----------------------Fun --------------------
+#Fun Commands
 @bot.command()
 async def gib(ctx):
     """Gib fun please"""
@@ -879,6 +894,7 @@ async def dog(ctx):
 
 @bot.command()
 async def dogpic(ctx):
+    """Sends a random dog pic."""
     if(not await check_player(ctx)):
         sendmsg(ctx, strings['fun_only_players'])
         return
@@ -888,6 +904,7 @@ async def dogpic(ctx):
 
 @bot.command()
 async def dogfact(ctx):
+    """Sends a random dog fact."""
     if(not await check_player(ctx)):
         sendmsg(ctx, strings['fun_only_players'])
         return
@@ -895,9 +912,7 @@ async def dogfact(ctx):
     j = r.json()
     await sendmsg(ctx, j['facts'][0])
 
-
 #on_command and help functions
-
 @bot.command()
 async def helpme(ctx):
     await sendmsg(ctx, strings['general_help'].format(
@@ -917,7 +932,6 @@ async def movehelp(ctx):
 
 
 #-------------------Interaction with Server and Stats -----------------
-
 async def sendmsg(ctx, msg, pm_to_author=False):
     if(len(msg)> 1500):
         #split into parts that are as long as they can be
@@ -961,24 +975,6 @@ async def sendmsg(ctx, msg, pm_to_author=False):
         print(s)
         await post_log(ctx, s, pm_to_author)
 
-@bot.event
-async def on_command(ctx):
-    try:
-        s = strings['called'].format(
-            category = ctx.channel.category,
-            channel = ctx.channel,
-            author = ctx.author,
-            message = ctx.message.content,
-            time = time())
-    except AttributeError:
-        s = strings['called'].format(
-            category = 'DM Channel',
-            channel = ctx.channel,
-            author = ctx.author,
-            message = ctx.message.content,
-            time = time())
-    print(s)
-    await post_log(ctx, s)
 
 async def post_log(ctx, msg, pm_to_author = False):
     #Server ID: 679614550286663721
@@ -1035,8 +1031,6 @@ async def check_player(ctx):
     print(s)
     return is_player
     
-
-
 def get_admin(ctx):
     return ctx.guild.owner
 
@@ -1078,11 +1072,6 @@ async def printstats():
     print(time() + ' Statistics posted')
     messages = ''
 
-
-    
-
-
-
 # ------------- Move helper commands ------------------------
 def get_move_overview(move):
     s = ''
@@ -1099,8 +1088,6 @@ def get_move_overview(move):
 def is_roll_move(move):
     if('success' in move): return True
     else: return False
-
-
 
 #JSON commands:
 def get_move(keyword_or_name):
