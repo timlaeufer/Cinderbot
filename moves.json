@@ -28,7 +28,7 @@
 		"Lash Out Physically":{
 			"raw": "Lash Out Physically",
 			"name": "Lash Out Physically",
-			"keywords": ["lash", "lash out", "physcially", "lash out"],
+			"keywords": ["lash", "lash out", "physcially", "lash out", "lashout"],
 		"desc": "When you **lash out physically**, roll with *Volatile*",
 		"success": "You deal them harm, and they choke up momentarily before they can react*",
 		"complication": "You harm them but choose one:$$-*They learn something about your true nature and gain a String on you,*,$-*The MC decides how bad the harm turns out*, or $*-You become your Darkest Self.*"

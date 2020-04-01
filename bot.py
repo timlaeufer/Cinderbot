@@ -717,7 +717,7 @@ async def delnpc(ctx):
         else:
             s = strings['del_question_deleted'].format(
                 num = num,
-                question = questions[num])
+                question = questions[num-1])
             del questions[num]
             with open('npcquestions.questions', 'w+') as f:
                 f.writelines(questions)
@@ -790,6 +790,43 @@ async def addlocation(ctx):
         mention = ctx.author.mention,
         question = ctx.message.content[13:],
         num = num))
+
+@bot.command()
+async def dellocation(ctx):
+    """Delete an npc-question"""
+
+    is_mod = await check_mod(ctx)
+    author = ctx.author
+    
+
+    if(not is_mod):
+        await sendmsg(ctx, strings['only_mods_add_questions'].format(
+            mention = author.mention))
+        return
+
+    with open('locationquestions.questions', 'r') as f:
+        questions = f.readlines()
+
+    s= ''
+
+    msg = ctx.message.content[12:].strip()
+    if(msg.isnumeric()):
+        num = int(msg)
+        if(num > len(questions)-1):
+            s = strings['del_given_index_too_high'].format(
+                num1 = num,
+                max_num = len(questions)-1)
+        else:
+            s = strings['del_question_deleted'].format(
+                num = num,
+                question = questions[num])
+            del questions[num-1]
+            with open('locationquestions.questions', 'w+') as f:
+                f.writelines(questions)
+    else:
+        s = strings['del_argument_not_readable']
+
+    await sendmsg(ctx, s)
 
 #Fun Commands
 @bot.command()
@@ -1172,7 +1209,7 @@ def is_mention(arg):
     if(arg[0] == '<' and arg[-1] == '>' and '@' in arg):
         return True
     else:
-        return Fals
+        return False
     
 
 
