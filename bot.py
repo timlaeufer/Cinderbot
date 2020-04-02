@@ -637,7 +637,7 @@ async def npc(ctx):
             #found single
             num = indices[0]
         
-    question = questions[num]
+    question = questions[num-1]
     await sendmsg(ctx, strings['send_question'].format(
         question = question,
         num = num))
@@ -679,7 +679,7 @@ async def addnpc(ctx):
     with open('npcquestions.questions', 'r') as f:
         questions = f.readlines()
     num = len(questions) + 1
-    questions.append('\n' + ctx.message.content[8:]).strip()
+    questions.append('\n' + ctx.message.content[8:].strip())
     with open('npcquestions.questions', 'w+') as f:
         f.writelines(questions)
 
@@ -707,18 +707,17 @@ async def delnpc(ctx):
     s= ''
 
     msg = ctx.message.content[7:].strip()
-    print(msg)
     if(msg.isnumeric()):
         num = int(msg)
-        if(num > len(questions)-1):
+        if(num > len(questions)):
             s = strings['del_given_index_too_high'].format(
                 num1 = num,
-                max_num = len(questions)-1)
+                max_num = len(questions))
         else:
             s = strings['del_question_deleted'].format(
                 num = num,
                 question = questions[num-1])
-            del questions[num]
+            del questions[num-1]
             with open('npcquestions.questions', 'w+') as f:
                 f.writelines(questions)
     else:
