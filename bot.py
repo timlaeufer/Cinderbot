@@ -90,6 +90,7 @@ async def on_command(ctx):
             channel = ctx.channel,
             author = ctx.author,
             message = ctx.message.content,
+            server = ctx.guild.name,
             time = time())
     except AttributeError:
         s = strings['called'].format(
@@ -97,6 +98,7 @@ async def on_command(ctx):
             channel = ctx.channel,
             author = ctx.author,
             message = ctx.message.content,
+            server = ctx.guild.name,
             time = time())
     print(s)
     await post_log(ctx, s)    
@@ -112,14 +114,6 @@ async def testing(ctx):
     print(ctx.message.content)
 
     me = ctx.guild.me
-    everyone = get_everyone_role(ctx)
-    bots = get_bot_role(ctx)
-    mods = get_mod_role(ctx)
-
-    print(str(me))
-    print(str(everyone))
-    print(str(bots))
-    print(str(mods))
 
 @bot.command()
 async def opengame(ctx):
@@ -460,6 +454,36 @@ async def move(ctx):
         if(element != ' '):
             message = message.replace(element, '')
 
+    #If remaining message is empty, roll 2d6, add, and return
+    if(message == '' and numeric is None):
+        dice = [0, 0]
+        dice[0] = random.randint(1,6)
+        dice[1] = random.randint(1,6)
+        if(dice[0] == dice[1] == 6):
+            lucky = True
+        result = dice[0] + dice[1] + 0
+        s = strings['move_general'].format(
+            d1 = dice[0],
+            d2 = dice[1],
+            mod = 0,
+            res = result)
+        await sendmsg(ctx, s)
+        return
+    elif(message == ''):
+        dice = [0, 0]
+        dice[0] = random.randint(1,6)
+        dice[1] = random.randint(1,6)
+        if(dice[0] == dice[1] == 6):
+            lucky = True
+        result = dice[0] + dice[1] + numeric
+        s = strings['move_general'].format(
+            d1 = dice[0],
+            d2 = dice[1],
+            mod = numeric,
+            res = result)
+        await sendmsg(ctx, s)
+        return
+
     #Split message
     args = message.split(' ')
 
@@ -579,7 +603,7 @@ async def movelist(ctx):
                 s += '\t\t' + move
                 s += '\n'
 
-    await sendmsg(ctx, s)
+    await sendmsg(ctx, s, pm_to_author = True)
 
 #Event Commands:
 #NPCs                
@@ -953,9 +977,9 @@ async def dogfact(ctx):
 async def helpme(ctx):
     await sendmsg(ctx, strings['general_help'].format(
         me = ctx.guild.me.mention,
-        tim = ctx.guild.owner.nick,
-        annie = ctx.guild.get_member(132240553013280768).nick,
-        ollie = ctx.guild.get_member(131352795444936704).nick))
+        tim = bot.get_user(314135917604503553), #ID for tim
+        annie = bot.get_user(132240553013280768).name,
+        ollie = bot.get_user(131352795444936704).name))
 
 @bot.command()
 async def opengamehelp(ctx):
@@ -1000,6 +1024,7 @@ async def sendmsg(ctx, msg, pm_to_author=False):
                     category = 'Private Message',
                     channel = ch,
                     message = msg,
+                    server = ctx.guild.name,
                     time = time()) + "\n\n"
         else:
             await ctx.send(msg)
@@ -1007,12 +1032,14 @@ async def sendmsg(ctx, msg, pm_to_author=False):
                     category = ctx.channel.category,
                     channel = ctx.channel.mention,
                     message = msg,
+                    server = ctx.guild.name,
                     time = time()) + "\n\n"
         print(s)
         await post_log(ctx, s, pm_to_author)
 
 
 async def post_log(ctx, msg, pm_to_author = False):
+    """Posts a log to the MH2 log channel"""
     #Server ID: 679614550286663721
     #Log Channel ID: 693116058575306795
     serv = bot.get_guild(679614550286663721)
@@ -1041,6 +1068,7 @@ async def check_mod(ctx):
                                 msg = message,
                                 channel = ctx.channel,
                                 category = ctx.channel.category,
+                                server = ctx.guild.name + str(ctx.guild.id),
                                 time = time()) + "\n"
     print(s)
     return is_mod
@@ -1050,37 +1078,40 @@ async def check_player(ctx):
     author = ctx.author
     roles = author.roles
     message = ctx.message.content
-    player_role = get_player_role(ctx)
-    
-    is_player = False
-    if(player_role in roles):
-        is_player = True
-    else:
-        is_player = False
+
+    if (await check_mod(ctx)):
+        #If the user is a mod, it overrides needing the player role
+        return True
+
+    for role in roles:
+        if ('player') in role.name.lower():
+            is_player = True
 
     s = strings['isplayer'].format(author = author.name,
                                 result = str(is_player),
                                 msg = message,
                                 channel = ctx.channel.mention,
                                 category = ctx.channel.category,
+                                server = ctx.guild.name + str(ctx.guild.id),
                                 time = time()) + "\n"
     print(s)
     return is_player
     
 def get_admin(ctx):
-    return ctx.guild.owner
+    return bot.get_user(314135917604503553)
 
 def get_mod_role(ctx):
-    return ctx.guild.get_role(679618112122912887)
+    for role in ctx.guild.roles:
+        if ('moderator' in role.name.lower()):
+            return role
 
 def get_bot_role(ctx):
-    return ctx.guild.get_role(679620725526888581)
+    for role in ctx.guild.roles:
+        if ('bot' in role.name.lower()):
+            return role
 
 def get_everyone_role(ctx):
-    return ctx.guild.get_role(679614550286663721)
-
-def get_player_role(ctx):
-    return ctx.guild.get_role(679618147384295444)
+    return ctx.guild.default_role
 
 @tasks.loop(minutes = 1)
 async def printstats():
