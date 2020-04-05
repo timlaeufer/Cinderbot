@@ -692,9 +692,12 @@ async def npcs(ctx):
 @bot.command()
 async def addnpc(ctx):
     """Adds a question"""
+
+    if(not await on_main_server(ctx)):
+        return
+
     is_mod = await check_mod(ctx)
     author = ctx.author
-    
 
     if(not is_mod):
         await sendmsg(ctx, strings['only_mods_add_questions'].format(
@@ -716,6 +719,9 @@ async def addnpc(ctx):
 @bot.command()
 async def delnpc(ctx):
     """Delete an npc-question"""
+
+    if(not await on_main_server(ctx)):
+        return
 
     is_mod = await check_mod(ctx)
     author = ctx.author
@@ -794,6 +800,9 @@ async def locations(ctx):
 @bot.command()
 async def addlocation(ctx):
     """Adds a question"""
+    if(not await on_main_server(ctx)):
+        return
+    
     is_mod = await check_mod(ctx)
     author = ctx.author
     
@@ -818,6 +827,9 @@ async def addlocation(ctx):
 @bot.command()
 async def dellocation(ctx):
     """Delete an npc-question"""
+
+    if(not await on_main_server(ctx)):
+        return
 
     is_mod = await check_mod(ctx)
     author = ctx.author
@@ -1125,6 +1137,27 @@ def get_bot_role(ctx):
 
 def get_everyone_role(ctx):
     return ctx.guild.default_role
+
+async def on_main_server(ctx):
+    if(ctx.guild is None): #if ctx is DM Channel
+        g_id = 679614550286663721
+        ch_id = 679620045256523776
+        inv = await bot.get_guild(g_id).get_channel(ch_id).create_invite(
+            max_age = 36000)
+        await sendmsg(ctx, strings['func_only_on_main_server'].format(
+                invite = inv))
+        return False
+    
+    if(ctx.guild.id != 679614550286663721): #if not on main server
+        g_id = 679614550286663721
+        ch_id = 679620045256523776
+        inv = await bot.get_guild(g_id).get_channel(ch_id).create_invite(
+            max_age = 36000)
+        await sendmsg(ctx, strings['func_only_on_main_server'].format(
+            invite = inv))
+        return False
+    return True
+    
 
 @tasks.loop(minutes = 1)
 async def printstats():
