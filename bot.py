@@ -98,7 +98,7 @@ async def on_command(ctx):
             channel = ctx.channel,
             author = ctx.author,
             message = ctx.message.content,
-            server = ctx.guild.name,
+            server = 'No server',
             time = time())
     print(s)
     await post_log(ctx, s)    
@@ -659,7 +659,8 @@ async def npc(ctx):
             return
         elif(len(indices) == 1 and msg != ''):
             #found single
-            num = indices[0]
+            #+1 to fix index error
+            num = indices[0]+1
         
     question = questions[num-1]
     await sendmsg(ctx, strings['send_question'].format(
@@ -871,19 +872,19 @@ async def gib(ctx):
     if ('fun' in message):
         choice = random.choice(choices)
     elif('dad' in message):
-        choice = choice[4]
+        choice = choices[4]
     elif('catfact' in message):
-        choice = choice[1]
+        choice = choices[1]
     elif('catpic' in message):
-        choice = choice[0]
+        choice = choices[0]
     elif('cat' in message):
-        choice = choice[random.randint(1,2)]
+        choice = choices[random.randint(1,2)]
     elif('dogfact' in message):
-        choice = choice[3]
+        choice = choices[3]
     elif('dogpic' in message):
-        choice = choice[2]
+        choice = choices[2]
     elif('dog' in message):
-        choice = choice[random.randint(2,3)]
+        choice = choices[random.randint(2,3)]
     else:
         await sendmsg(ctx, strings['gib_what'])
         return
@@ -906,7 +907,7 @@ async def gib(ctx):
 
 @bot.command()
 async def hammer(ctx):
-    await sendmsg(ctx, 'Nothing to see here...')
+    await sendmsg(ctx, 'Can\'t touch this.')
     return
     msg = ctx.message.content[7:].strip()
     await sendmsg(ctx,(strings['banhammer'].format(
@@ -1028,12 +1029,21 @@ async def sendmsg(ctx, msg, pm_to_author=False):
                     time = time()) + "\n\n"
         else:
             await ctx.send(msg)
-            s = strings['sendmsg'].format(
-                    category = ctx.channel.category,
-                    channel = ctx.channel.mention,
-                    message = msg,
-                    server = ctx.guild.name,
-                    time = time()) + "\n\n"
+            try:
+                s = strings['sendmsg'].format(
+                        category = ctx.channel.category,
+                        channel = ctx.channel.mention,
+                        message = msg,
+                        server = ctx.guild.name,
+                        time = time()) + '\n\n'
+            except AttributeError:
+                s = strings['sendmsg'].format(
+                        category = 'DM Channel',
+                        channel = ctx.channel,
+                        message = msg,
+                        server = 'No Server',
+                        time = time()) + '\n\n'
+                
         print(s)
         await post_log(ctx, s, pm_to_author)
 
@@ -1083,9 +1093,12 @@ async def check_player(ctx):
         #If the user is a mod, it overrides needing the player role
         return True
 
+    is_player = False
+
     for role in roles:
         if ('player') in role.name.lower():
             is_player = True
+
 
     s = strings['isplayer'].format(author = author.name,
                                 result = str(is_player),
