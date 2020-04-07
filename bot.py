@@ -16,6 +16,7 @@ import json #reading moves.json
 import string #string.letters and string.digits
 import random #rolling
 import inspect
+import sqlite3
 
 #Bot initialisation:
 description = '''Manages characters, rolls, and moves
@@ -48,9 +49,11 @@ with open('moves.json', 'r') as f:
 b = datetime.datetime.now()
 print('Loading moves.json done in ' + str((b-a).microseconds) + 'ms!')
 
-print('Initializing bot...')
 a = datetime.datetime.now()
 
+
+
+print('Initializing bot...')
 messages = []
 """
 Layout of server message logging:
@@ -73,15 +76,68 @@ async def on_ready():
 
 @bot.listen()
 async def on_message(message):
+    log_msg(message)
+
+
+
+def log_msg(message):
+    #save message in database
     return
-    if('cinderbot' in message.author.name):
-        return
-    ch = message.channel
-    cat = ch.category
-    tup = (time(True), cat.name, ch.name, message.author.name,
-           len(message.content),get_occurence_list(message.content))
-    messages.append(tup)
-    
+
+    conn = sqlite3.connect('logs/messages.db')
+    """
+    Flow:
+
+    Check if DM
+        True
+            Check if user exists
+                True
+                    user_info = ...
+                False
+                    create user
+                    user_info = ...
+            Check if channel exists
+                True
+                    channel_info = ...
+                False
+                    create channel
+                    channel_info = ...
+            server_info = None/0
+            category_info = None/0
+        False
+            Check if server exists
+                True
+                    server_info = ...
+                False
+                    create_server
+                    server_info = ...
+            Check if user exists
+                True
+                    user_info = ...
+                False
+                    create user
+                    user_info = ...
+            Check if category_exists
+                True
+                    category_info = ...
+                False
+                    create category
+                    category_info = ...
+            Check if channel exists
+                True
+                    channel_info = ...
+                False
+                    create_channel
+                    channel_info = ...
+
+    create_message
+    """
+
+    comm.commit()
+    conn.close()
+
+
+
 @bot.event
 async def on_command(ctx):
     try:
@@ -102,7 +158,6 @@ async def on_command(ctx):
             time = time())
     print(s)
     await post_log(ctx, s)    
-    
     
 #-------------------Bot Commands ------------------------
 @bot.command()
@@ -1157,33 +1212,6 @@ async def on_main_server(ctx):
             invite = inv))
         return False
     return True
-    
-
-@tasks.loop(minutes = 1)
-async def printstats():
-    """Line Layout:
-    (time,cat,ch,author,length,occurences_array)
-    So as a line:
-    >time,cat,ch,author,length,occ
-    occ will be consisting a series of the following:
-    <digit>,<occurence<
-    This way the , can be used as a seperator and the file can be
-    analysed by excel easily
-
-    """
-    if(len(messages)<1):
-        return
-    print(time() + ' Posting Statistics ...')
-    s = ''
-    with open('statistics/' + time(True) + '.csv', 'w+') as f:
-        for el in messages:
-            s = el[0]+','+el[1]+','+el[2]+','+el[3]+','+el[4]
-            for occ in el[5]:
-                s += ','+occ[0]+','+occ[1]
-            f.write(s + '\n')
-            s = ''
-    print(time() + ' Statistics posted')
-    messages = ''
 
 # ------------- Move helper commands ------------------------
 def get_move_overview(move):
