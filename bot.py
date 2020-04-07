@@ -16,7 +16,7 @@ import json #reading moves.json
 import string #string.letters and string.digits
 import random #rolling
 import inspect
-import sqlite3
+from db_handler import *
 
 #Bot initialisation:
 description = '''Manages characters, rolls, and moves
@@ -51,6 +51,8 @@ print('Loading moves.json done in ' + str((b-a).microseconds) + 'ms!')
 
 a = datetime.datetime.now()
 
+db_handler = db_handler()
+
 
 
 print('Initializing bot...')
@@ -82,59 +84,10 @@ async def on_message(message):
 
 def log_msg(message):
     #save message in database
+    db_handler.log(strings['relative_database_path'], message)
     return
 
-    conn = sqlite3.connect('logs/messages.db')
-    """
-    Flow:
-
-    Check if DM
-        True
-            Check if user exists
-                True
-                    user_info = ...
-                False
-                    create user
-                    user_info = ...
-            Check if channel exists
-                True
-                    channel_info = ...
-                False
-                    create channel
-                    channel_info = ...
-            server_info = None/0
-            category_info = None/0
-        False
-            Check if server exists
-                True
-                    server_info = ...
-                False
-                    create_server
-                    server_info = ...
-            Check if user exists
-                True
-                    user_info = ...
-                False
-                    create user
-                    user_info = ...
-            Check if category_exists
-                True
-                    category_info = ...
-                False
-                    create category
-                    category_info = ...
-            Check if channel exists
-                True
-                    channel_info = ...
-                False
-                    create_channel
-                    channel_info = ...
-
-    create_message
-    """
-
-    comm.commit()
-    conn.close()
+    
 
 
 
@@ -659,6 +612,33 @@ async def movelist(ctx):
                 s += '\n'
 
     await sendmsg(ctx, s, pm_to_author = True)
+
+@bot.command()
+async def names(ctx):
+
+    lis = []
+    s = ''
+    if('boy' in ctx.message.content):
+        r = requests.get('http://names.drycodes.com/10?nameOptions=boy_names')
+        lis += r.json()
+        s = strings['names_boy']
+    elif('girl' in ctx.message.content):
+        r = requests.get('http://names.drycodes.com/10?nameOptions=girl_names')
+        lis += r.json()
+        s = strings['names_girl']
+    else:
+        r = requests.get('http://names.drycodes.com/5?nameOptions=boy_names')
+        lis += r.json()
+        r = requests.get('http://names.drycodes.com/5?nameOptions=girl_names')
+        lis += r.json()
+        s = strings['names_both']
+
+    s += '\n'
+    for el in lis:
+        s += el.replace('_', ' ') + '\n'
+
+    await sendmsg(ctx, s)
+        
 
 #Event Commands:
 #NPCs                
