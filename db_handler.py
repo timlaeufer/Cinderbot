@@ -188,17 +188,47 @@ class db_handler:
         except AttributeError:
             nick = message_obj.author.name
 
-        query = 'INSERT INTO {table} '
-        query += '(message_id,channel_id,user_id,user_nick,time,content) '
-        query += 'VALUES ({msg_id},{ch_id},{u_id},"{u_nick}","{time}","{content}");'
-        query = query.format(
-            table = self.STR_MESSAGE,
-            msg_id = message_obj.id,
-            ch_id = message_obj.channel.id,
-            u_id = message_obj.author.id,
-            u_nick = nick,
-            time = str(message_obj.created_at) + 'UTC',
-            content = message_obj.clean_content)
+
+        try:
+            query = 'INSERT INTO {table} '
+            query += '(message_id,channel_id,user_id,user_nick,time,content,server_id,category_id) '
+            query += 'VALUES ({msg_id},{ch_id},{u_id},"{u_nick}","{time}","{content}", {s_id},{cat_id});'
+            query = query.format(
+                table = self.STR_MESSAGE,
+                msg_id = message_obj.id,
+                ch_id = message_obj.channel.id,
+                u_id = message_obj.author.id,
+                u_nick = nick,
+                time = str(message_obj.created_at) + 'UTC',
+                content = message_obj.clean_content.replace('"', '/'),
+                s_id = message_obj.guild.id,
+                cat_id = message_obj.channel.category.id)
+        except AttributeError:
+            try:
+                query = 'INSERT INTO {table} '
+                query += '(message_id,channel_id,user_id,user_nick,time,content,server_id) '
+                query += 'VALUES ({msg_id},{ch_id},{u_id},"{u_nick}","{time}","{content}", {s_id});'
+                query = query.format(
+                    table = self.STR_MESSAGE,
+                    msg_id = message_obj.id,
+                    ch_id = message_obj.channel.id,
+                    u_id = message_obj.author.id,
+                    u_nick = nick,
+                    time = str(message_obj.created_at) + 'UTC',
+                    content = message_obj.clean_content.replace('"', '/'),
+                    s_id = message_obj.guild.id)
+            except AttributeError:
+                query = 'INSERT INTO {table} '
+                query += '(message_id,channel_id,user_id,user_nick,time,content) '
+                query += 'VALUES ({msg_id},{ch_id},{u_id},"{u_nick}","{time}","{content}");'
+                query = query.format(
+                    table = self.STR_MESSAGE,
+                    msg_id = message_obj.id,
+                    ch_id = message_obj.channel.id,
+                    u_id = message_obj.author.id,
+                    u_nick = nick,
+                    time = str(message_obj.created_at) + 'UTC',
+                    content = message_obj.clean_content.replace('"', '/'))
         cursor.execute(query)
         return cursor
             
