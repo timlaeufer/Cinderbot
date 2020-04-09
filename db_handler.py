@@ -90,6 +90,19 @@ class db_handler:
         conn.commit()
         conn.close()
 
+    def log_join(self, member_obj, amount_users):
+        conn = sqlite3.connect('logs/messages.db')
+        c = conn.cursor()
+
+        query = 'INSERT INTO join (join_id,amount_now) '
+        query += 'VALUES ({mem_id},{amount});'
+
+        c.execute(query.format(
+            mem_id = member_obj.id,
+            amount = amount_users))
+
+        conn.commit()
+        conn.close()
 
     def exists_in_db(self, cursor, table, element_id):
         # SELECT EXISTS(SELECT 1 FROM myTbl WHERE u_tag="tag");
@@ -231,7 +244,15 @@ class db_handler:
                     content = message_obj.clean_content.replace('"', '/'))
         cursor.execute(query)
         return cursor
-            
+
+
+    def fetch_sql(self, db, sql):
+        conn = sqlite3.connect(db)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        lis = cursor.execute(sql).fetchall()
+        conn.close()
+        return lis
 
 
         

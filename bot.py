@@ -76,6 +76,11 @@ async def on_ready():
     print('Bot is initialized after ' + str((b-a).microseconds) + 'ms!')
     #printstats.start()
 
+@bot.command()
+async def joined(ctx, member:discord.Member):
+    new_amount = len(ctx.guild.members)
+    db_handler.log_join(member, new_amount)
+
 @bot.listen()
 async def on_message(message):
     log_msg(message)
