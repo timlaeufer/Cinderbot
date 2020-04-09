@@ -58,7 +58,7 @@ with open('flags.txt', 'r') as f:
     flags = f.readlines()
 
 for i, f in enumerate(flags):
-    flags[i] = f.replace('\n', '').strip()
+    flags[i] = ' ' + f.replace('\n', '').strip()
 
 
 
@@ -92,18 +92,6 @@ async def joined(ctx, member:discord.Member):
 async def on_message(message):
     log_msg(message)
 
-    try:
-        if(not message.author.id == message.guild.me.id):
-            found_flags = []
-            for flag in flags:
-                if (flag.strip().lower() in str(message.content).lower()):
-                    found_flags.append(flag)
-
-            if(len(found_flags)>0):
-                await post_flag(found_flags, message)
-    except AttributeError:
-        pass
-
 
 
 def log_msg(message):
@@ -111,24 +99,6 @@ def log_msg(message):
             
     db_handler.log(strings['relative_database_path'], message)
     return
-
-async def post_flag(found_flags, message):
-    flag_channel = 697841220109729833
-    f_ch = bot.get_guild(679614550286663721).get_channel(flag_channel)
-
-    link = 'https://discordapp.com/channels/' + str(697841220109729833) + '/'
-    link += str(message.channel.id) + '/' + str(message.id)
-    try:
-        cat = message.channel.category.name
-    except AttributeError:
-        cat = 'None'
-    await f_ch.send(strings['flag_mention'].format(
-        author = str(message.author.nick) + '(' + str(message.author.id) + ')',
-        category = cat,
-        channel = message.channel.name,
-        flag = str(found_flags),
-        link = link,
-        msg = message.clean_content))
 
 
 
