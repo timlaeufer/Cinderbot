@@ -246,14 +246,12 @@ class db_handler:
         return cursor
 
 
-    def fetch_sql(self, db, sql):
+    def fetch_sql_rows(self, db, sql):
         conn = sqlite3.connect(db)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         lis = cursor.execute(sql).fetchall()
         conn.close()
         return lis
-
-
         
     

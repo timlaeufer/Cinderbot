@@ -625,6 +625,10 @@ async def movelist(ctx):
     await sendmsg(ctx, s, pm_to_author = True)
 
 @bot.command()
+async def name(ctx):
+    await names(ctx)
+
+@bot.command()
 async def names(ctx):
 
     lis = []
