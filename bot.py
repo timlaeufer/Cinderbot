@@ -92,6 +92,19 @@ async def joined(ctx, member:discord.Member):
 async def on_message(message):
     log_msg(message)
 
+@bot.listen()
+async def on_message_edit(before, after):
+    log_edit(before, after)
+
+def log_edit(before, after):
+    db_handler.log_edit(strings['relative_database_path'], before, after)
+
+@bot.listen()
+async def on_message_delete(message):
+    log_delete(message)
+
+def log_delete(message):
+    db_handler.log_delete(strings['relative_database_path'], message)
 
 
 def log_msg(message):

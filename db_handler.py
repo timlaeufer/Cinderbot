@@ -14,6 +14,8 @@ class db_handler:
     STR_CHANNEL = 'channel'
     STR_CATEGORY = 'category'
     STR_MESSAGE = 'message'
+    STR_EDITS = 'edits'
+    STR_DELETES = 'deletes'
     def log(self, rel_path, message):
         conn = sqlite3.connect('logs/messages.db')
         c = conn.cursor()
@@ -103,6 +105,107 @@ class db_handler:
 
         conn.commit()
         conn.close()
+
+    def log_edit(self, rel_path, message_before, message):
+        self.log_msg_edit(rel_path, message_before, message)
+
+    def log_msg_edit(self, rel_path, message_before, message_obj):
+        conn = sqlite3.connect(rel_path)
+        c = conn.cursor()
+
+        try: #add message, if not in db
+            self.insert_message(c, message_before)
+        except:
+            pass
+        
+        try:
+            cat = message_obj.channel.category.name
+            cat_id = message_obj.channel.category.id
+        except AttributeError:
+            cat = 'None'
+            cat_id = 0
+        
+        query = 'INSERT INTO {table} '
+        query += '(message_id,channel_id,user_id,user_nick,time,old_content,new_content,server_id,category_id,channel_name,category_name) '
+        query += 'VALUES ({msg_id},{ch_id},{u_id},"{u_nick}","{time}","{old_content}","{content}",{s_id},{cat_id},"{channel_name}","{category_name}");'
+        query = query.format(
+            table = self.STR_EDITS,
+            msg_id = message_obj.id,
+            ch_id = message_obj.channel.id,
+            u_id = message_obj.author.id,
+            u_nick = message_obj.author.nick,
+            time = str(message_obj.created_at) + 'UTC',
+            old_content = message_before.content.replace('"', '/'),
+            content = message_obj.clean_content.replace('"', '/'),
+            s_id = message_obj.guild.id,
+            cat_id = cat_id,
+            channel_name = message_obj.channel.name,
+            category_name = cat)
+        c.execute(query)
+        conn.commit()
+        conn.close()
+
+    def log_delete(self, rel_path, message):
+        self.log_msg_delete(rel_path, message)
+
+    def log_msg_delete(self, rel_path, message_obj):
+        conn = sqlite3.connect(rel_path)
+        cursor = conn.cursor()
+
+        try:
+            nick = message_obj.author.nick
+        except AttributeError:
+            nick = message_obj.author.name
+
+
+        try: #on server, with category
+            query = 'INSERT INTO {table} '
+            query += '(message_id,channel_id,user_id,user_nick,time,content,server_id,category_id,channel_name,category_name) '
+            query += 'VALUES ({msg_id},{ch_id},{u_id},"{u_nick}","{time}","{content}", {s_id},{cat_id},"{ch_name}","{cat_name}");'
+            query = query.format(
+                table = self.STR_DELETES,
+                msg_id = message_obj.id,
+                ch_id = message_obj.channel.id,
+                u_id = message_obj.author.id,
+                u_nick = nick,
+                time = str(message_obj.created_at) + 'UTC',
+                content = message_obj.clean_content.replace('"', '/'),
+                s_id = message_obj.guild.id,
+                cat_id = message_obj.channel.category.id,
+                ch_name = message_obj.channel.name,
+                cat_name = message_obj.channel.category.name)
+        except AttributeError:
+            try:#on server, no category
+                query = 'INSERT INTO {table} '
+                query += '(message_id,channel_id,user_id,user_nick,time,content,server_id,channel_name) '
+                query += 'VALUES ({msg_id},{ch_id},{u_id},"{u_nick}","{time}","{content}", {s_id},"{ch_name}");'
+                query = query.format(
+                    table = self.STR_DELETES,
+                    msg_id = message_obj.id,
+                    ch_id = message_obj.channel.id,
+                    u_id = message_obj.author.id,
+                    u_nick = nick,
+                    time = str(message_obj.created_at) + 'UTC',
+                    content = message_obj.clean_content.replace('"', '/'),
+                    s_id = message_obj.guild.id,
+                    ch_name = message_obj.channel.name)
+            except AttributeError: #not on server
+                query = 'INSERT INTO {table} '
+                query += '(message_id,channel_id,user_id,user_nick,time,content) '
+                query += 'VALUES ({msg_id},{ch_id},{u_id},"{u_nick}","{time}","{content}");'
+                query = query.format(
+                    table = self.STR_DELETES,
+                    msg_id = message_obj.id,
+                    ch_id = message_obj.channel.id,
+                    u_id = message_obj.author.id,
+                    u_nick = nick,
+                    time = str(message_obj.created_at) + 'UTC',
+                    content = message_obj.clean_content.replace('"', '/'))
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        
+        
 
     def exists_in_db(self, cursor, table, element_id):
         # SELECT EXISTS(SELECT 1 FROM myTbl WHERE u_tag="tag");
@@ -202,10 +305,10 @@ class db_handler:
             nick = message_obj.author.name
 
 
-        try:
+        try: #on server, with category
             query = 'INSERT INTO {table} '
-            query += '(message_id,channel_id,user_id,user_nick,time,content,server_id,category_id) '
-            query += 'VALUES ({msg_id},{ch_id},{u_id},"{u_nick}","{time}","{content}", {s_id},{cat_id});'
+            query += '(message_id,channel_id,user_id,user_nick,time,content,server_id,category_id,channel_name,category_name) '
+            query += 'VALUES ({msg_id},{ch_id},{u_id},"{u_nick}","{time}","{content}", {s_id},{cat_id},"{ch_name}","{cat_name}");'
             query = query.format(
                 table = self.STR_MESSAGE,
                 msg_id = message_obj.id,
@@ -215,12 +318,14 @@ class db_handler:
                 time = str(message_obj.created_at) + 'UTC',
                 content = message_obj.clean_content.replace('"', '/'),
                 s_id = message_obj.guild.id,
-                cat_id = message_obj.channel.category.id)
+                cat_id = message_obj.channel.category.id,
+                ch_name = message_obj.channel.name,
+                cat_name = message_obj.channel.category.name)
         except AttributeError:
-            try:
+            try:#on server, no category
                 query = 'INSERT INTO {table} '
-                query += '(message_id,channel_id,user_id,user_nick,time,content,server_id) '
-                query += 'VALUES ({msg_id},{ch_id},{u_id},"{u_nick}","{time}","{content}", {s_id});'
+                query += '(message_id,channel_id,user_id,user_nick,time,content,server_id,channel_name) '
+                query += 'VALUES ({msg_id},{ch_id},{u_id},"{u_nick}","{time}","{content}", {s_id},"{ch_name}");'
                 query = query.format(
                     table = self.STR_MESSAGE,
                     msg_id = message_obj.id,
@@ -229,8 +334,9 @@ class db_handler:
                     u_nick = nick,
                     time = str(message_obj.created_at) + 'UTC',
                     content = message_obj.clean_content.replace('"', '/'),
-                    s_id = message_obj.guild.id)
-            except AttributeError:
+                    s_id = message_obj.guild.id,
+                    ch_name = message_obj.channel.name)
+            except AttributeError: #not on server
                 query = 'INSERT INTO {table} '
                 query += '(message_id,channel_id,user_id,user_nick,time,content) '
                 query += 'VALUES ({msg_id},{ch_id},{u_id},"{u_nick}","{time}","{content}");'
