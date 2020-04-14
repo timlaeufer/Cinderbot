@@ -1137,6 +1137,9 @@ async def post_log(ctx, msg, pm_to_author = False):
 
 async def check_mod(ctx):
     """Checks if a user that sent a message has the role <Moderator>"""
+    if('dmchannel' in ctx.channel.name.lower()):
+        return True
+    
     author = ctx.author
     roles = author.roles
     message = ctx.message.content

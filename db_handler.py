@@ -124,7 +124,10 @@ class db_handler:
         except AttributeError:
             cat = 'None'
             cat_id = 0
-        
+        try:
+            auth_name = message_obj.author.nick
+        except AttributeError:
+            auth_name = message_obj.author.name
         query = 'INSERT INTO {table} '
         query += '(message_id,channel_id,user_id,user_nick,time,old_content,new_content,server_id,category_id,channel_name,category_name) '
         query += 'VALUES ({msg_id},{ch_id},{u_id},"{u_nick}","{time}","{old_content}","{content}",{s_id},{cat_id},"{channel_name}","{category_name}");'
@@ -133,7 +136,7 @@ class db_handler:
             msg_id = message_obj.id,
             ch_id = message_obj.channel.id,
             u_id = message_obj.author.id,
-            u_nick = message_obj.author.nick,
+            u_nick = auth_name,
             time = str(message_obj.created_at) + 'UTC',
             old_content = message_before.content.replace('"', '/'),
             content = message_obj.clean_content.replace('"', '/'),

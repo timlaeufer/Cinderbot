@@ -12,6 +12,9 @@ import string #string.letters and string.digits
 import sqlite3
 from os import listdir
 from os.path import isfile, join, getsize
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.dates as mdates
 
 """
 This class analyzes the databases with all messages and prints a .pdf
@@ -109,14 +112,14 @@ class Analyzer:
         td_last_x_days = datetime.timedelta(days = last_x_days)
         start = end - td_last_x_days
         
-        query = self.sqls['totel_message_counts_by_server_times'].format(
-            s_id = server_id,
-            end = get_time_as_db_string(end),
-            start = get_time_as_db_string(start))
+        query = self.sqls['get_serv_msg_by_range'].format(
+            serv_id = server_id,
+            end = self.get_time_as_db_string(end),
+            start = self.get_time_as_db_string(start))
         rows = self.get_sql_res(query)
         tups = self.count_msg_per_time(rows, time_step_in_min = time_step_in_min)
-        for tup in tups:
-            print(str(tup[0]) + '\t' + str(tup[1]))
+
+        return tups
 
     def get_time_as_db_string(self, time_obj):
         """Returns a time obj as a >YYYY-MM-DD HH:MM:SS.mmmmmmUTC< format obj"""
@@ -150,7 +153,7 @@ class Analyzer:
         else:
             minute = 0
         if(x.second):
-            second = str(x.second)
+            second = x.second
         else:
             second = 0
         if(x.microsecond):
@@ -174,9 +177,42 @@ class Analyzer:
         #returns tuple (time, msg_counted_from_last_time)
         
         lis = []
-        tup = ()
-        for row in rows:
-            print(row)
+        tup = []
+
+        start_time = rows[0]['time']
+        end_time = rows[-1]['time']
+
+
+        next_time = self.get_next_time(start_time, time_step_in_min, as_str = True)
+        lis = [(start_time, 0)]
+        tup = [next_time, 0]
+        
+        for i in range(len(rows)):
+            #if rows[i]['time'] >= next time: append tup to lis, start new tup
+            if(rows[i]['time'] >= next_time):
+                tup = (next_time, tup[1])
+                lis.append(tup)
+                next_time = self.get_next_time(
+                    next_time,
+                    time_step_in_min,
+                    as_str = True)
+                tup = [next_time, 0]
+            else:#if current row time < next_time, increment tup[1] by 1
+                tup[1] = tup[1] + 1
+        return lis
+
+    def get_next_time(self, time_str, time_step_in_min, as_str = False):
+        """Returns a time_str that is time_step_in_min minutes later in time"""
+
+        td = datetime.timedelta(minutes = time_step_in_min)
+        start_time = self.parse_time_from_string(time_str)
+        new_time = start_time + td
+
+        if(as_str):
+            return self.get_time_as_db_string(new_time)
+        else:
+            return new_time
+        
 
     def get_time(self, days_ago = 0, days_back = 7, date_x = None, as_string = False):
         """Get's the time x that's days_back days behind y, or returns date_x"""
@@ -250,8 +286,29 @@ class Analyzer:
                 microsecond = 0,
                 tzinfo = datetime.timezone.utc)
         return time
+
+    def plot_data(self, data, title = None, y_label = None, x_label = None):
+        """Plots a list of (x,y) tuples)"""
         
+        hours = mdates.HourLocator()
+        hours_fmt = mdates.DateFormatter('%H')
+        days = mdates.DayLocator()
+        days_fmt = mdates.DateFormatter('%d')
         
+        fig, ax = plt.subplots() #create the figure
+        x_vals = [self.parse_time_from_string(i[0]) for i in data] #time values
+        y_vals = [i[1] for i in data] #sum values
+
+        ax.set_xlabel(x_label)
+        ax.set_ylabel(y_label)
+        ax.set_title(title)
+        
+        ax.grid(True)
+        
+        for tup in data:
+            ax.plot(x_vals, y_vals)
+
+        plt.show()
         
 path = 'logs/'
 dbs = [f for f in listdir(path) if isfile(join(path, f)) and
@@ -266,5 +323,12 @@ if('.db' not in db):
     db = db + '.db'
 
 ana = Analyzer(path + 'sql_statements.ini', path + db)
-ana.get_time()
-ana.get_serv_activity()
+
+serv_id = 679614550286663721 #Lonesome Town = 695629497709494303
+time_step = 60
+last_x_days = 7
+
+tups = ana.get_serv_activity(time_step_in_min = time_step, last_x_days = 7, server_id = serv_id)
+ana.plot_data(tups, x_label = 'time in UTC',
+              y_label = 'amount of messages per ' + str(time_step) + ' min',
+              title = 'Messages the last ' + str(last_x_days) + ' days, server_id = ' + str(serv_id))
