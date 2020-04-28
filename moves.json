@@ -7,7 +7,7 @@
 			"keywords": ["turn", "turnon", "on", "turn on"],
 		"desc": "When you **turn someone on**, roll with *Hot*",
 		"success": "You gain a string on the target, and they choose a reaction from below: $$-*I give myself to you*,$-*I promise something I think you want*, or $*-I get embarrassed and act awkward*. $$*For rules on asexuality and non-attraction, turn to page 49.*",
-		"complication": "The target can either **give you a string on them**, or choose a reaction from below: $$-*I give myself to you*,$-*I promise something I think you want*, or $*I get embarrassed and act awkward*. $$*For rules on asexuality and non-attraction, turn to page 49.*"
+		"complication": "The target can either **give you a string on them**, or choose a reaction from below: $$-*I give myself to you*,$-*I promise something I think you want*, or $-*I get embarrassed and act awkward*. $$*For rules on asexuality and non-attraction, turn to page 49.*"
 		},
 		"Shut Someone Down":{
 			"raw": "Shut Someone Down",
@@ -15,7 +15,7 @@
 			"keywords": ["shut", "shutdown", "down", "shut down"],
 		"desc": "When you **shut someone down**, roll with *Cold*",
 		"success": "Choose one from below: $$-*They loose a string on you*,$-*If they have no strings on you gain one on them*,$-*They gain a Condition*, or $*-You take 1 forward.*",
-		"complication": "Choose one from below but you come across poorly, and they give you a Condition in return:$$-*They loose a string on your*,$-*If they have no strings on you gain one on them*,$-*They gain a Condition*, or $*-You take 1 forward.*"
+		"complication": "Choose one from below but you come across poorly, and they give you a Condition in return:$$-*They loose a string on you*,$-*If they have no strings on you gain one on them*,$-*They gain a Condition*, or $*-You take 1 forward.*"
 		},
 		"Keep Your Cool":{
 			"raw": "Keep Your Cool",

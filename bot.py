@@ -16,6 +16,7 @@ import json #reading moves.json
 import string #string.letters and string.digits
 import random #rolling
 import inspect
+import counter
 from db_handler import *
 
 #Bot initialisation:
@@ -60,10 +61,10 @@ with open('flags.txt', 'r') as f:
 for i, f in enumerate(flags):
     flags[i] = ' ' + f.replace('\n', '').strip()
 
+counter = counter.counter()
 
 
 print('Initializing bot...')
-messages = []
 """
 Layout of server message logging:
 Time§~§Category§~§Channel§~§User§~§Length§~§Occurences
@@ -76,6 +77,7 @@ so as a tuple:
 
 @bot.event
 async def on_ready():
+    """Lets Tim know the bot loaded properly"""
     print('Logged in as')
     print(bot.user.name)
     print(bot.user.id)
@@ -85,15 +87,23 @@ async def on_ready():
 
 @bot.command()
 async def joined(ctx, member:discord.Member):
-    new_amount = len(ctx.guild.members)
-    db_handler.log_join(member, new_amount)
+    """Triggered if someone joins the server"""
+    if(member and ctx.guild.id == 679614550286663721):
+        new_amount = len(ctx.guild.members)
+        db_handler.log_join(member, new_amount)
 
 @bot.listen()
 async def on_message(message):
+    """Triggered if a message is read by the bot"""
     log_msg(message)
+
+    if(message.author is not message.guild.me):
+        counter.add_message(message.created_at)
+
 
 @bot.listen()
 async def on_message_edit(before, after):
+    """Triggered if a message is edited"""
     log_edit(before, after)
 
 def log_edit(before, after):
@@ -101,6 +111,7 @@ def log_edit(before, after):
 
 @bot.listen()
 async def on_message_delete(message):
+    """Triggered if a message is deleted"""
     log_delete(message)
 
 def log_delete(message):
@@ -117,6 +128,8 @@ def log_msg(message):
 
 @bot.event
 async def on_command(ctx):
+    """Triggered if a command is called"""
+    counter.add_command()
     try:
         s = strings['called'].format(
             category = ctx.channel.category,
@@ -133,27 +146,27 @@ async def on_command(ctx):
             message = ctx.message.content,
             server = 'No server',
             time = time())
-    print(s)
-    await post_log(ctx, s)    
+    #print(s)
+    #await post_log(ctx, s)    
     
 #-------------------Bot Commands ------------------------
 @bot.command()
 async def testing(ctx):
+    """A small, mod-only testing command"""
     if(await check_mod(ctx)):
        await sendmsg(ctx, ctx.message.author.name)
     else:
         await sendmsg(ctx, '`You are not a moderator`')
-    print(ctx.message.content)
-
-    me = ctx.guild.me
 
 @bot.command()
 async def opengame(ctx):
-    """A command for mods to easily open games on the server"""
+    """A command for mods to easily open games on the server. .opengamehelp for more info!"""
     is_mod = await check_mod(ctx)
     author = ctx.author
     
-
+    if(ctx.guild.id != 679614550286663721):#main server
+        return
+    
     if(not is_mod):
         await sendmsg(ctx, strings['game_open_only_mods'])
         return
@@ -247,9 +260,12 @@ async def opengame(ctx):
 
 @bot.command()
 async def confirm(ctx):
-    """Confirms a game and opens it"""
+    """Confirms a game and opens it. .opengamehelp for more info!"""
     is_mod = await check_mod(ctx)
     author = ctx.author
+
+    if(ctx.guild.id != 679614550286663721):#main server
+        return
     
 
     if(not is_mod):
@@ -312,7 +328,7 @@ async def confirm(ctx):
         for id in member_ids:
             mem = serv.get_member(id)
             members.append(mem)
-            
+
     #create role
     new_role = await serv.create_role(
         name=game_name,
@@ -326,22 +342,67 @@ async def confirm(ctx):
     
     #set new permissions in overwrite dict
     overwrites = {}
+    bot_role = get_bot_role(ctx)
+    mod_role = get_mod_role(ctx)
+    mc_role = get_mc_role(ctx)
+    player_role = get_player_role(ctx)
+    everyone_role = get_everyone_role(ctx)
+    
     if (game_type == 'private'):
-        overwrites = {
-            serv.me: discord.PermissionOverwrite(view_channel=True),
-            get_mod_role(ctx): discord.PermissionOverwrite(view_channel=True),
-            get_bot_role(ctx): discord.PermissionOverwrite(view_channel=True),
-            new_role: discord.PermissionOverwrite(view_channel=True),
-            get_everyone_role(ctx): discord.PermissionOverwrite(view_channel=False)
-            }
+        overwrites[new_role] = discord.PermissionOverwrite(
+                send_messages = True, speak = True, view_channel = True)
+        overwrites[serv.me] = discord.PermissionOverwrite(
+                send_messages = True, view_channel = True)
+
+        #bots: send True, Speak True, View True
+        if(bot_role):
+            overwrites[bot_role] = discord.PermissionOverwrite(
+                send_messages = True, speak = True, view_channel = True)
+        #mods: send True, Speak True, View True
+        if(mod_role):
+            overwrites[mod_role] = discord.PermissionOverwrite(
+                send_messages = True, speak = True, view_channel = True)
+        #everyone: Send False, Speak False, View False
+        if(everyone_role):
+            overwrites[everyone:role] = discord.PermissionOverwrite(
+                send_messages = False, speak = False, view_channel = False)
+        #player: Send False, Speak False, View False
+        if(player_role):
+            overwrites[player_role] = discord.PermissionOverwrite(
+                send_messages = False, speak = False, view_channel = False)
+        #Player: Send False, Speak False, View False
+        if(mc_role):
+            overwrites[mc_role] = discord.PermissionOverwrite(
+                send_messages = False, speak = False, view_channel = False)
     else:
-        overwrites = {
-            serv.me: discord.PermissionOverwrite(send_messages=True),
-            get_bot_role(ctx): discord.PermissionOverwrite(send_messages=True),
-            get_everyone_role(ctx): discord.PermissionOverwrite(send_messages=False, speak=False),
-            get_mod_role(ctx): discord.PermissionOverwrite(send_messages=True, speak=True),
-            new_role: discord.PermissionOverwrite(send_messages=True, speak=True)
-            }
+        #public game
+        overwrites[new_role] = discord.PermissionOverwrite(
+                send_messages = True, speak = True, view_channel = True)
+        overwrites[serv.me] = discord.PermissionOverwrite(
+                send_messages = True, view_channel = True)
+
+        #bots: send True, Speak True, View True
+        if(bot_role):
+            overwrites[bot_role] = discord.PermissionOverwrite(
+                send_messages = True, speak = True, view_channel = True)
+        #mods: send True, Speak True, View True
+        if(mod_role):
+            overwrites[mod_role] = discord.PermissionOverwrite(
+                send_messages = True, speak = True, view_channel = True)
+        #everyone: Send False, Speak False, View False
+        if(everyone_role):
+            overwrites[everyone_role] = discord.PermissionOverwrite(
+                send_messages = False, speak = False, view_channel = False)
+        #player: Send False, Speak False, View True
+        if(player_role):
+            overwrites[player_role] = discord.PermissionOverwrite(
+                send_messages = False, speak = False, view_channel = True)
+        #Player: Send False, Speak False, View True
+        if(mc_role):
+            overwrites[mc_role] = discord.PermissionOverwrite(
+                send_messages = False, speak = False, view_channel = True)
+
+
     #create new category with proper overwrites
     new_cat = await serv.create_category(game_name, overwrites = overwrites)
     print(strings['category_created'].format(
@@ -362,7 +423,8 @@ async def confirm(ctx):
                 temp = await serv.create_text_channel(
                     channel[0],
                     category = new_cat,
-                    overwrites ={serv.default_role: discord.PermissionOverwrite(send_messages=True)})
+                    overwrites ={player_role: discord.PermissionOverwrite(send_messages=True),
+                                 mc_role: discord.PermissionOverwrite(send_messages=True)})
             else:#regular text channel
                 temp = await serv.create_text_channel(channel[0], category = new_cat)
             created_channels.append(temp)
@@ -453,6 +515,7 @@ async def skins(ctx):
 
 @bot.command()
 async def move(ctx):
+    """Standard move command. .movehelp for more info!"""
     author = ctx.author
     s = ''
     if(not await check_player(ctx)):
@@ -639,10 +702,12 @@ async def movelist(ctx):
 
 @bot.command()
 async def name(ctx):
+    """Gives boy or girl names from drycodes.com. Alias for .names"""
     await names(ctx)
 
 @bot.command()
 async def names(ctx):
+    """Gives boy or girl names. .names girl, or .names boy. From drycodes.com"""
 
     lis = []
     s = ''
@@ -754,7 +819,7 @@ async def npcs(ctx):
         
 @bot.command()
 async def addnpc(ctx):
-    """Adds a question"""
+    """Adds a npc question"""
 
     if(not await on_main_server(ctx)):
         return
@@ -1119,8 +1184,8 @@ async def sendmsg(ctx, msg, pm_to_author=False):
                         server = 'No Server',
                         time = time()) + '\n\n'
                 
-        print(s)
-        await post_log(ctx, s, pm_to_author)
+        #print(s)
+        #await post_log(ctx, s, pm_to_author)
 
 
 async def post_log(ctx, msg, pm_to_author = False):
@@ -1198,8 +1263,27 @@ def get_mod_role(ctx):
 
 def get_bot_role(ctx):
     for role in ctx.guild.roles:
-        if ('bot' in role.name.lower()):
+        if (role.id == 679620725526888581):
             return role
+    return None
+
+def get_player_role(ctx):
+    for role in ctx.guild.roles:
+        if(role.id == 679618147384295444):
+            return role
+    return None
+
+def get_mc_role(ctx):
+    for role in ctx.guild.roles:
+        if(role.id == 679618972441772053):
+            return role
+    return None
+
+def get_support_role(ctx):
+    for role in ctx.guild.roles:
+        if(role.id == 704767301043355790):
+            return role
+    return None
 
 def get_everyone_role(ctx):
     return ctx.guild.default_role

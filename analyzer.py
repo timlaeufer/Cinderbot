@@ -56,7 +56,7 @@ class Analyzer:
     database = ''
     handler = None
 
-    def __init__(self, ini, database):
+    def __init__(self, ini = "logs/sql_statements.ini", database = "messages"):
         #Read bot.ini
         config = configparser.ConfigParser()
         config.read(ini)
@@ -309,7 +309,9 @@ class Analyzer:
             ax.plot(x_vals, y_vals)
 
         plt.show()
+
         
+
 path = 'logs/'
 dbs = [f for f in listdir(path) if isfile(join(path, f)) and
              '.db' in f]
@@ -325,8 +327,14 @@ if('.db' not in db):
 ana = Analyzer(path + 'sql_statements.ini', path + db)
 
 serv_id = 679614550286663721 #Lonesome Town = 695629497709494303
-time_step = 60
-last_x_days = 7
+
+time_step = int(input("Which time step in minutes?"))
+if(time_step < 15):
+    time_step = 15
+
+last_x_days = int(input("How many days from now?"))
+if(last_x_days < 1):
+    last_x_days = 1
 
 tups = ana.get_serv_activity(time_step_in_min = time_step, last_x_days = 7, server_id = serv_id)
 ana.plot_data(tups, x_label = 'time in UTC',
