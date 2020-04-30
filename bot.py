@@ -18,59 +18,41 @@ import random #rolling
 import inspect
 import counter
 from db_handler import *
+import fun_commands
 
 #Bot initialisation:
+
+#Bot initialisation: 
 description = '''Manages characters, rolls, and moves
 for the Monstehearts 2 Discord Server of Timmitim#2579.'''
 bot = commands.Bot(command_prefix='.', description=description)
 
-#Read bot.ini
-print('Loading bot.ini ....')
+print('Initializing bot...')
 a = datetime.datetime.now()
+description = '''Manages characters, rolls, and moves
+for the Monstehearts 2 Discord Server of Timmitim#2579.'''
+
+#Read bot.ini
 config = configparser.ConfigParser()
 config.read('bot.ini')
-b = datetime.datetime.now()
-print('bot.ini loaded! in ' + str((b-a).microseconds) + 'ms!')
+print('bot.ini loaded.')
 
 #Convert config to simple dict for ease of use:
-print('Converting bot.ini to dict .... ')
-a = datetime.datetime.now()
 strings = {}
 for section in config.sections():
     for tup in config.items(section):
         strings.update({tup[0]: tup[1]})
 b = datetime.datetime.now()
-print('Done converting dot.ini in ' + str((b-a).microseconds) + 'ms!')
+print('\tbot.ini integrated in bot.')
 
-        
-print('Loading moves.json ...')
-a = datetime.datetime.now()
 with open('moves.json', 'r') as f:
     dic = json.load(f)
-b = datetime.datetime.now()
-print('Loading moves.json done in ' + str((b-a).microseconds) + 'ms!')
+print('Moves loaded.')
 
-a = datetime.datetime.now()
 
 db_handler = db_handler()
 
-flags = []
-with open('flags.txt', 'r') as f:
-    flags = f.readlines()
-
-for i, f in enumerate(flags):
-    flags[i] = ' ' + f.replace('\n', '').strip()
-
 counter = counter.counter()
-
-
-print('Initializing bot...')
-"""
-Layout of server message logging:
-Time§~§Category§~§Channel§~§User§~§Length§~§Occurences
-so as a tuple:
-(time,cat,ch,author,length,occurences_array)
-"""
 
 
 #--------------Events ------------------
@@ -78,11 +60,11 @@ so as a tuple:
 @bot.event
 async def on_ready():
     """Lets Tim know the bot loaded properly"""
-    print('Logged in as')
-    print(bot.user.name)
-    print(bot.user.id)
+    
     b = datetime.datetime.now()
-    print('Bot is initialized after ' + str((b-a).microseconds) + 'ms!')
+    s = 'Bot is initialized after ' + str(str((b-a).seconds))
+    s += '.' +  str((b-a).microseconds)[3:] + 's.'
+    print(s)
     #printstats.start()
 
 @bot.command()
@@ -120,7 +102,7 @@ def log_delete(message):
 
 def log_msg(message):
     #save message in database
-            
+
     db_handler.log(strings['relative_database_path'], message)
     return
 
@@ -147,8 +129,8 @@ async def on_command(ctx):
             server = 'No server',
             time = time())
     #print(s)
-    #await post_log(ctx, s)    
-    
+    #await post_log(ctx, s)
+
 #-------------------Bot Commands ------------------------
 @bot.command()
 async def testing(ctx):
@@ -163,10 +145,10 @@ async def opengame(ctx):
     """A command for mods to easily open games on the server. .opengamehelp for more info!"""
     is_mod = await check_mod(ctx)
     author = ctx.author
-    
+
     if(ctx.guild.id != 679614550286663721):#main server
         return
-    
+
     if(not is_mod):
         await sendmsg(ctx, strings['game_open_only_mods'])
         return
@@ -174,9 +156,9 @@ async def opengame(ctx):
     channel_tuples = []
     #split message
     args = ctx.message.content.split()
-    
+
     gametype = 0 #0 is for private, 1 is for public
-    
+
     try:
         #check if the second position is 'private' or 'public'
         if(args[1] == 'private'):
@@ -197,16 +179,16 @@ async def opengame(ctx):
             return
         game_name = args[2]
 
-        
+
     except IndexError:
         await sendmsg(ctx, strings['og_not_enough_args'])
         return
-    
-    
+
+
     del args[0] #command call
     del args[0] #gametype (priv/pub)
     del args[0] #gamename
-    
+
     #get mentioned users for easy role assignment
     mentioned_users = ctx.message.mentions
 
@@ -243,7 +225,7 @@ async def opengame(ctx):
     s += strings['og_game_waiting_for_confirmation_1'].format(
         gamename = game_name,
         gametype = game_type)
-    s += '\n' 
+    s += '\n'
 
     for tup in tups:
         s += strings['summary_channel'].format(type = tup[1],
@@ -266,7 +248,7 @@ async def confirm(ctx):
 
     if(ctx.guild.id != 679614550286663721):#main server
         return
-    
+
 
     if(not is_mod):
         await sendmsg(ctx, strings['game_confirm_only_mods'])
@@ -307,13 +289,13 @@ async def confirm(ctx):
     <number>:member
     L
     """
-    
+
     data = lines[3:] #gets only the channels and members
     game_type = lines[2][:-1]
     channels = []
     member_ids = []
     members = []
-    
+
     #parse members and channels
     #tuple: (name:type\n). the \n has to be considered
     for dat in data:
@@ -337,9 +319,9 @@ async def confirm(ctx):
         author = author,
         rolename = game_name,
         time = time()))
-    
 
-    
+
+
     #set new permissions in overwrite dict
     overwrites = {}
     bot_role = get_bot_role(ctx)
@@ -347,7 +329,7 @@ async def confirm(ctx):
     mc_role = get_mc_role(ctx)
     player_role = get_player_role(ctx)
     everyone_role = get_everyone_role(ctx)
-    
+
     if (game_type == 'private'):
         overwrites[new_role] = discord.PermissionOverwrite(
                 send_messages = True, speak = True, view_channel = True)
@@ -411,7 +393,7 @@ async def confirm(ctx):
         time = time()))
 
     created_channels = []
-    
+
 
     #create new channels
     for channel in channels:
@@ -433,7 +415,7 @@ async def confirm(ctx):
                 channelname = channel[1],
                 categoryname = game_name,
                 time = time()))
-            
+
 
     #assign roles
     if(len(members) > 0):
@@ -442,7 +424,7 @@ async def confirm(ctx):
 
     shutil.move('waiting_for_confirmation/' + game_name + '.txt'
                 , 'confirmed/' + game_name + time(True) +'_' + str(author) + '.txt')
-    
+
 
     #Tell people what you did:
     s = strings['og_created_info'].format(
@@ -454,7 +436,7 @@ async def confirm(ctx):
         s += strings['og_channel_created'].format(channelname = channel.mention)
         s += '\n'
 
-    if(len(members) > 0):         
+    if(len(members) > 0):
         s += strings['og_members_assigned_info'].format(role_mention = new_role.mention)
         s += '\n'
         for member in members:
@@ -462,6 +444,9 @@ async def confirm(ctx):
 
     await sendmsg(ctx, s)
 
+
+
+#------- MOVES AND SKIN COMMANDS --------------
 @bot.command()
 async def skin(ctx):
     """Lists all moves a skin has. Alias for moves(ctx)"""
@@ -496,7 +481,7 @@ async def moves(ctx):
             s += '\tSkin: ' + skin + '\n'
 
     ret =strings['skin_not_found'].format(searched = skin_name) + '\n' + s
-            
+
     await sendmsg(ctx, ret)
 
 @bot.command()
@@ -524,10 +509,10 @@ async def move(ctx):
 
     numeric = None
 
-    
+
 
     message = ctx.message.content[6:] #removes '.move ' from the message
-    
+
     """
     Check all chars if they're a numeric.
     If so, it takes the numeric and saves it
@@ -539,10 +524,10 @@ async def move(ctx):
             else:
                 numeric = + int(char)
             break
-        
+
     replace = string.punctuation + string.digits
     #No punctuation in the command, numeric is already checked.
-    
+
 
     #delete all punctuation and digits, except whitespaces
     for element in replace:
@@ -592,7 +577,7 @@ async def move(ctx):
     raw_string = ''
     for element in data:
         raw_string += element + ' '
-        
+
     raw_string = raw_string[:-1]
     candidates = get_move(raw_string)
     if(len(candidates) == 1): #If match is found by whole phrase
@@ -643,10 +628,9 @@ async def move(ctx):
                 raw = raw_string,
                 comm = ctx.message.content))
             return
-        
+
     if(numeric is not None): #If there is a numeric in it
         #check if move is actually one to roll for
-        print("has numeric!")
         if(is_roll_move(move)):
             await sendmsg(ctx, strings['move_rolled'].format(
                 mention = ctx.author.mention,
@@ -679,10 +663,10 @@ async def move(ctx):
                     mod = numeric,
                     res = result,
                     event = move['success']).replace('$', '\n'))
-            
+
         else:
             await sendmsg(ctx, get_move_overview(move))
-        
+
     else: #If there is no numeric in the command
         await sendmsg(ctx, get_move_overview(move))
 
@@ -731,10 +715,10 @@ async def names(ctx):
         s += el.replace('_', ' ') + '\n'
 
     await sendmsg(ctx, s)
-        
+
 
 #Event Commands:
-#NPCs                
+#NPCs
 @bot.command()
 async def npc(ctx):
     """Draws a random NPC question"""
@@ -789,7 +773,7 @@ async def npc(ctx):
             #found single
             #+1 to fix index error
             num = indices[0]+1
-        
+
     question = questions[num-1]
     await sendmsg(ctx, strings['send_question'].format(
         question = question,
@@ -816,7 +800,7 @@ async def npcs(ctx):
             s = ''
         """
     await sendmsg(ctx, s, pm_to_author = True)
-        
+
 @bot.command()
 async def addnpc(ctx):
     """Adds a npc question"""
@@ -831,7 +815,7 @@ async def addnpc(ctx):
         await sendmsg(ctx, strings['only_mods_add_questions'].format(
             mention = author.mention))
         return
-    
+
     with open('npcquestions.questions', 'r') as f:
         questions = f.readlines()
     num = len(questions) + 1
@@ -853,7 +837,7 @@ async def delnpc(ctx):
 
     is_mod = await check_mod(ctx)
     author = ctx.author
-    
+
 
     if(not is_mod):
         await sendmsg(ctx, strings['only_mods_add_questions'].format(
@@ -883,7 +867,7 @@ async def delnpc(ctx):
         s = strings['del_argument_not_readable']
 
     await sendmsg(ctx, s)
-    
+
 #Locations:
 @bot.command()
 async def location(ctx):
@@ -924,22 +908,22 @@ async def locations(ctx):
         """
 
     await sendmsg(ctx, s, pm_to_author = True)
-    
+
 @bot.command()
 async def addlocation(ctx):
     """Adds a question"""
     if(not await on_main_server(ctx)):
         return
-    
+
     is_mod = await check_mod(ctx)
     author = ctx.author
-    
+
 
     if(not is_mod):
         await sendmsg(ctx, strings['only_mods_add_questions'].format(
             mention = author.mention))
         return
-    
+
     with open('locationquestions.questions', 'r') as f:
         questions = f.readlines()
     num = len(questions)+1
@@ -961,7 +945,7 @@ async def dellocation(ctx):
 
     is_mod = await check_mod(ctx)
     author = ctx.author
-    
+
 
     if(not is_mod):
         await sendmsg(ctx, strings['only_mods_add_questions'].format(
@@ -991,128 +975,6 @@ async def dellocation(ctx):
         s = strings['del_argument_not_readable']
 
     await sendmsg(ctx, s)
-
-#Fun Commands
-@bot.command()
-async def gib(ctx):
-    """Gib fun please"""
-    choices = []
-    choices.append('Cat picture') #0
-    choices.append('Cat fact') #1
-    choices.append('Dog picture') #2
-    choices.append('Dog fact')#3
-    choices.append('Dad joke')#4
-
-    choice = 0
-    
-    if(not await check_player(ctx)):
-        await sendmsg(ctx, strings['fun_only_players'])
-        return
-    message = ctx.message.content
-    if ('fun' in message):
-        choice = random.choice(choices)
-    elif('dad' in message):
-        choice = choices[4]
-    elif('catfact' in message):
-        choice = choices[1]
-    elif('catpic' in message):
-        choice = choices[0]
-    elif('cat' in message):
-        choice = choices[random.randint(1,2)]
-    elif('dogfact' in message):
-        choice = choices[3]
-    elif('dogpic' in message):
-        choice = choices[2]
-    elif('dog' in message):
-        choice = choices[random.randint(2,3)]
-    else:
-        await sendmsg(ctx, strings['gib_what'])
-        return
-
-    await sendmsg(ctx, strings['gib'].format(
-            mention = ctx.author.mention,
-            thing = choice))
-    
-        
-    if(choice == choices[0]):
-        await catpic(ctx)
-    if(choice == choices[1]):
-        await catfact(ctx)
-    if(choice == choices[2]):
-        await dogpic(ctx)
-    if(choice == choices[3]):
-        await dogfact(ctx)
-    if(choice == choices[4]):
-        await dadjoke(ctx)
-
-@bot.command()
-async def hammer(ctx):
-    await sendmsg(ctx, 'Can\'t touch this.')
-    return
-    msg = ctx.message.content[7:].strip()
-    await sendmsg(ctx,(strings['banhammer'].format(
-                      name = msg.replace('@',''))))
-    
-@bot.command()
-async def dadjoke(ctx):
-    headers = {'Accept':'text/plain'}
-    r = requests.get('https://icanhazdadjoke.com/', headers = headers)
-    await sendmsg(ctx, r.text)
-
-@bot.command()
-async def daddyjoke(ctx):
-    await sendmsg(ctx, 'No. Try `.dadjoke`.')
-
-@bot.command()
-async def dad(ctx):
-    await dadjoke(ctx)
-
-@bot.command()
-async def cat(ctx):
-    await catpic(ctx)
-
-@bot.command()
-async def catpic(ctx):
-    if(not await check_player(ctx)):
-        sendmsg(ctx, strings['fun_only_players'])
-        return
-    r = requests.get('http://aws.random.cat/meow')
-    j = r.json()
-    await sendmsg(ctx, j['file'])
-
-@bot.command()
-async def catfact(ctx):
-    if(not await check_player(ctx)):
-        sendmsg(ctx, strings['fun_only_players'])
-        return
-    r = requests.get('https://cat-fact.herokuapp.com/facts/random')
-    j = r.json()
-    await sendmsg(ctx, j['text']) 
-
-@bot.command()
-async def dog(ctx):
-    await dogpic(ctx)
-
-@bot.command()
-async def dogpic(ctx):
-    """Sends a random dog pic."""
-    if(not await check_player(ctx)):
-        sendmsg(ctx, strings['fun_only_players'])
-        return
-    r = requests.get('https://dog.ceo/api/breeds/image/random')
-    j = r.json()
-    await sendmsg(ctx, j['message'])
-
-@bot.command()
-async def dogfact(ctx):
-    """Sends a random dog fact."""
-    if(not await check_player(ctx)):
-        sendmsg(ctx, strings['fun_only_players'])
-        return
-    r = requests.get('http://dog-api.kinduff.com/api/facts?number=1')
-    j = r.json()
-    await sendmsg(ctx, j['facts'][0])
-
 #on_command and help functions
 @bot.command()
 async def helpme(ctx):
@@ -1142,7 +1004,7 @@ async def sendmsg(ctx, msg, pm_to_author=False):
         #all lines
         lines = [s for s in msg.split('\n')]
         cur_length = 0
-        
+
         for line in lines:
             section += line + '\n'
             cur_length += len(line)
@@ -1183,7 +1045,7 @@ async def sendmsg(ctx, msg, pm_to_author=False):
                         message = msg,
                         server = 'No Server',
                         time = time()) + '\n\n'
-                
+
         #print(s)
         #await post_log(ctx, s, pm_to_author)
 
@@ -1196,20 +1058,20 @@ async def post_log(ctx, msg, pm_to_author = False):
     log_ch = serv.get_channel(693116058575306795)
 
     ch = log_ch
-    
+
     await ch.send(msg.replace('@', 'at'))
-    
+
 
 async def check_mod(ctx):
     """Checks if a user that sent a message has the role <Moderator>"""
     if('dmchannel' in ctx.channel.name.lower()):
         return True
-    
+
     author = ctx.author
     roles = author.roles
     message = ctx.message.content
     mod_role = get_mod_role(ctx) #ID for mod = 679618112122912887
-    
+
     is_mod = False
     if(mod_role in roles):
         is_mod = True
@@ -1223,7 +1085,7 @@ async def check_mod(ctx):
                                 category = ctx.channel.category,
                                 server = ctx.guild.name + str(ctx.guild.id),
                                 time = time()) + "\n"
-    print(s)
+    #print(s)
     return is_mod
 
 async def check_player(ctx):
@@ -1250,9 +1112,9 @@ async def check_player(ctx):
                                 category = ctx.channel.category,
                                 server = ctx.guild.name + str(ctx.guild.id),
                                 time = time()) + "\n"
-    print(s)
+    #print(s)
     return is_player
-    
+
 def get_admin(ctx):
     return bot.get_user(314135917604503553)
 
@@ -1297,7 +1159,7 @@ async def on_main_server(ctx):
         await sendmsg(ctx, strings['func_only_on_main_server'].format(
                 invite = inv))
         return False
-    
+
     if(ctx.guild.id != 679614550286663721): #if not on main server
         g_id = 679614550286663721
         ch_id = 679620045256523776
@@ -1355,7 +1217,7 @@ def get_move(keyword_or_name):
 
 def get_skin_by_name(search_move, only_name = False):
     """Returns the skin dict when given a move name"""
-    
+
     for src in dic:
         for skin in dic[src]:
             for move in dic[src][skin]:
@@ -1386,19 +1248,7 @@ def remove_dupes(lis):
         if(element not in new_list):
             new_list.append(lis[i])
     return new_list
-
-def get_occurence_list(message_content):
-    """returns a list of tuples that show the symbol occurences"""
-    #tup = (<digit>, <amount of occurences>)
-    digs = string.digits + string.ascii_lowercase
-    lis = []
-    for element in digs:
-        tup = (element, message_content.count(element))
-        lis.append(tup)
-    return lis
-        
     
-
 def time(simple=False):
     if(simple):
         return str(datetime.datetime.now().strftime('%d-%m-%Y--%H_%M_%S'))
@@ -1409,7 +1259,10 @@ def is_mention(arg):
         return True
     else:
         return False
-    
 
+print('\nStarting bot...')
+
+print('\tLoading cogs ....')
+bot.add_cog(fun_commands.Fun_commands(bot))
 
 bot.run(read_token())

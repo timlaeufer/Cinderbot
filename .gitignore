@@ -4,3 +4,4 @@ __pycache__/constants.cpython-38.pyc
 *.pyc
 *.txt
 *.db
+*.csv

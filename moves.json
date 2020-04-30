@@ -14,7 +14,7 @@
 			"name": "Shut Someone Down",
 			"keywords": ["shut", "shutdown", "down", "shut down"],
 		"desc": "When you **shut someone down**, roll with *Cold*",
-		"success": "Choose one from below: $$-*They loose a string on you*,$-*If they have no strings on you gain one on them*,$-*They gain a Condition*, or $*-You take 1 forward.*",
+		"success": "Choose one from below: $$-*They lose a string on you*,$-*If they have no strings on you gain one on them*,$-*They gain a Condition*, or $*-You take 1 forward.*",
 		"complication": "Choose one from below but you come across poorly, and they give you a Condition in return:$$-*They loose a string on you*,$-*If they have no strings on you gain one on them*,$-*They gain a Condition*, or $*-You take 1 forward.*"
 		},
 		"Keep Your Cool":{

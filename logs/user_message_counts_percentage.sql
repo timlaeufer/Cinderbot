@@ -8,5 +8,6 @@ SELECT
 	INNER JOIN category on channel.category_id = category.category_id
 	INNER JOIN server on category.server_id = server.server_id
 	WHERE server.server_id = 679614550286663721
+		and message.server_id = 679614550286663721
 	GROUP BY message.user_id
 	ORDER BY amount desc
