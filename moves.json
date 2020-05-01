@@ -85,574 +85,752 @@
 				"keywords": ["conditions"],
 				"desc": "Gangs add +1 to your rolls and harm as applicable "
 			}
-		},
-		"MC":{ 
-			"Preparing to Play":{
-				"raw": "Preparing to Play",
-				"name": "Preparing to Play",
-				"keywords": ["play", "preparing"],
-				"desc": "As the MC, teaching the game often falls to you. This is an outline for how to teach the game, with page references to help you look up anything you want guidance on. Feel free to modify this process and teach in whatever way works best for you:$$-*Gather Supplies (58)*,$-*Explain Premise and Roles (59)*,$-*Introduce Safety Tools (60)*, $-*Option: Small Town (60)*,$-*Pick Skins (61)*,$-*Choose Identities (62)*,$-*Establish Setting (63)*,,$-*Discuss Roleplaying (65)*,,$-*Discuss Moves and Strings (66)*,,$-*Choose Stats and Moves (67)*,,$-*Teach Reactively (68)*,$-*Establish Backstories (69)*$*Set Up Seating Chart (70)*,and most importantly $*-Start Playing!*"  
-		},
-		"The First Scene":{
-			"raw": "The First Scene",
-			"name": "The First Scene",
-			"keywords": ["first scene"],
-			"desc": "Start the first scene in homeroom, and use your principles to help uncover tensions.If you’re antsy to get the story rolling, here are three reliable options:$$-*Stage a disappearance*,$-*Plan a party*, $*-Demand a fight.!*"  
-		},
-		"Principles":{
-			"raw": "Gaze Into the Abyss",
-			"name": "Principles",
-			"keywords": ["principles"],
-		"desc": "$$-*Embrace melodrama.*,$-*Address yourself to the characters,not the players.*,$-*Make monsters seem human, and vice versa.*, $-*Make labels matter.*,$-*Give everyone a messy life.*,$-*Find the catch.*,$-*Ask provocative questions and build on the answers.*,$-*Be a fan of the main characters.*,$-*Treat side characters like stolen cars.*,$-*Give side characters simple,divisive motivations.*,$-*Sometimes, disclaim decision making.*"
-},
-		"Reactions":{
-			"raw": "Reactions",
-			"name": "Reactions",
-			"keywords": ["reactions"],
-			"desc": "$$-*Put them together.*,$-*Separate them.*,$-*Tell them the possible consequences and ask.*, $-*Inflict harm (as established).*,$-*Enact drastic measures.*,$-*Turn their move back on them.*,$-*Leap to the worst possible conclusion.*,$-*Expose a dangerous secret to the wrong person.*,$-*Take a String on someone*,,$-*Herald the abyss.*,$-*Trigger their Darkest Self.*"
-},
-		"Side Character Strings":{
-			"raw": "Side Character Strings",
-			"name": "Side Character Strings",
-			"keywords": ["npc", "npcstring", "npc strings","side character strings"],
-		"desc": "You can spend a side character’s Strings on a main character in four ways:$$-*Offer them an experience point to do what you want.*,$-*Place a Condition on them.*, $-*Add 1 to the harm you’re dealing them., $-*Ambush them with a Reaction, setting it up and knocking it down in one fell swoop.*" 
+			},
+			"MC":{ 
+				"Preparing to Play":{
+					"raw": "Preparing to Play",
+					"name": "Preparing to Play",
+					"keywords": ["play", "preparing"],
+					"desc": "As the MC, teaching the game often falls to you. This is an outline for how to teach the game, with page references to help you look up anything you want guidance on. Feel free to modify this process and teach in whatever way works best for you:$$-*Gather Supplies (58)*,$-*Explain Premise and Roles (59)*,$-*Introduce Safety Tools (60)*, $-*Option: Small Town (60)*,$-*Pick Skins (61)*,$-*Choose Identities (62)*,$-*Establish Setting (63)*,,$-*Discuss Roleplaying (65)*,,$-*Discuss Moves and Strings (66)*,,$-*Choose Stats and Moves (67)*,,$-*Teach Reactively (68)*,$-*Establish Backstories (69)*$*Set Up Seating Chart (70)*,and most importantly $*-Start Playing!*"  
+			},
+			"The First Scene":{
+				"raw": "The First Scene",
+				"name": "The First Scene",
+				"keywords": ["first scene"],
+				"desc": "Start the first scene in homeroom, and use your principles to help uncover tensions.If you’re antsy to get the story rolling, here are three reliable options:$$-*Stage a disappearance*,$-*Plan a party*, $*-Demand a fight.!*"  
+			},
+			"Principles":{
+				"raw": "Gaze Into the Abyss",
+				"name": "Principles",
+				"keywords": ["principles"],
+				"desc": "$$-*Embrace melodrama.*,$-*Address yourself to the characters,not the players.*,$-*Make monsters seem human, and vice versa.*, $-*Make labels matter.*,$-*Give everyone a messy life.*,$-*Find the catch.*,$-*Ask provocative questions and build on the answers.*,$-*Be a fan of the main characters.*,$-*Treat side characters like stolen cars.*,$-*Give side characters simple,divisive motivations.*,$-*Sometimes, disclaim decision making.*"
+			},
+			"Reactions":{
+				"raw": "Reactions",
+				"name": "Reactions",
+				"keywords": ["reactions"],
+				"desc": "$$-*Put them together.*,$-*Separate them.*,$-*Tell them the possible consequences and ask.*, $-*Inflict harm (as established).*,$-*Enact drastic measures.*,$-*Turn their move back on them.*,$-*Leap to the worst possible conclusion.*,$-*Expose a dangerous secret to the wrong person.*,$-*Take a String on someone*,,$-*Herald the abyss.*,$-*Trigger their Darkest Self.*"
+			},
+			"Side Character Strings":{
+				"raw": "Side Character Strings",
+				"name": "Side Character Strings",
+				"keywords": ["npc", "npcstring", "npc strings","side character strings"],
+				"desc": "You can spend a side character’s Strings on a main character in four ways:$$-*Offer them an experience point to do what you want.*,$-*Place a Condition on them.*, $-*Add 1 to the harm you’re dealing them., $-*Ambush them with a Reaction, setting it up and knocking it down in one fell swoop.*" 
+			},
+			"Villains":{
+				"raw": "Villains",
+				"name": "Villains",
+				"keywords": ["villains"],
+				"desc": "If a villain becomes meaningfully involved in the story, you can do the following two things to give yourself a bit of extra structure and inspiration for playing them: $$-*Write a custom Principle for playing them.*, or $-*Write a custom Reaction for them.*"
+			}
+			},
+			"Fae":{
+				"Faery Contract":{
+					"raw" : "Faery Contract",
+					"name": "Faery Contract (Fae)",
+					"keywords": ["contract"],
+					"desc": "If someone breaks a promise or contract made to you, **take a String on them**. When spending a String to even out the score and get justice on a broken promise$ add these options to *Pulling Strings*: $`-they fuck up something simple at a crucial moment, **suffering 1 Harm** if appropriate` $`-add 2 to your roll on an act of vengeance.`"
+				},
+			"Unashamed":{
+				"raw" : "Unashamed",
+				"name": "Unashamed (Fae)",
+				"keywords": ["unashamed"],
+				"desc": "You can give someone a String on you to add **3** to your attempt to *turn them on*."
+			},
+			"The Wild Hunt":{
+				"raw": "The Wild Hunt",
+				"name": "The Wild Hunt (Fae)",
+				"keywords": ["wild", "hunt"],
+				"desc": "When you draw upon you *most feral manner*, echoing the lithe movements of a cat or the coracity of a wolf, **add 1** to your roll to *Turn Someone On*"
+			},
+			"Lure":{
+				"raw" : "Lure",
+				"name": "Lure (Fae)",
+				"keywords": ["lure"],
+				"desc": "Whenever someone makes a promise to you, they mark experience. $Whenever someone breaks a promise to you, you mark experience."
+			},
+			"Guide":{
+				"raw" : "Guide",
+				"name": "Guide (Fae)",
+				"keywords": ["guide"],
+				"desc": "If you spend a String on someone willing, you can bring them across the veil into a faery realm. The spell lasts for a scene or two, before youre both returned to the mundane world."
+			},
+			"Beyond the Veil": {
+				"raw" : "Beyond the Veil",
+				"name": "Beyond the Veil (Fae)",
+				"keywords": ["beyond", "veil"],
+				"desc": "To seek audience with the Faery King/Queen, *Gaze Into the Abyss*: Name what youre looking for, and *roll with Dark*",
+				"success": "The Faery King/Queen shows you lucid visions, and you take *1 Forward* to adressing them. They also reveal a *hidden String* on someone to you. Gain it.",
+				"complication": "The Faery King/Queen shows you confusing and alarming visions, but you get your answer nonetheless. Additionally, they demand a favor of you**."
+			},
+			"Fae Sex":{
+				"raw" : "Fae Sex",
+				"name" : "Sex Move (Fae)",
+				"keywords": ["sex", "fae"],
+				"desc": "When you lie naked with another, you can ask them for a promise. If they refure, take 2 Strings on them."
+			}
+			},
+			"Ghost":{
+				"Unresolved Trauma":{
+					"raw": "Unresolved Trauma",
+					"name": "Unresolved Truama (Ghost)",
+					"keywords": ["trauma","unresolved"],
+					"desc": "Whenever something brings to mind your death, you choke up and gain the Condition **traumatized** if you dont have it already. Whenever someone helps you resolve this Condition, you both mark experience."
+				},
+				"Helpful Spirit":{
+					"raw": "Helpful Spirit",
+					"name": "Helpful Spirit (Ghost)",
+					"keywords": ["helpful"],
+					"desc": "When you help someone resolve a Condition, gain a String on them."
+				},
+				"Transference":{
+					"raw": "Transference",
+					"name": "Transference (Ghost)",
+					"keywords": ["transference"],
+					"desc": "Whenever you spend time truly listening to someone elses struggles, they *heal 1 Harm, and then transfer their remaining harm to you.*"
+				},
+				"Projected Blame":{
+					"raw": "Projected Blame",
+					"name": "Projected Blame (Ghost)",
+					"keywords": ["blame"],
+					"desc": "While youve got the Condition **traumatized**, you may act as though others had the Condition at **fault for my death.**"
+				},
+				"Creep":{
+					"raw": "Creep",
+					"name": "Creep (Ghost)",
+					"keywords": ["creep"],
+					"desc": "When you silently witness someone in one of their most private moments, perhaps sleeping or putting on makeup, gain a String on them."
+				},
+				"Limitless": {
+					"raw": "Limitless",
+					"name": "Limitless (Ghost)",
+					"keywords": ["limitless"],
+					"desc": "You can walk through walls and fly."
+				},
+				"Ghost Sex":{
+					"raw": "Ghost Sex",
+					"name" : "Sex Move (Ghost)",
+					"keywords": ["sex", "ghost"],
+					"desc": "When you have sex with someone, you both get to ask a question of one another. This can be asked in character or player-to-player. They must answer honestly and directly."
+				}
+			},
+			"Ghoul":{
+				"The Hunger":{
+					"raw" : "The Hunger",
+					"name": "The Hunger (Ghoul)",
+					"keywords": ["hunger"],
+					"desc": "You have a Hunger for (circle 1): fear, power, plunder, thrills. $When you heedlessly pursue a Hunger, **add 1** to rolls. When you ignore a promising feeding opportunity, roll to *Keep Your Cool.*"
+				},
+				"What the Right Hand Wants": {
+					"raw" : "What the Right Hand Wants",
+					"name": "What the Right Hand Wants (Ghoul)",
+					"keywords": ["right hand","hand wants", "right-hand"],
+					"desc": "Your body contains many histories, and it desires many things. Create another Hunger."
+				},
+				"Satiey":{
+					"raw" : "Satiety",
+					"name": "Satiey (Ghoul)",
+					"keywords": ["saitey"],
+					"desc": "When you satiate a Hunger, choose one: $`- Heal one harm` $`- Mark Experience` $`- Take 1 forward` "
+				},
+				"Short Rest for the Wicked":{
+					"raw": "Short Rest for the Wicked",
+					"name": "Short Rest for the Wicked (Ghoul)",
+					"keywords": ["short rest","short-rest","wicked"],
+					"desc": "When you die, wait it out. A few hours later, you wake up fully healed."
+				},
+				"Watchful Golem":{
+					"raw": "Watchful Golem",
+					"name": "Watchful Golem (Ghoul)",
+					"keywords": ["Golem"],
+					"desc": "When you defend someone without them ever knowing about it, mark experience."
+				},
+				"Ending":{
+					"raw": "Ending",
+					"name": "Ending (Ghoul)",
+					"keywords": ["Ending"],
+					"desc": "You remember every detail of your death. When you tell someone about it, give them the Condition *morbid* and roll to *Turn Them On with Cold.*"
+				},
+				"Espirit De Corpse":{
+					"raw" : "Esprit De Corpse",
+					"name": "Espirite De Corpse (Ghoul)",
+					"keywords": ["Espirit","De corpse"],
+					"desc": "When you *Gaze Into the Abyss*, the abyss will share with you its Hunger. Treat that Hunger as one of your own until you satiate it, and mark experience when you do so."
+				},
+				"Ghoul Sex":{
+					"raw" : "Ghoul Sex",
+					"name" : "Sex Move (Ghoul)",
+					"keywords": ["sex", "Ghoul"],
+					"desc": "When you have sex with someone, create a new Hunger."
+				}
+			},
+			"Hollow":{
+				"Better Than Nothing":{
+					"raw": "Better Than Nothing",
+					"name": "Better Than Nothing (Hollow)",
+					"keywords": ["Than Nothing","Better Than"],
+					"desc": "When you gain a Condition, mark experience."
+				},
+				"A Blank Canvas": {
+					"raw": "A Blank Canvas",
+					"name": "A Blank Canvas (Hollow)",
+					"keywords": ["Blank Canvas","Canvas"],
+					"desc": "When you take an action that embodies one of your Conditions, allowing that Condition to alter your sense of self, cross it off and add 1 to your roll."
+				},
+				"Try Harder Next Time":{
+					"raw" : "Try Harder Next Time",
+					"name": "Try Harder Next Time (Hollow)",
+					"keywords": ["try", "harder"],
+					"desc": "When you screw up, give yourself an appropriate Condition and take 1 Forward."
+				},
+				"Fake":{
+					"raw": "Fake",
+					"name": "Fake (Hollow)",
+					"keywords": ["Fake"],
+					"desc": "**Add 1** to any rolls you make while lying."
+				},
+				"Metamorphosis":{
+					"raw": "Methamorphosis",
+					"name": "Metamorphosis (Hollow)",
+					"keywords": ["Metamorphosis"],
+					"desc": "When you *Gaze Into the Abyss*, on a 7 or higher the abyss will also show you what you must become, and you can permanently swap two of your stats."
+				},
+				"Strange Impressions":{
+					"raw": "Strange Impressions",
+					"name": "Strange Impressions (Hollow)",
+					"keywords": ["Impressions"],
+					"desc": "When a main character either harms you or helps you heal, you can respond by studying them with wide eyes. If you do, temporarily gain one of their Skin Moves and add it to your character sheet. It disappears once you use it."
+				},
+				"Hollow Sex":{
+					"raw": "Hollow Sex",
+					"name" : "Sex Move (Hollow)",
+					"keywords": ["sex", "Hollow"],
+					"desc": "When you have sex with someone, both players secretly write down whether the sex was confusing or soothing for their character. If you reveal the same answer, both characters mark experience."
+				}
+			},
+			"Infernal":{
+				"Soul Debt":{
+					"raw": "Soul Debt",
+					"name": "Soul Debt (Infernal)",
+					"keywords": ["soul debt"],
+					"desc": "You owe a debt to a Dark Power. Name it, and choose two Bargains it has made with you. $The Dark Power can gain Strings. If ever it has **5 Strings** on you, trigger your Darkest Self."
+				},
+				"Dark Recruiter": {
+					"raw" : "Dark Recruiter",
+					"name": "Dark Recruiter (Infernal)",
+					"keywords": ["Recruiter"],
+					"desc": "When you bring an innocent soul to the Dark Power, mark experience."
+				},
+				"Under Pressure":{
+					"raw": "Under Pressure",
+					"name": "Try Harmer Next Time (Infernal)",
+					"keywords": ["Pressure"],
+					"desc": "If someone has 3 or more Strings on you, **add 1** to your rolls to carry out their bidding."
+				},
+				"Cant Save Myself":{
+					"raw": "Cant save myself",
+					"name": "Cant Save Myself (Infernal)",
+					"keywords": ["cant save"],
+					"desc": "When somebody saves you from forces too powerful for you to reckon with, they mark experience, and you gain a String on them."
+				},
+				"The Power Flows Through You":{
+					"raw": "The Power Flows Through You",
+					"name": "The Power Flows Through You (Infernal, Bargain)",
+					"keywords": ["power "],
+					"desc": "You can give the Dark Power a String in order to **add 2** to your next roll"
+				},
+				"Numbing It Out":{
+					"raw": "Numbing it out",
+					"name": "Numbing It Out (Infernal, Bargain)",
+					"keywords": ["Numbing"],
+					"desc": "You can give the Dark Power a String in order to remove a Condition or up to two harm."
+				},
+				"Elsewise Power":{
+					"raw": "Elsewise Power",
+					"name": "Elsewise Power (Infernal, Bargain)",
+					"keywords": ["Elsewise"],
+					"desc": "You can give the Dark Power a String to use a move you dont have, just this once. This move can come from any Skin."
+				},
+				"Uncanny Voices":{
+					"raw" : "Uncanny Voices",
+					"name": "Uncanny Voices (Infernal, Bargain)",
+					"keywords": ["Uncanny"],
+					"desc": "You can give the Dark Power a String in order to realize a secret about someone youre talking to. The owner of that character will reveal one of their secret fears, secret desires, or secret strengths (they choose which.)"
+				},
+				"Strings Attached":{
+					"raw": "Strings Attached",
+					"name": "Strings Attached (Infernal, Bargain)",
+					"keywords": ["Attached"],
+					"desc": "You can ask the Dark Power for something that you really, really want. The MC will attach a price to the thing you want, and hint at an undesired twist in its nature. If you pay the price, youll get what youre after."
+				},
+				"Infernal Sex":{
+					"raw": "Strings Attached",
+					"name" : "Sex Move (Infernal)",
+					"keywords": ["sex", "Infernal"],
+					"desc": "When you have sex, the Dark Power loses a String on you and gains a String on whoever you had sex with."
+			  }
+			},
+			"Mortal":{
+				"True Love":{
+					"raw" : "True Love",
+					"name": "True Love (Mortal)",
+					"keywords": ["True"],
+					"desc": "You always have exactly one Lover. The first is chosen during Your Backstory. If you ever fall in love with someone else instead, give them a String and they become your new Lover. You always carry *1 forward* to earning your Lovers heart or fancy."
+				},
+				"Mess With Me, Mess With Him":{
+					"raw": "Mess With Me, Mess With Him",
+					"name": "Mess With Me, Mess With Him (Mortal)",
+					"keywords": ["Mess"],
+					"desc": "When using your Lovers name as a threat, **add 2** to your roll to *Shut Someone Down* or *Keep Your Cool*. Your Lover gains a String on you."
+				},
+				"Entrenched":{
+					"raw" : "Entrenched",
+					"name": "Entrenched (Mortal)",
+					"keywords": ["Entrenched"],
+					"desc": "If you and another character have a combined total of *5 or more Strings* on one another, **gain 1** to all rolls against them."
+				},
+				"Sympathy is My Weapon":{
+					"raw" : "Sympathy is My Weapon",
+					"name": "Sympathy is My Weapon (Mortal)",
+					"keywords": ["Sympathy"],
+					"desc": "Every time you forgive someone for hurting you, and excuse their base nature, gain a String on them."
+				},
+				"Excuses Are My Armour":{
+					"raw" : "Exuses are my Armour",
+					"name": "Excuses Are My Armour (Mortal)",
+					"keywords": ["Excuses","My armor"],
+					"desc": "When you ignore some blatant problem with your Lover or how they treat you, mark experience."
+				},
+				"Downward Spiral":{
+					"raw" : "Downward Spiral",
+					"name": "Downward Spiral (Mortal)",
+					"keywords": ["downward","spiral"],
+					"desc": "When you *Gaze Into the Abyss*, you may cause yourself *1 Harm*. If you do, **add 2** to your roll."
+				},
+				"Down the Rabbit Hole":{
+					"raw": "Down the Rabbit Hole",
+					"name": "Down the Rabbit Hole (Mortal)",
+					"keywords": ["Rabbit hole"],
+					"desc": "When you go poking your nose in affairs not meant for your kind, someone involved in the situation gains a String on you, and you mark experience."
+				},
+				"Mortal Sex":{
+					"raw" : "Mortal Sex",
+					"name" : "Sex Move (Mortal)",
+					"keywords": ["sex", "Mortal"],
+					"desc": "When you have sex with someone, it awakens something sinister within. The next time you take your eyes off them, they become their Darkest Self."
+				}
+			},
+			"Queen":{
+				"The Clique":{
+					"raw" : "The Clique",
+					"name": "The Clique (Queen)",
+					"keywords": ["Clique"],
+					"desc": "Youre at the head of the toughest, coolest, most powerful clique around. They count as a gang. Choose one of the following strengths for your gang: $`- Theyre armed (with guns and real dangerous stuff)` $`- Theyre connected (with money and designer drugs)` $`- Theyre talented (in a band or sports team)` $`- Theyre cultists (with dark oaths and willingness to die).`"
+				},
+				"The Shield":{
+					"raw" : "The Shield",
+					"name": "The Shield (Queen)",
+					"keywords": ["Shield"],
+					"desc": "When youre surrounded by your gang, **subtract 1 from any rolls** against you."
+				},
+				"Bought Loyalty":{
+					"raw" : "Bought Loyalty",
+					"name": "Bought Loyalty (Queen)",
+					"keywords": ["Bought"],
+					"desc": "You can give a side character a String on you to tempt them to do your bidding. The MC will tell you what sort of bribe, threat, or coaxing itll take to get that character to do what you want right now."
+				},
+				"And Your Enemies Closer":{
+					"raw": "And You Enemies Closer",
+					"name": "And Your Enemies Closer (Queen)",
+					"keywords": ["Enemies Close","Closer"],
+					"desc": "When someone betrays you, gain a String on them."
+				},
+				"Many Bodies":{
+					"raw": "Many Bodies",
+					"name": "Many Bodies (Queen)",
+					"keywords": ["Bodies"],
+					"desc": "When you promise one of your gang members to someone, **add 2** to your roll to *Turn Them On.* When one of your gang members has sex with someone, it triggers your Sex Move."
+				},
+				"Streaming":{
+					"raw": "Streaming",
+					"name": "Streaming (Queen)",
+					"keywords": ["Streaming"],
+					"desc": "You have a telepathic connection with your gang members. You can always hear their emotions and fears. If you try to hear specific thoughts, *Gaze Into the Abyss* about it and **add 1** to your roll."
+				},
+				"Queen Sex":{
+					"raw" : "Queen Sex",
+					"name" : "Sex Move (Queen)",
+					"keywords": ["sex", "Queen"],
+					"desc": "When you have sex with someone, they gain the Condition *one of them.* While the Condition remains, they count as part of your gang."
+				}
+			},
+			"Vampire":{
+				"Invited":{
+					"raw": "Invited",
+					"name": "Invited (Vampire)",
+					"keywords": ["invited"],
+					"desc": "You cannot enter a home without being invited. Whenever someone invites you in, gain a String on them."
+				},
+				"Hypnotic": {
+					"raw": "Hypnotic",
+					"name": "Hypnotic (Vampire)",
+					"keywords": ["hypnotic"],
+					"desc": "You can hypnotize people who have no Strings on you. **Roll with Hot.**",
+					"success": "They do exactly what you wish and have no idea that anything is wrong",
+					"complication": "The hypnosis works, but choose one: $`-They realize exactly what youve done to them` $`-They fuck up your commands` $`-Their sanity is unhinged.`"
+				},
+				"Cold As Ice":{
+					"raw": "Cold As Ice",
+					"name": "Cold As Ice (Vampire)",
+					"keywords": ["cold as ice","ice"],
+					"desc": "When you *Shut Someone Down* and roll a 7 or higher, you may choose an extra option from the list."
+				},
+				"The Feeding":{
+					"raw": "The Feeding",
+					"name": "The Feeding (Vampire)",
+					"keywords": ["feeding"],
+					"desc": "You feed on hot blood, direct from the source. If this is the first time theyve ever been fed upon, you both mark experience. When you feed, choose two: $`-You heal 1 harm` $`-You take 1 forward` $`-They definitely dont die.`"
+				},
+				"Marked For the Hunt":{
+					"raw": "Marked For The Hunt",
+					"name": "Marked For the Hunt (Vampire)",
+					"keywords": ["Marked"],
+					"desc": "Feeding on someone establishes a preternatural bond. From that point forward, whenever you *Gaze Into the Abyss* concerning their whereabouts or well-being, roll as if you had **Dark 3.**"
+				},
+				"Inescapable":{
+					"raw": "Inescapable",
+					"name": "Inescapable (Vampire)",
+					"keywords": ["Inescapable"],
+					"desc": "You may spend a String on someone to demand that they remain in your presence. If they still walk out on you, gain **2 Strings** on them."
+				},
+				"Vampire Sex":{
+					"raw": "Vampire Sex",
+					"name" : "Sex Move (Vampire)",
+					"keywords": ["sex", "vampire"],
+					"desc": "When you deny someone sexually, gain a String on them. When you have sex with someone, lose all Strings on them."
+				}
+			},
+			"Werewolf":{
+				"Primal Dominance":{
+					"raw": "Primal Dominance",
+					"name": "Primal Dominance (Werewolf)",
+					"keywords": ["Dominance"],
+					"desc": "When you harm someone, take a String on them."
+				},
+				"Scent of Blood":{
+					"raw": "Scent of Blood",
+					"name": "Scent of Blood (Werewolf)",
+					"keywords": ["Scent"],
+					"desc": "**Add 1** to all rolls against those who have been harmed in this scene already."
+				},
+				"Howl at the Moon":{
+					"raw": "Howl at the Moon",
+					"name": "Howl at the Moon (Werewolf)",
+					"keywords": ["Howl"],
+					"desc": "When basked in moonlight, you may act as if you had **Dark 3**."
+				},
+				"Spirit Armour":{
+					"raw": "Spirit Armour",
+					"name": "Spirit Armour (Werewolf)",
+					"keywords": ["Armour"],
+					"desc": "When basked in moonlight, any harm that you suffer is **reduced by 1**, and you **add 2** to all rolls to *Keep Your Cool*."
+				},
+				"Heightened Senses":{
+					"raw": "Heightened Senses",
+					"name": "Heightened Senses (Werewolf)",
+					"keywords": ["Senses","Heightended"],
+					"desc":"When you rely on your animal instincts to make sense of a charged situation, roll with *Dark.*",
+					"success": "Ask the MC three questions from below and take **1 Forward**",
+					"complication":"Ask one question from below and take *1 Forward* $`- Wheres my best escape route or way in?`  $`- Which enemy is the most vulnerable to me?`  $`- Whats their secret weakness?` $`- What poses the biggest threat to me?` $`- Whos in control here?`"
+				},          
+				"Unstable":{
+					"raw": "Unstable",
+					"name": "Unstable (Werewolf)",
+					"keywords": ["Unstable"],
+					"desc": "When you become your Darkest Self, mark experience."
+				}, 
+				"Werewolf Sex":{
+					"raw": "Werewolf Sex",
+					"name" : "sex Move (Werewolf)",
+					"keywords": ["sex", "Werewolf"],
+					"desc": "When you have sex with someone, you establish a deep spiritual connection with them. Until either of you breaks that spirit connection (by having sex with someone else) **add 1** to all rolls made to defend them. You can tell when that connection has been broken."
+				}
+			},
+			"Witch":{
+				"Sympathetic Tokens":{
+					"raw": "Sympathetic Tokens",
+					"name": "Sympathetic Tokens (Witch)",
+					"keywords": ["Tokens"],
+					"desc": "You gain power from Sympathetic Tokens - items of personal significance taken from others. Sympathetic Tokens count as Strings.."
+				}, 
+				"Hex-Casting":{
+					"raw": "Hexcasting",
+					"name": "Hex-Casting (Witch)",
+					"keywords": ["Casting"],
+					"desc": "You can cast Hexes. Choose two that you know. To cast them, either expend a Sympathetic Token during a secret ritual, or meet the targets gaze and chant at them in tongues. Then roll with *Dark.*",
+					"success": "The Hex works, and can easily be reversed",
+					"complication":"The Hex works but choose one: $`- The casting does you 1 Harm;`  $`- The Hex has weird side effects;` $`- Trigger your Darkest Self.`"
+				}, 
+				"Transgressive Magic":{
+					"raw": "Transgressive Magic",
+					"name": "Transgressive Magic (Witch)",
+					"keywords": ["transgressive"],
+					"desc": "If your ritual transgresses the communitys moral or sexual standards, **add 1** to your Hex-Casting roll."
+				},
+				"Sanctuary":{
+					"raw": "Sanctuary",
+					"name": "Sanctuary (Witch)",
+					"keywords": ["sanctuary"],
+					"desc": "You have a secret place for practicing witchcraft. **Add 1** to all rolls you make within this space."
+				}, 
+				"Wither":{
+					"raw": "Wither",
+					"name": "Wither (Witch Hey)",
+					"keywords": ["wither"],
+					"desc": "The hexed loses all of their hair, or their teeth start falling out, or their period arrives unexpected and heavy, or their skin gets all sickly yellow and spotty. Whatever the specifics, its bad."
+				}, 
+				"Binding":{
+					"raw": "Binding",
+					"name": "Binding (Witch)",
+					"keywords": ["binding"],
+					"desc": "The person cannot physically harm others."
+				}, 
+				"Ring of Lies":{
+					"raw": "Ring of Lies",
+					"name": "Ring of Lies (Witch)",
+					"keywords": ["ring of lies", "ring"],
+					"desc": "Whenever the person attempts to lie, they hear a piercing ringing noise. Big lies will often make their knees buckle and disorient them. Severe lies can cause harm or even brain damage."
+				}, 
+				"Watching":{
+					"raw": "Watching",
+					"name": "Watching (Witch)",
+					"keywords": ["wtching"],
+					"desc": "You enter a deep sleep, and begin to see the world through the eyes of the hexed. You can feel their reactions to and impressions of what they are seeing."
+				}, 
+				"Illusions":{
+					"raw": "Illusions",
+					"name": "Illusions (Witch)",
+					"keywords": ["Illusions"],
+					"desc": "**Pick one:** snakes and bugs, demonic visages, false prophecies, non-existent subtext. $The hexed sees that thing everywhere. You have no control over the exact images or manifestations."
+				}, 
+				"Witch Sex":{
+					"raw": "Witch Sex",
+					"name" : "Sex Move (Witch)",
+					"keywords": ["sex", "Witch"],
+					"desc": "After sex, you can take a Sympathetic Token from them. They know about it, and its cool."
+				}
+			},
+			"Growing Up":{
+				"Make Others Feel Beautiful":{
+					"raw" : "Make Others Feel Beautiful",
+					"name": "Make Others Feel Beautiful (Growing Up)",
+					"keywords": ["make others feel beautiful", "makeothersfeelbeautiful", "makeothers", "beautiful"],
+					"desc": "Roll with *Hot*.",
+					"success": "Choose **two** from below: $ *-they take 1 Forward* $*-they remove a Condition* $*-they mark experience* $*-you take 1 Forward*",
+					"complication":"You can tempt them to do what you want, as if youd just spent a String."
+				},
+				"Call People On Their Shit":{
+					"raw" : "Call People On Their Shit",
+					"name": "Call People On Their Shit (Growing Up)",
+					"keywords": ["call people on their shit", "shit", "call", "call people"],
+					"desc": "Roll with *Cold*.",
+					"success": "Choose **one** from below: $ *-they lose a String against __someone else__* $*-they choke up, break down, or bail*",
+					"complication":"You come across poorly. They *give you a* **condition** and you choose **one** from below:$ *-they lose a String against __someone else__* $*-they choke up, break down, or bail*"
+				},
+				"Intervene in an Act of Violence":{
+					"raw" : "Intervene in an Act of Violence",
+					"name": "Intervene in an Act of Violence (Growing Up)",
+					"keywords": ["intervene in an act of violence", "intervene", "intervene violence"],
+					"desc": "Roll with *Volatile*.",
+					"success": "You get in the way and they need to deal with you first. Whoever you are protexting gets to react and takes 1 Forward to whatever they decide to do. ",
+					"complication":"You are in the middle of it! The assilant chooses one from below:$ *-I back off* $*-I take whatever harm you want to give me as I push past* $*-I redirect the violence to you*"
+				},
+				"Share Your Pain":{
+					"raw" : "Share Your Pain",
+					"name": "Share Your Pain (Growing Up)",
+					"keywords": ["share your pain", "share pain"],
+					"desc": "Roll with *Dark*.",
+					"success": "You share your pain. Choose **two**: $*-remove one Condition from yourself* $*-remove a Condition from someone who listened* $*-take 1 Forward toward helping yourself* $*-those who listened take 1 Forward to helping you.*",
+					"complication":"You share your pain. Choose **one**: $*-remove one Condition from yourself* $*-remove a Condition from someone who listened* $*-take 1 Forward toward helping yourself* $*-those who listened take 1 Forward to helping you.*"
+				}
+			}
 	},
-		"Villains":{
-			"raw": "Villains",
-			"name": "Villains",
-			"keywords": ["villains"],
-		"desc": "If a villain becomes meaningfully involved in the story, you can do the following two things to give yourself a bit of extra structure and inspiration for playing them: $$-*Write a custom Principle for playing them.*, or $-*Write a custom Reaction for them.*"
-}
-},
-    "Fae":{
-      "Faery Contract":{
-		"raw" : "Faery Contract",
-		"name": "Faery Contract (Fae)",
-		"keywords": ["contract"],
-        "desc": "If someone breaks a promise or contract made to you, **take a String on them**. When spending a String to even out the score and get justice on a broken promise$ add these options to *Pulling Strings*: $`-they fuck up something simple at a crucial moment, **suffering 1 Harm** if appropriate` $`-add 2 to your roll on an act of vengeance.`"
-      },
-      "Unashamed":{
-	    "raw" : "Unashamed",
-		"name": "Unashamed (Fae)",
-		"keywords": ["unashamed"],
-        "desc": "You can give someone a String on you to add **3** to your attempt to *turn them on*."
-      },
-      "The Wild Hunt":{
-	    "raw": "The Wild Hunt",
-	    "name": "The Wild Hunt (Fae)",
-		"keywords": ["wild", "hunt"],
-        "desc": "When you draw upon you *most feral manner*, echoing the lithe movements of a cat or the coracity of a wolf, **add 1** to your roll to *Turn Someone On*"
-      },
-      "Lure":{
-		"raw" : "Lure",
-		"name": "Lure (Fae)",
-	    "keywords": ["lure"],
-        "desc": "Whenever someone makes a promise to you, they mark experience. $Whenever someone breaks a promise to you, you mark experience."
-      },
-	  "Guide":{
-	    "raw" : "Guide",
-		"name": "Guide (Fae)",
-	    "keywords": ["guide"],
-		"desc": "If you spend a String on someone willing, you can bring them across the veil into a faery realm. The spell lasts for a scene or two, before youre both returned to the mundane world."
-	  },
-	  "Beyond the Veil": {
-		"raw" : "Beyond the Veil",
-		"name": "Beyond the Veil (Fae)",
-	    "keywords": ["beyond", "veil"],
-		"desc": "To seek audience with the Faery King/Queen, *Gaze Into the Abyss*: Name what youre looking for, and *roll with Dark*",
-		"success": "The Faery King/Queen shows you lucid visions, and you take *1 Forward* to adressing them. They also reveal a *hidden String* on someone to you. Gain it.",
-		"complication": "The Faery King/Queen shows you confusing and alarming visions, but you get your answer nonetheless. Additionally, they demand a favor of you**."
-	  },
-	  "Fae Sex":{
-		"raw" : "Fae Sex",
-		"name" : "Sex Move (Fae)",
-		"keywords": ["sex", "fae"],
-		"desc": "When you lie naked with another, you can ask them for a promise. If they refure, take 2 Strings on them."
-	  }
-    },
-    "Ghost":{
-      "Unresolved Trauma":{
-		"raw": "Unresolved Trauma",
-		"name": "Unresolved Truama (Ghost)",
-		"keywords": ["trauma","unresolved"],
-        "desc": "Whenever something brings to mind your death, you choke up and gain the Condition **traumatized** if you dont have it already. Whenever someone helps you resolve this Condition, you both mark experience."
-      },
-      "Helpful Spirit":{
-		"raw": "Helpful Spirit",
-		"name": "Helpful Spirit (Ghost)",
-		"keywords": ["helpful"],
-        "desc": "When you help someone resolve a Condition, gain a String on them."
-      },
-      "Transference":{
-		"raw": "Transference",
-	    "name": "Transference (Ghost)",
-		"keywords": ["transference"],
-        "desc": "Whenever you spend time truly listening to someone elses struggles, they *heal 1 Harm, and then transfer their remaining harm to you.*"
-      },
-      "Projected Blame":{
-		"raw": "Projected Blame",
-		"name": "Projected Blame (Ghost)",
-	    "keywords": ["blame"],
-        "desc": "While youve got the Condition **traumatized**, you may act as though others had the Condition at **fault for my death.**"
-      },
-	  "Creep":{
-		"raw": "Creep",
-		"name": "Creep (Ghost)",
-	    "keywords": ["creep"],
-		"desc": "When you silently witness someone in one of their most private moments, perhaps sleeping or putting on makeup, gain a String on them."
-	  },
-	  "Limitless": {
-		"raw": "Limitless",
-		"name": "Limitless (Ghost)",
-	    "keywords": ["limitless"],
-		"desc": "You can walk through walls and fly."
-	  },
-	  "Ghost Sex":{
-		"raw": "Ghost Sex",
-		"name" : "Sex Move (Ghost)",
-		"keywords": ["sex", "ghost"],
-		"desc": "When you have sex with someone, you both get to ask a question of one another. This can be asked in character or player-to-player. They must answer honestly and directly."
-	  }
-    },
-    "Ghoul":{
-       "The Hunger":{
-		"raw" : "The Hunger",
-		"name": "The Hunger (Ghoul)",
-	  	"keywords": ["hunger"],
-        "desc": "You have a Hunger for (circle 1): fear, power, plunder, thrills. $When you heedlessly pursue a Hunger, **add 1** to rolls. When you ignore a promising feeding opportunity, roll to *Keep Your Cool.*"
-      },
-      "What the Right Hand Wants": {
-		"raw" : "What the Right Hand Wants",
-        "name": "What the Right Hand Wants (Ghoul)",
-	  	"keywords": ["right hand","hand wants", "right-hand"],
-        "desc": "Your body contains many histories, and it desires many things. Create another Hunger."
-      },
-      "Satiey":{
-		"raw" : "Satiety",
-        "name": "Satiey (Ghoul)",
-	  	"keywords": ["saitey"],
-        "desc": "When you satiate a Hunger, choose one: $`- Heal one harm` $`- Mark Experience` $`- Take 1 forward` "
-      },
-      "Short Rest for the Wicked":{
-		"raw": "Short Rest for the Wicked",
-        "name": "Short Rest for the Wicked (Ghoul)",
-	  	"keywords": ["short rest","short-rest","wicked"],
-        "desc": "When you die, wait it out. A few hours later, you wake up fully healed."
-      },
-      "Watchful Golem":{
-		"raw": "Watchful Golem",
-        "name": "Watchful Golem (Ghoul)",
-	  	"keywords": ["Golem"],
-        "desc": "When you defend someone without them ever knowing about it, mark experience."
-      },
-      "Ending":{
-		"raw": "Ending",
-        "name": "Ending (Ghoul)",
-	  	"keywords": ["Ending"],
-        "desc": "You remember every detail of your death. When you tell someone about it, give them the Condition *morbid* and roll to *Turn Them On with Cold.*"
-      },
-      "Espirit De Corpse":{
-		"raw" : "Esprit De Corpse",
-        "name": "Espirite De Corpse (Ghoul)",
-	  	"keywords": ["Espirit","De corpse"],
-        "desc": "When you *Gaze Into the Abyss*, the abyss will share with you its Hunger. Treat that Hunger as one of your own until you satiate it, and mark experience when you do so."
-      },
-        "Ghoul Sex":{
-		"raw" : "Ghoul Sex",
-		"name" : "Sex Move (Ghoul)",
-		"keywords": ["sex", "Ghoul"],
-		"desc": "When you have sex with someone, create a new Hunger."
-	  }
-	},
-    "Hollow":{
-     "Better Than Nothing":{
-		"raw": "Better Than Nothing",
-      "name": "Better Than Nothing (Hollow)",
-	  	"keywords": ["Than Nothing","Better Than"],
-        "desc": "When you gain a Condition, mark experience."
-      },
-      "A Blank Canvas": {
-		"raw": "A Blank Canvas",
-        "name": "A Blank Canvas (Hollow)",
-	  	"keywords": ["Blank Canvas","Canvas"],
-        "desc": "When you take an action that embodies one of your Conditions, allowing that Condition to alter your sense of self, cross it off and add 1 to your roll."
-      },
-      "Try Harder Next Time":{
-		"raw" : "Try Harder Next Time",
-        "name": "Try Harder Next Time (Hollow)",
-	  	"keywords": ["try", "harder"],
-        "desc": "When you screw up, give yourself an appropriate Condition and take 1 Forward."
-      },
-      "Fake":{
-		"raw": "Fake",
-        "name": "Fake (Hollow)",
-	  	"keywords": ["Fake"],
-        "desc": "**Add 1** to any rolls you make while lying."
-      },
-      "Metamorphosis":{
-		"raw": "Methamorphosis",
-        "name": "Metamorphosis (Hollow)",
-	  	"keywords": ["Metamorphosis"],
-        "desc": "When you *Gaze Into the Abyss*, on a 7 or higher the abyss will also show you what you must become, and you can permanently swap two of your stats."
-      },
-      "Strange Impressions":{
-		"raw": "Strange Impressions",
-        "name": "Strange Impressions (Hollow)",
-	  	"keywords": ["Impressions"],
-        "desc": "When a main character either harms you or helps you heal, you can respond by studying them with wide eyes. If you do, temporarily gain one of their Skin Moves and add it to your character sheet. It disappears once you use it."
-      },
-        "Hollow Sex":{
-		"raw": "Hollow Sex",
-		"name" : "Sex Move (Hollow)",
-		"keywords": ["sex", "Hollow"],
-		"desc": "When you have sex with someone, both players secretly write down whether the sex was confusing or soothing for their character. If you reveal the same answer, both characters mark experience."
-	  }
-	},
-    "Infernal":{
-		"Soul Debt":{
-			"raw": "Soul Debt",
-			"name": "Soul Debt (Infernal)",
-			"keywords": ["soul debt"],
-			"desc": "You owe a debt to a Dark Power. Name it, and choose two Bargains it has made with you. $The Dark Power can gain Strings. If ever it has **5 Strings** on you, trigger your Darkest Self."
+	"ReSkins (Ferretheim Games)":{
+		"Angel":{
+				"Holy Pledge":{
+					"raw": "Holy Pledge",
+					"name": "Holy Pledge (Angel)",
+					"keywords": ["holy pledge","pledge"],
+					"desc": "You hold yourself to a high moral system, reflected by your Integrity stat. It starts at zero, and fluctuates from zero to 3. Gain an Integrity when you: $-Prove your loyalty to the group you are pledged to $-Best those who challenge or disregard your values $$What group you pledge to (circle one): a church, your elders, a community, your friend group, a secret society, your family, a school,a movement. $$What principles does your group value above all others? Circle two or three, or make up your own: purity, solidarity, discipline, might, reason, faith, success, respect, law and order, fairness, mercy, __________."
+				},
+				"Blissfully Aware":{
+					"raw": "Blissfully Aware",
+					"name": "Blissfully Aware (Angel)",
+					"keywords": ["blissfully aware", "aware"],
+					"desc": "When you are in a moment of intimate expression (a kiss, being held close, being asked on a date, etc) you may roll to *gaze into the abyss* about the person you’re being intimate with as if your Dark was 3."
+				}, 
+				"Entitled Enlightenment":{
+					"raw": "Entitled Enlightenment",
+					"name": "Entitled Enlightenment (Angel)",
+					"keywords": ["entitled enlightenment", "entitled", "enlightenment"],
+					"desc": "If you bring someone into your group, your Integrity becomes 3 until it fluctuates once again. If they are a main character, they gain the move *Holy Pledge* and an Integrity score."
+				}, 
+				"Forgiveness":{
+					"raw": "Forgiveness",
+					"name": "Forgiveness (Angel)",
+					"keywords": ["forgiveness"],
+					"desc": "When you hold someone close and offer them absolution, you can erase 1 point of Integrity to bring them out of their Darkest Self or to gain 2 Strings on them."
+				}, 
+				"Gehenna":{
+					"raw": "Gehenna",
+					"name": "Gehenna (Angel)",
+					"keywords": ["gehenna"],
+					"desc": "When you *lash out physically* against someone, you can roll Integrity instead of Volatile. If you do, erase 1 point of Integrity afterwards."
+				}, 
+				"Forgotten for Clay":{
+					"raw": "Forgotten for Clay",
+					"name": "Forgotten for Clay (Angel)",
+					"keywords": ["forgotten", "forgotten for clay"],
+					"desc": "When someone else gets the praise or attention you feel you deserve, gain a String on them and they mark experience."
+				}, 
+				"Glory":{
+					"raw": "Glory",
+					"name": "Glory (Angel)",
+					"keywords": ["glory"],
+					"desc": "When you demand the truth, you can erase 1 point of Integrity and ask one question. If they answer honestly, they gain a String on you and mark experience. If they deflect, you gain 1 point of Integrity and mark experience."
+				}
+			}
 		},
-		"Dark Recruiter": {
-			"raw" : "Dark Recruiter",
-			"name": "Dark Recruiter (Infernal)",
-			"keywords": ["Recruiter"],
-			"desc": "When you bring an innocent soul to the Dark Power, mark experience."
+	"Skin Deep (Ferretheim Games)":{
+		"Bakeneko":{
+			"At No Ones Beck and Call":{
+				"raw": "At No Ones Beck and Call",
+				"name": "At No Ones Beck and Call (Bakeneko)",
+				"keywords": ["at no ones beck and call", "beck and call"],
+				"desc": "When you blow someone off to just hang out and relax *clear a* **Condition**."
+			},
+			"Prowler":{
+				"raw": "Prowler",
+				"name": "Prowler (Bakeneko)",
+				"keywords": ["prowler"],
+				"desc": "You can see perfectly in the dark."
+			},
+			"Cat and Mouse":{
+				"raw": "Cat and Mouse",
+				"name": "Cat and Mouse (Bakeneko)",
+				"keywords": ["cat and mouse"],
+				"desc": "When you roll a 7-9 to *Lash Out Physically* and the MC devides how bad it is, the Harm *can not be greater* than your **Volatile** stat.",
+				"success": "You deal them harm, and they choke up momentarily before they can react*",
+				"complication": "You harm them but choose one:$$-*They learn something about your true nature and gain a String on you,*,$-*The MC decides how bad the harm turns out (**Because of the move: The Harm can not be greater than your Volatile stat!**)*, or $*-You become your Darkest Self.*"
+			},
+			"Cross My Path":{
+				"raw": "Cross My Path",
+				"name": "Cross My Path (Bakeneko)",
+				"keywords": ["cross my path"],
+				"desc": "You can *spend a String* to **subtract 1** from a main characters roll against you."
+			},
+			"Claws Out":{
+				"raw": "Claws Out",
+				"name": "Claws Out (Bakeneko)",
+				"keywords": ["claws out"],
+				"desc": "You can give someone a *String on you* to add **+3** to your attempt to *Shut Them Down*"
+			},
+			"Lap Cat":{
+				"raw": "Lap Cat",
+				"name": "Lap Cat (Bakeneko)",
+				"keywords": ["lap cat"],
+				"desc": "When you make a big show about choosing one person over another, the person you favor *marks experience* and you **gain a String on them**."
+			},
+			"On Your Feet":{
+				"raw": "On You Feet",
+				"name": "On Your Feet (Bakeneko)",
+				"keywords": ["On Your Feet"],
+				"desc": "You can leap your height from a standing position and take **no Harm** from falls."
+			}
 		},
-		"Under Pressure":{
-			"raw": "Under Pressure",
-			"name": "Try Harmer Next Time (Infernal)",
-			"keywords": ["Pressure"],
-			"desc": "If someone has 3 or more Strings on you, **add 1** to your rolls to carry out their bidding."
+		"Bedlam":{
+			"Cheshire Path":{
+				"raw": "Cheshire Path",
+				"name": "Cheshire Path",
+				"keywords" : ["cheshire path"],
+				"desc": "You may *Run Away* with **Dark** instead of **Volatile**, but on a __7-9__ you must always leave something behind."
+			},
+			"Good Omens":{
+				"raw": "Good Omens",
+				"name": "Good Omens",
+				"keywords" : ["good omens"],
+				"desc": "When you roll a 10 up to *Gaze into the Abyss* you can choose to get confusing and alarming visions but share them with anyone else in the scene you choose."
+			},
+			"Fascination Street":{
+				"raw": "Fascination Street",
+				"name": "Fascination Street",
+				"keywords" : ["fascination street"],
+				"desc": "When another character *Gazes into the Abyss* about you they subtract 1 from their roll unless looking directly into your eyes."
+			},
+			"Terabithia":{
+				"raw": "Terabithia",
+				"name": "Terabithia",
+				"keywords" : ["terabithia"],
+				"desc": "When you purposefully lead another main character into a supernatural situation they mark experience and you *gain a String on them*."
+			},
+			"Through the Looking Glass":{
+				"raw": "Through the Looking Glass",
+				"name": "Through the Looking Glass",
+				"keywords" : ["through the looking glass", "looking glass"],
+				"desc": "To slip into the supernatural world, such as an afterlife, a fairy court, or a parallel dimension, roll with **Dark**. On a **10 up**, you can get by reasonably well where and can make your way back easily. Ony a **7-9**, choose **one**: $*-You will need to find another way back* $*-Something escapes into the mundane world* $*-You enter your __Darkest Self__*",
+				"success" : "You slip into a supernatural world, get by reasonably well there, and can make your way back easily.",
+				"complication": "You can get there, but choose **one**: $*-You will need to find another way back* $*-Something escapes into the mundane world* $*-You enter your __Darkest Self__*"
+			},
+			"Tea In Innsmouth":{
+				"raw": "Tea In Innsmouth",
+				"name": "Tea In Innsmouth",
+				"keywords" : ["tea in innsmouth"],
+				"desc": "Add 2 to rolls to *Keep Your Cool* in dangerous supernatural situations."
+			}		
 		},
-		"Cant Save Myself":{
-			"raw": "Cant save myself",
-			"name": "Cant Save Myself (Infernal)",
-			"keywords": ["cant save"],
-			"desc": "When somebody saves you from forces too powerful for you to reckon with, they mark experience, and you gain a String on them."
-		},
-		"The Power Flows Through You":{
-			"raw": "The Power Flows Through You",
-			"name": "The Power Flows Through You (Infernal, Bargain)",
-			"keywords": ["power "],
-			"desc": "You can give the Dark Power a String in order to **add 2** to your next roll"
-		},
-		"Numbing It Out":{
-			"raw": "Numbing it out",
-			"name": "Numbing It Out (Infernal, Bargain)",
-			"keywords": ["Numbing"],
-			"desc": "You can give the Dark Power a String in order to remove a Condition or up to two harm."
-		},
-		"Elsewise Power":{
-			"raw": "Elsewise Power",
-			"name": "Elsewise Power (Infernal, Bargain)",
-			"keywords": ["Elsewise"],
-			"desc": "You can give the Dark Power a String to use a move you dont have, just this once. This move can come from any Skin."
-		},
-		"Uncanny Voices":{
-			"raw" : "Uncanny Voices",
-			"name": "Uncanny Voices (Infernal, Bargain)",
-			"keywords": ["Uncanny"],
-			"desc": "You can give the Dark Power a String in order to realize a secret about someone youre talking to. The owner of that character will reveal one of their secret fears, secret desires, or secret strengths (they choose which.)"
-		},
-		"Strings Attached":{
-			"raw": "Strings Attached",
-			"name": "Strings Attached (Infernal, Bargain)",
-			"keywords": ["Attached"],
-			"desc": "You can ask the Dark Power for something that you really, really want. The MC will attach a price to the thing you want, and hint at an undesired twist in its nature. If you pay the price, youll get what youre after."
-		},
-        "Infernal Sex":{
-			"raw": "Strings Attached",
-			"name" : "Sex Move (Infernal)",
-			"keywords": ["sex", "Infernal"],
-			"desc": "When you have sex, the Dark Power loses a String on you and gains a String on whoever you had sex with."
-	  }
-	},
-    "Mortal":{
-		"True Love":{
-			"raw" : "True Love",
-			"name": "True Love (Mortal)",
-			"keywords": ["True"],
-			"desc": "You always have exactly one Lover. The first is chosen during Your Backstory. If you ever fall in love with someone else instead, give them a String and they become your new Lover. You always carry *1 forward* to earning your Lovers heart or fancy."
-		},
-		"Mess With Me, Mess With Him":{
-			"raw": "Mess With Me, Mess With Him",
-			"name": "Mess With Me, Mess With Him (Mortal)",
-			"keywords": ["Mess"],
-			"desc": "When using your Lovers name as a threat, **add 2** to your roll to *Shut Someone Down* or *Keep Your Cool*. Your Lover gains a String on you."
-		},
-		"Entrenched":{
-			"raw" : "Entrenched",
-			"name": "Entrenched (Mortal)",
-			"keywords": ["Entrenched"],
-			"desc": "If you and another character have a combined total of *5 or more Strings* on one another, **gain 1** to all rolls against them."
-		},
-		"Sympathy is My Weapon":{
-			"raw" : "Sympathy is My Weapon",
-			"name": "Sympathy is My Weapon (Mortal)",
-			"keywords": ["Sympathy"],
-			"desc": "Every time you forgive someone for hurting you, and excuse their base nature, gain a String on them."
-		},
-		"Excuses Are My Armour":{
-			"raw" : "Exuses are my Armour",
-			"name": "Excuses Are My Armour (Mortal)",
-			"keywords": ["Excuses","My armor"],
-			"desc": "When you ignore some blatant problem with your Lover or how they treat you, mark experience."
-		},
-		"Downward Spiral":{
-			"raw" : "Downward Spiral",
-			"name": "Downward Spiral (Mortal)",
-			"keywords": ["downward","spiral"],
-			"desc": "When you *Gaze Into the Abyss*, you may cause yourself *1 Harm*. If you do, **add 2** to your roll."
-		},
-		"Down the Rabbit Hole":{
-			"raw": "Down the Rabbit Hole",
-			"name": "Down the Rabbit Hole (Mortal)",
-			"keywords": ["Rabbit hole"],
-			"desc": "When you go poking your nose in affairs not meant for your kind, someone involved in the situation gains a String on you, and you mark experience."
-		},
-        "Mortal Sex":{
-			"raw" : "Mortal Sex",
-			"name" : "Sex Move (Mortal)",
-			"keywords": ["sex", "Mortal"],
-			"desc": "When you have sex with someone, it awakens something sinister within. The next time you take your eyes off them, they become their Darkest Self."
+		"Devil":{
+			"Give to Get":{
+				"raw": "Give to Get",
+				"name": "Give to Get",
+				"keywords" : ["give to get"],
+				"desc": "If you supply someone with something they desire (physical or other) gain a *String* on them. If they asked you for it they mark experience when you do."
+			},
+			"Infamous":{
+				"raw": "Infamous",
+				"name": "Infamous",
+				"keywords" : ["infamous"],
+				"desc": "When you have **3** or more *Strings* on a character, they gain **+1** to doing your bidding."
+			},
+			"Master of the Inferno":{
+				"raw": "Master of the Inferno",
+				"name": "Master of the Inferno",
+				"keywords" : ["master of the inferno"],
+				"desc": "When a main or side character fights for you they inflict a minimum *Harm* __equal to your **Hot** stat__."
+			},
+			"Mammons Plaything":{
+				"raw": "Mammons Plaything",
+				"name": "Mammons Plaything",
+				"keywords" : ["mammons plaything"],
+				"desc": "You can spend a String you have on a main character to add 1 to their roll. If the roll becomes a **10 up** *you choose the results __for them__*."
+			},
+			"Gift Horse":{
+				"raw": "Gift Horse",
+				"name": "Gift Horse",
+				"keywords" : ["gift horse"],
+				"desc": "When you tempt a character and they refuse mark experience."
+			},
+			"Center of the Sabbath":{
+				"raw": "Center of the Sabbath",
+				"name": "Center of the Sabbath",
+				"keywords" : ["center of the sabbath"],
+				"desc": "When you enter your *Darkest Self* clear __all Conditions__ you have."
+			},
+			"Abyss Born":{
+				"raw": "Abyss Born",
+				"name": "Abyss Born",
+				"keywords" : ["abyss born"],
+				"desc": "If you get a **10 up** on a roll to *Gaze into the Abyss* about a desire you can procure you take **2 Foward** instead of one."
+			}
 		}
-	},
-    "Queen":{
-		"The Clique":{
-			"raw" : "The Clique",
-			"name": "The Clique (Queen)",
-			"keywords": ["Clique"],
-			"desc": "Youre at the head of the toughest, coolest, most powerful clique around. They count as a gang. Choose one of the following strengths for your gang: $`- Theyre armed (with guns and real dangerous stuff)` $`- Theyre connected (with money and designer drugs)` $`- Theyre talented (in a band or sports team)` $`- Theyre cultists (with dark oaths and willingness to die).`"
-		},
-        "The Shield":{
-			"raw" : "The Shield",
-			"name": "The Shield (Queen)",
-			"keywords": ["Shield"],
-			"desc": "When youre surrounded by your gang, **subtract 1 from any rolls** against you."
-		},
-        "Bought Loyalty":{
-			"raw" : "Bought Loyalty",
-			"name": "Bought Loyalty (Queen)",
-			"keywords": ["Bought"],
-			"desc": "You can give a side character a String on you to tempt them to do your bidding. The MC will tell you what sort of bribe, threat, or coaxing itll take to get that character to do what you want right now."
-		},
-        "And Your Enemies Closer":{
-			"raw": "And You Enemies Closer",
-			"name": "And Your Enemies Closer (Queen)",
-			"keywords": ["Enemies Close","Closer"],
-			"desc": "When someone betrays you, gain a String on them."
-		},
-        "Many Bodies":{
-			"raw": "Many Bodies",
-			"name": "Many Bodies (Queen)",
-			"keywords": ["Bodies"],
-			"desc": "When you promise one of your gang members to someone, **add 2** to your roll to *Turn Them On.* When one of your gang members has sex with someone, it triggers your Sex Move."
-		},
-        "Streaming":{
-			"raw": "Streaming",
-			"name": "Streaming (Queen)",
-			"keywords": ["Streaming"],
-			"desc": "You have a telepathic connection with your gang members. You can always hear their emotions and fears. If you try to hear specific thoughts, *Gaze Into the Abyss* about it and **add 1** to your roll."
-		},
-        "Queen Sex":{
-			"raw" : "Queen Sex",
-			"name" : "Sex Move (Queen)",
-			"keywords": ["sex", "Queen"],
-			"desc": "When you have sex with someone, they gain the Condition *one of them.* While the Condition remains, they count as part of your gang."
-		}
-	},
-    "Vampire":{
-        "Invited":{
-			"raw": "Invited",
-			"name": "Invited (Vampire)",
-			"keywords": ["invited"],
-			"desc": "You cannot enter a home without being invited. Whenever someone invites you in, gain a String on them."
-		},
-		"Hypnotic": {
-			"raw": "Hypnotic",
-			"name": "Hypnotic (Vampire)",
-			"keywords": ["hypnotic"],
-			"desc": "You can hypnotize people who have no Strings on you. **Roll with Hot.**",
-			"success": "They do exactly what you wish and have no idea that anything is wrong",
-			"complication": "The hypnosis works, but choose one: $`-They realize exactly what youve done to them` $`-They fuck up your commands` $`-Their sanity is unhinged.`"
-		},
-		"Cold As Ice":{
-			"raw": "Cold As Ice",
-			"name": "Cold As Ice (Vampire)",
-			"keywords": ["cold as ice","ice"],
-			"desc": "When you *Shut Someone Down* and roll a 7 or higher, you may choose an extra option from the list."
-		},
-		"The Feeding":{
-			"raw": "The Feeding",
-			"name": "The Feeding (Vampire)",
-			"keywords": ["feeding"],
-			"desc": "You feed on hot blood, direct from the source. If this is the first time theyve ever been fed upon, you both mark experience. When you feed, choose two: $`-You heal 1 harm` $`-You take 1 forward` $`-They definitely dont die.`"
-		},
-		"Marked For the Hunt":{
-			"raw": "Marked For The Hunt",
-			"name": "Marked For the Hunt (Vampire)",
-			"keywords": ["Marked"],
-			"desc": "Feeding on someone establishes a preternatural bond. From that point forward, whenever you *Gaze Into the Abyss* concerning their whereabouts or well-being, roll as if you had **Dark 3.**"
-		},
-		"Inescapable":{
-			"raw": "Inescapable",
-			"name": "Inescapable (Vampire)",
-			"keywords": ["Inescapable"],
-			"desc": "You may spend a String on someone to demand that they remain in your presence. If they still walk out on you, gain **2 Strings** on them."
-		},
-        "Vampire Sex":{
-			"raw": "Vampire Sex",
-			"name" : "Sex Move (Vampire)",
-			"keywords": ["sex", "vampire"],
-			"desc": "When you deny someone sexually, gain a String on them. When you have sex with someone, lose all Strings on them."
-		}
-	},
-    "Werewolf":{
-        "Primal Dominance":{
-			"raw": "Primal Dominance",
-			"name": "Primal Dominance (Werewolf)",
-			"keywords": ["Dominance"],
-			"desc": "When you harm someone, take a String on them."
-		},
-        "Scent of Blood":{
-			"raw": "Scent of Blood",
-			"name": "Scent of Blood (Werewolf)",
-			"keywords": ["Scent"],
-			"desc": "**Add 1** to all rolls against those who have been harmed in this scene already."
-		},
-        "Howl at the Moon":{
-			"raw": "Howl at the Moon",
-			"name": "Howl at the Moon (Werewolf)",
-			"keywords": ["Howl"],
-			"desc": "When basked in moonlight, you may act as if you had **Dark 3**."
-		},
-        "Spirit Armour":{
-			"raw": "Spirit Armour",
-			"name": "Spirit Armour (Werewolf)",
-			"keywords": ["Armour"],
-			"desc": "When basked in moonlight, any harm that you suffer is **reduced by 1**, and you **add 2** to all rolls to *Keep Your Cool*."
-		},
-        "Heightened Senses":{
-			"raw": "Heightened Senses",
-			"name": "Heightened Senses (Werewolf)",
-			"keywords": ["Senses","Heightended"],
-			"desc":"When you rely on your animal instincts to make sense of a charged situation, roll with *Dark.*",
-			"success": "Ask the MC three questions from below and take **1 Forward**",
-			"complication":"Ask one question from below and take *1 Forward* $`- Wheres my best escape route or way in?`  $`- Which enemy is the most vulnerable to me?`  $`- Whats their secret weakness?` $`- What poses the biggest threat to me?` $`- Whos in control here?`"
-		},          
-        "Unstable":{
-			"raw": "Unstable",
-			"name": "Unstable (Werewolf)",
-			"keywords": ["Unstable"],
-			"desc": "When you become your Darkest Self, mark experience."
-		}, 
-        "Werewolf Sex":{
-			"raw": "Werewolf Sex",
-			"name" : "sex Move (Werewolf)",
-			"keywords": ["sex", "Werewolf"],
-			"desc": "When you have sex with someone, you establish a deep spiritual connection with them. Until either of you breaks that spirit connection (by having sex with someone else) **add 1** to all rolls made to defend them. You can tell when that connection has been broken."
-		}
-	},
-    "Witch":{
-        "Sympathetic Tokens":{
-			"raw": "Sympathetic Tokens",
-			"name": "Sympathetic Tokens (Witch)",
-			"keywords": ["Tokens"],
-			"desc": "You gain power from Sympathetic Tokens - items of personal significance taken from others. Sympathetic Tokens count as Strings.."
-		}, 
-        "Hex-Casting":{
-			"raw": "Hexcasting",
-			"name": "Hex-Casting (Witch)",
-			"keywords": ["Casting"],
-			"desc": "You can cast Hexes. Choose two that you know. To cast them, either expend a Sympathetic Token during a secret ritual, or meet the targets gaze and chant at them in tongues. Then roll with *Dark.*",
-			"success": "The Hex works, and can easily be reversed",
-			"complication":"The Hex works but choose one: $`- The casting does you 1 Harm;`  $`- The Hex has weird side effects;` $`- Trigger your Darkest Self.`"
-		}, 
-        "Transgressive Magic":{
-			"raw": "Transgressive Magic",
-			"name": "Transgressive Magic (Witch)",
-			"keywords": ["transgressive"],
-			"desc": "If your ritual transgresses the communitys moral or sexual standards, **add 1** to your Hex-Casting roll."
-		},
-        "Sanctuary":{
-			"raw": "Sanctuary",
-			"name": "Sanctuary (Witch)",
-			"keywords": ["sanctuary"],
-			"desc": "You have a secret place for practicing witchcraft. **Add 1** to all rolls you make within this space."
-		}, 
-        "Wither":{
-			"raw": "Wither",
-			"name": "Wither (Witch Hey)",
-			"keywords": ["wither"],
-			"desc": "The hexed loses all of their hair, or their teeth start falling out, or their period arrives unexpected and heavy, or their skin gets all sickly yellow and spotty. Whatever the specifics, its bad."
-		}, 
-        "Binding":{
-			"raw": "Binding",
-			"name": "Binding (Witch)",
-			"keywords": ["binding"],
-			"desc": "The person cannot physically harm others."
-		}, 
-        "Ring of Lies":{
-			"raw": "Ring of Lies",
-			"name": "Ring of Lies (Witch)",
-			"keywords": ["ring of lies", "ring"],
-			"desc": "Whenever the person attempts to lie, they hear a piercing ringing noise. Big lies will often make their knees buckle and disorient them. Severe lies can cause harm or even brain damage."
-		}, 
-        "Watching":{
-			"raw": "Watching",
-			"name": "Watching (Witch)",
-			"keywords": ["wtching"],
-			"desc": "You enter a deep sleep, and begin to see the world through the eyes of the hexed. You can feel their reactions to and impressions of what they are seeing."
-		}, 
-        "Illusions":{
-			"raw": "Illusions",
-			"name": "Illusions (Witch)",
-			"keywords": ["Illusions"],
-			"desc": "**Pick one:** snakes and bugs, demonic visages, false prophecies, non-existent subtext. $The hexed sees that thing everywhere. You have no control over the exact images or manifestations."
-		}, 
-        "Witch Sex":{
-			"raw": "Witch Sex",
-			"name" : "Sex Move (Witch)",
-			"keywords": ["sex", "Witch"],
-			"desc": "After sex, you can take a Sympathetic Token from them. They know about it, and its cool."
-        }
-    },
-    "Growing Up":{
-        "Make Others Feel Beautiful":{
-            "raw" : "Make Others Feel Beautiful",
-            "name": "Make Others Feel Beautiful (Growing Up)",
-            "keywords": ["make others feel beautiful", "makeothersfeelbeautiful", "makeothers", "beautiful"],
-            "desc": "Roll with *Hot*.",
-            "success": "Choose **two** from below: $ *-they take 1 Forward* $*-they remove a Condition* $*-they mark experience* $*-you take 1 Forward*",
-            "complication":"You can tempt them to do what you want, as if youd just spent a String."
-        },
-        "Call People On Their Shit":{
-            "raw" : "Call People On Their Shit",
-            "name": "Call People On Their Shit (Growing Up)",
-            "keywords": ["call people on their shit", "shit", "call", "call people"],
-            "desc": "Roll with *Cold*.",
-            "success": "Choose **one** from below: $ *-they lose a String against __someone else__* $*-they choke up, break down, or bail*",
-            "complication":"You come across poorly. They *give you a* **condition** and you choose **one** from below:$ *-they lose a String against __someone else__* $*-they choke up, break down, or bail*"
-        },
-        "Intervene in an Act of Violence":{
-            "raw" : "Intervene in an Act of Violence",
-            "name": "Intervene in an Act of Violence (Growing Up)",
-            "keywords": ["intervene in an act of violence", "intervene", "intervene violence"],
-            "desc": "Roll with *Volatile*.",
-            "success": "You get in the way and they need to deal with you first. Whoever you are protexting gets to react and takes 1 Forward to whatever they decide to do. ",
-            "complication":"You are in the middle of it! The assilant chooses one from below:$ *-I back off* $*-I take whatever harm you want to give me as I push past* $*-I redirect the violence to you*"
-        },
-        "Share Your Pain":{
-            "raw" : "Share Your Pain",
-            "name": "Share Your Pain (Growing Up)",
-            "keywords": ["share your pain", "share pain"],
-            "desc": "Roll with *Dark*.",
-            "success": "You share your pain. Choose **two**: $*-remove one Condition from yourself* $*-remove a Condition from someone who listened* $*-take 1 Forward toward helping yourself* $*-those who listened take 1 Forward to helping you.*",
-            "complication":"You share your pain. Choose **one**: $*-remove one Condition from yourself* $*-remove a Condition from someone who listened* $*-take 1 Forward toward helping yourself* $*-those who listened take 1 Forward to helping you.*"
-        }
-    }
-    }
-  }
+	}
+ }

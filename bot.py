@@ -52,7 +52,8 @@ print('Moves loaded.')
 
 db_handler = db_handler()
 
-counter = counter.counter()
+counter = counter.counter(datetime.datetime.now())
+initialized = None
 
 
 #--------------Events ------------------
@@ -68,6 +69,16 @@ async def on_ready():
     #printstats.start()
 
 @bot.command()
+async def stats(ctx):
+    """Tim-Only command. Shows the current runtime of the bot."""
+    if(ctx.author.id != 314135917604503553):
+        return
+    
+
+    await sendmsg(ctx, counter.get_stats())
+
+
+@bot.command()
 async def joined(ctx, member:discord.Member):
     """Triggered if someone joins the server"""
     if(member and ctx.guild.id == 679614550286663721):
@@ -78,6 +89,9 @@ async def joined(ctx, member:discord.Member):
 async def on_message(message):
     """Triggered if a message is read by the bot"""
     log_msg(message)
+
+    if("dmchannel" in message.channel.name.lower()):
+       return
 
     if(message.author is not message.guild.me):
         counter.add_message(message.created_at)
@@ -105,7 +119,6 @@ def log_msg(message):
 
     db_handler.log(strings['relative_database_path'], message)
     return
-
 
 
 @bot.event
@@ -468,7 +481,7 @@ async def moves(ctx):
     for src in dic:
         for skin in dic[src]:
             if(skin.lower() == skin_name):
-                s += 'Skin: ' + skin + '\n'
+                s += 'Entry: ' + skin + '\n'
                 for move in dic[src][skin]:
                     s += '\t' + move
                     s += '\n'
@@ -478,7 +491,7 @@ async def moves(ctx):
     for src in dic:
         s += 'Source: ' + src + '\n'
         for skin in dic[src]:
-            s += '\tSkin: ' + skin + '\n'
+            s += '\tEntry: ' + skin + '\n'
 
     ret =strings['skin_not_found'].format(searched = skin_name) + '\n' + s
 
@@ -495,7 +508,7 @@ async def skins(ctx):
     for src in dic:
         s += 'Source: ' + src + '\n'
         for skin in dic[src]:
-            s += '\tSkin: ' + skin + '\n'
+            s += '\tEntry: ' + skin + '\n'
     await sendmsg(ctx, s)
 
 @bot.command()
@@ -982,7 +995,8 @@ async def helpme(ctx):
         me = ctx.guild.me.mention,
         tim = bot.get_user(314135917604503553), #ID for tim
         annie = bot.get_user(132240553013280768).name,
-        ollie = bot.get_user(131352795444936704).name))
+        ollie = bot.get_user(131352795444936704).name,
+        taylor= bot.get_user(430181668666605570).name))
 
 @bot.command()
 async def opengamehelp(ctx):

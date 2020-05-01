@@ -58,14 +58,6 @@ class Fun_commands(commands.Cog):
             await dogfact(ctx)
         if(choice == choices[4]):
             await dadjoke(ctx)
-
-    @commands.command()
-    async def hammer(ctx):
-        await sendmsg(ctx, 'Can\'t touch this.')
-        return
-        msg = ctx.message.content[7:].strip()
-        await sendmsg(ctx,(strings['banhammer'].format(
-                          name = msg.replace('@',''))))
     @commands.command()
     async def dadjoke(ctx):
         headers = {'Accept':'text/plain'}
