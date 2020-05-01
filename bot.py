@@ -612,7 +612,7 @@ async def move(ctx):
                 raw = raw_string,
                 comm = message) + '\n'
             for element in candidates:
-                print("Element: " + str(element))
+                #print("Element: " + str(element))
                 temp = strings['multiple_moves_single'].format(
                     move = str(element['name']),
                     skin = str(get_skin_by_name(element['raw'], True)),
