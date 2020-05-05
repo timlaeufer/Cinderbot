@@ -725,13 +725,12 @@ async def movelist(ctx):
 
 @bot.command()
 async def name(ctx):
-    """Gives boy or girl names from drycodes.com. Alias for .names"""
+    Gives boy or girl names from drycodes.com. Alias for .names
     await names(ctx)
 
 @bot.command()
 async def names(ctx):
-    """Gives boy or girl names. .names girl, or .names boy. From drycodes.com"""
-
+    Gives boy or girl names. .names girl, or .names boy. From drycodes.com
     lis = []
     s = ''
     if('boy' in ctx.message.content):
