@@ -365,7 +365,7 @@ async def confirm(ctx):
         if(player_role):
             overwrites[player_role] = discord.PermissionOverwrite(
                 send_messages = False, speak = False, view_channel = False)
-        #Player: Send False, Speak False, View False
+        #mc: Send False, Speak False, View False
         if(mc_role):
             overwrites[mc_role] = discord.PermissionOverwrite(
                 send_messages = False, speak = False, view_channel = False)
@@ -392,7 +392,7 @@ async def confirm(ctx):
         if(player_role):
             overwrites[player_role] = discord.PermissionOverwrite(
                 send_messages = False, speak = False, view_channel = True)
-        #Player: Send False, Speak False, View True
+        #mc: Send False, Speak False, View True
         if(mc_role):
             overwrites[mc_role] = discord.PermissionOverwrite(
                 send_messages = False, speak = False, view_channel = True)
@@ -415,11 +415,38 @@ async def confirm(ctx):
             created_channels.append(temp)
         elif(channel[1] == 'text'):#Text channel
             if('visitor' in channel[0]): #if 'visitor' in channel name
+                overwrites = {}
+
+                overwrites[new_role] = discord.PermissionOverwrite(
+                        send_messages = True, speak = True, view_channel = True)
+                overwrites[serv.me] = discord.PermissionOverwrite(
+                        send_messages = True, view_channel = True)
+
+                #bots: send True, Speak True, View True
+                if(bot_role):
+                    overwrites[bot_role] = discord.PermissionOverwrite(
+                        send_messages = True, speak = True, view_channel = True)
+                #mods: send True, Speak True, View True
+                if(mod_role):
+                    overwrites[mod_role] = discord.PermissionOverwrite(
+                        send_messages = True, speak = True, view_channel = True)
+                #everyone: Send False, Speak False, View False
+                if(everyone_role):
+                    overwrites[everyone_role] = discord.PermissionOverwrite(
+                        send_messages = False, speak = False, view_channel = False)
+                #player: Send True, Speak False, View True
+                if(player_role):
+                    overwrites[player_role] = discord.PermissionOverwrite(
+                        send_messages = True, speak = False, view_channel = True)
+                #mc: Send True, Speak False, View True
+                if(mc_role):
+                    overwrites[mc_role] = discord.PermissionOverwrite(
+                         send_messages = True, speak = False, view_channel = True)
+                    
                 temp = await serv.create_text_channel(
                     channel[0],
                     category = new_cat,
-                    overwrites ={player_role: discord.PermissionOverwrite(send_messages=True),
-                                 mc_role: discord.PermissionOverwrite(send_messages=True)})
+                    overwrites = overwrites)
             else:#regular text channel
                 temp = await serv.create_text_channel(channel[0], category = new_cat)
             created_channels.append(temp)
@@ -493,7 +520,7 @@ async def moves(ctx):
         for skin in dic[src]:
             s += '\tEntry: ' + skin + '\n'
 
-    ret =strings['skin_not_found'].format(searched = skin_name) + '\n' + s
+    ret = strings['skin_not_found'].format(searched = skin_name) + '\n' + s
 
     await sendmsg(ctx, ret)
 

@@ -6,3 +6,5 @@ __pycache__/constants.cpython-38.pyc
 *.db
 *.csv
 *.json
+moves.json
+moves.json

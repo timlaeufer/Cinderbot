@@ -336,7 +336,7 @@ last_x_days = int(input("How many days from now?"))
 if(last_x_days < 1):
     last_x_days = 1
 
-tups = ana.get_serv_activity(time_step_in_min = time_step, last_x_days = 7, server_id = serv_id)
+tups = ana.get_serv_activity(time_step_in_min = time_step, last_x_days = last_x_days, server_id = serv_id)
 ana.plot_data(tups, x_label = 'time in UTC',
               y_label = 'amount of messages per ' + str(time_step) + ' min',
               title = 'Messages the last ' + str(last_x_days) + ' days, server_id = ' + str(serv_id))
