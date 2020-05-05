@@ -11,7 +11,6 @@ from discord.ext import tasks, commands
 import configparser #reading bot.ini
 import datetime #time and dates
 import shutil #moving files easily
-import requests #for fun moves
 import json #reading moves.json
 import string #string.letters and string.digits
 import random #rolling
@@ -19,8 +18,6 @@ import inspect
 import counter
 from db_handler import *
 import fun_commands
-
-#Bot initialisation:
 
 #Bot initialisation: 
 description = '''Manages characters, rolls, and moves
@@ -724,6 +721,8 @@ async def movelist(ctx):
 
     await sendmsg(ctx, s, pm_to_author = True)
 
+"""    
+
 @bot.command()
 async def name(ctx):
     """Gives boy or girl names from drycodes.com. Alias for .names"""
@@ -755,7 +754,7 @@ async def names(ctx):
         s += el.replace('_', ' ') + '\n'
 
     await sendmsg(ctx, s)
-
+"""
 
 #Event Commands:
 #NPCs
@@ -1302,8 +1301,5 @@ def is_mention(arg):
         return False
 
 print('\nStarting bot...')
-
-print('\tLoading cogs ....')
-bot.add_cog(fun_commands.Fun_commands(bot))
 
 bot.run(read_token())
