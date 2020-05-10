@@ -16,6 +16,7 @@ class db_handler:
     STR_MESSAGE = 'message'
     STR_EDITS = 'edits'
     STR_DELETES = 'deletes'
+
     def log(self, rel_path, message):
         conn = sqlite3.connect('logs/messages.db')
         c = conn.cursor()

@@ -18,6 +18,7 @@ import inspect
 import counter
 from db_handler import *
 import fun_commands
+import traceback
 
 #Bot initialisation: 
 description = '''Manages characters, rolls, and moves
@@ -70,9 +71,13 @@ async def stats(ctx):
     """Tim-Only command. Shows the current runtime of the bot."""
     if(ctx.author.id != 314135917604503553):
         return
-    
 
-    await sendmsg(ctx, counter.get_stats())
+    s = counter.get_stats()
+    if(len(s)>1800):
+        await sendmsg(ctx, 'Check your DMs!')
+        await sendmsg(ctx, counter.get_stats(), pm_to_author = True)
+    else:
+        await sendmsg(ctx, counter.get_stats())
 
 
 @bot.command()
@@ -87,11 +92,22 @@ async def on_message(message):
     """Triggered if a message is read by the bot"""
     log_msg(message)
 
-    if("dmchannel" in message.channel.name.lower()):
-       return
 
-    if(message.author is not message.guild.me):
-        counter.add_message(message.created_at)
+    try:
+        env_name = message.channel.guild.name
+    except AttributeError:
+        try:
+            env_name = 'DM-' + message.channel.recipient.name
+        except AttributeError:
+            env_name = 'GroupDM'
+            
+    if(message.author.id == 691792159455707157):
+        return
+    else:
+        counter.add_message(message.created_at,
+                            env_name = env_name,
+                            is_cmd = False)
+                
 
 
 @bot.listen()
@@ -121,25 +137,38 @@ def log_msg(message):
 @bot.event
 async def on_command(ctx):
     """Triggered if a command is called"""
-    counter.add_command()
+
+    message = ctx.message
+
     try:
-        s = strings['called'].format(
-            category = ctx.channel.category,
-            channel = ctx.channel,
-            author = ctx.author,
-            message = ctx.message.content,
-            server = ctx.guild.name,
-            time = time())
+        env_name = message.channel.guild.name
     except AttributeError:
-        s = strings['called'].format(
-            category = 'DM Channel',
-            channel = ctx.channel,
-            author = ctx.author,
-            message = ctx.message.content,
-            server = 'No server',
-            time = time())
+        try:
+            env_name = 'DM-' + message.channel.recipient.name
+        except AttributeError:
+            env_name = 'GroupDM'
+            
+    if(message.author.id == 691792159455707157):
+        return
+    else:
+        counter.add_message(message.created_at,
+                            env_name = env_name,
+                            is_cmd = True)
+
     #print(s)
     #await post_log(ctx, s)
+
+@bot.listen()
+async def on_command_error(ctx, error):
+    ex = error
+    s = '---------------------' + str(time()) + '----------'
+    s += '```'.join(traceback.format_exception(etype=type(ex),
+                                           value=ex, tb=ex.__traceback__))
+    s += '```'
+
+    if('CommandNotFound' in s):
+        return
+    await post_error(ctx, s)
 
 #-------------------Bot Commands ------------------------
 @bot.command()
@@ -512,12 +541,9 @@ async def moves(ctx):
                 await sendmsg(ctx, s)
                 return
 
-    for src in dic:
-        s += 'Source: ' + src + '\n'
-        for skin in dic[src]:
-            s += '\tEntry: ' + skin + '\n'
 
-    ret = strings['skin_not_found'].format(searched = skin_name) + '\n' + s
+
+    ret = strings['skin_not_found'].format(searched = skin_name)
 
     await sendmsg(ctx, ret)
 
@@ -533,7 +559,9 @@ async def skins(ctx):
         s += 'Source: ' + src + '\n'
         for skin in dic[src]:
             s += '\tEntry: ' + skin + '\n'
-    await sendmsg(ctx, s)
+    
+    await sendmsg(ctx, 'Check your DMs!')
+    await sendmsg(ctx, s, pm_to_author = True)
 
 @bot.command()
 async def move(ctx):
@@ -646,20 +674,29 @@ async def move(ctx):
             candidates = remove_dupes(candidates)
             s = ''
             s += strings['multiple_moves_found'].format(
+                num = len(candidates),
                 raw = raw_string,
                 comm = message) + '\n'
-            for element in candidates:
-                #print("Element: " + str(element))
-                temp = strings['multiple_moves_single'].format(
-                    move = str(element['name']),
-                    skin = str(get_skin_by_name(element['raw'], True)),
-                    call = str(element['raw']).lower()) + '\n'
-                if(len(s) + len(temp) >= 2000):
-                    pass
-                else:
-                    s += temp
-            await sendmsg(ctx, s)
-            return
+            if(len(candidates) == 1):
+                move = candidates[0]
+            
+            else:
+                for i, element in enumerate(candidates):
+                    #print("Element: " + str(element))
+                    if(i < 2):
+                        temp = strings['multiple_moves_single'].format(
+                            move = str(element['name']),
+                            skin = str(get_skin_by_name(element['raw'], True)),
+                            call = str(element['raw']).lower()) + '\n'
+                        if(len(s) + len(temp) >= 2000):
+                            break
+                        else:
+                            s += temp
+                    else:
+                        break
+
+                await sendmsg(ctx, s)
+                return
         else:
             await sendmsg(ctx, strings['move_not_found'].format(
                 raw = raw_string,
@@ -767,8 +804,8 @@ async def npc(ctx):
     msg = ctx.message.content[4:].strip()
     if(msg.isnumeric()):
         num = int(msg)
-        if(num > len(questions)-1):
-            num = len(questions)-1
+        if(num > len(questions)):
+            num = len(questions)
     else:
         #parse keywords
         keywords = []
@@ -861,6 +898,7 @@ async def addnpc(ctx):
     with open('npcquestions.questions', 'w+') as f:
         f.writelines(questions)
 
+
     await sendmsg(ctx, strings['added_question'].format(
         mention = ctx.author.mention,
         question = ctx.message.content[8:],
@@ -900,119 +938,17 @@ async def delnpc(ctx):
                 question = questions[num-1])
             del questions[num-1]
             with open('npcquestions.questions', 'w+') as f:
-                f.writelines(questions)
+                for i, q in enumerate(questions):
+                    if(i == len(questions)-1):
+                        f.write(q.replace('\n', ''))
+                    else:
+                        f.write(str(q))
+            
     else:
         s = strings['del_argument_not_readable']
 
     await sendmsg(ctx, s)
 
-#Locations:
-@bot.command()
-async def location(ctx):
-    """Draws a random location question"""
-    with open('locationquestions.questions', 'r') as f:
-        questions= f.readlines()
-    msg = ctx.message.content[4:].strip()
-    if(msg.isnumeric()):
-        num = int(msg)
-        if(num > len(questions)-1):
-            num = len(questions)-1
-    else:
-        num = random.randint(1, len(questions)-1)
-    question = questions[num]
-    await sendmsg(ctx, strings['send_location'].format(
-        question = question,
-        num = num))
-
-@bot.command()
-async def locations(ctx):
-    """sends all location questions to the author in pms """
-    if('list' in ctx.message.content):
-        simple = True
-    else:
-        simple = False
-    s = ''
-    with open('locationquestions.questions', 'r') as f:
-        questions = f.readlines()
-    s += strings['questions_list_location']
-    for i, q in enumerate(questions):
-        s += strings['questions_list_single'].format(
-            num = i+1,
-            question = q).replace('\n', '').strip() + '\n'
-        """
-        if(len(s) > 1500):
-            await sendmsg(ctx, s, pm_to_author = True)
-            s = ''
-        """
-
-    await sendmsg(ctx, s, pm_to_author = True)
-
-@bot.command()
-async def addlocation(ctx):
-    """Adds a question"""
-    if(not await on_main_server(ctx)):
-        return
-
-    is_mod = await check_mod(ctx)
-    author = ctx.author
-
-
-    if(not is_mod):
-        await sendmsg(ctx, strings['only_mods_add_questions'].format(
-            mention = author.mention))
-        return
-
-    with open('locationquestions.questions', 'r') as f:
-        questions = f.readlines()
-    num = len(questions)+1
-    questions.append('\n' + ctx.message.content[13:])
-    with open('locationquestions.questions', 'w+') as f:
-        f.writelines(questions)
-
-    await sendmsg(ctx, strings['added_question'].format(
-        mention = ctx.author.mention,
-        question = ctx.message.content[13:],
-        num = num))
-
-@bot.command()
-async def dellocation(ctx):
-    """Delete an npc-question"""
-
-    if(not await on_main_server(ctx)):
-        return
-
-    is_mod = await check_mod(ctx)
-    author = ctx.author
-
-
-    if(not is_mod):
-        await sendmsg(ctx, strings['only_mods_add_questions'].format(
-            mention = author.mention))
-        return
-
-    with open('locationquestions.questions', 'r') as f:
-        questions = f.readlines()
-
-    s= ''
-
-    msg = ctx.message.content[12:].strip()
-    if(msg.isnumeric()):
-        num = int(msg)
-        if(num > len(questions)-1):
-            s = strings['del_given_index_too_high'].format(
-                num1 = num,
-                max_num = len(questions)-1)
-        else:
-            s = strings['del_question_deleted'].format(
-                num = num,
-                question = questions[num])
-            del questions[num-1]
-            with open('locationquestions.questions', 'w+') as f:
-                f.writelines(questions)
-    else:
-        s = strings['del_argument_not_readable']
-
-    await sendmsg(ctx, s)
 #on_command and help functions
 @bot.command()
 async def helpme(ctx):
@@ -1021,7 +957,8 @@ async def helpme(ctx):
         tim = bot.get_user(314135917604503553), #ID for tim
         annie = bot.get_user(132240553013280768).name,
         ollie = bot.get_user(131352795444936704).name,
-        taylor= bot.get_user(430181668666605570).name))
+        taylor= bot.get_user(430181668666605570).name,
+        koifi = bot.get_user(698069648553410580).name))
 
 @bot.command()
 async def opengamehelp(ctx):
@@ -1066,7 +1003,7 @@ async def sendmsg(ctx, msg, pm_to_author=False):
                     category = 'Private Message',
                     channel = ch,
                     message = msg,
-                    server = ctx.guild.name,
+                    server = "DM",
                     time = time()) + "\n\n"
         else:
             await ctx.send(msg)
@@ -1101,6 +1038,17 @@ async def post_log(ctx, msg, pm_to_author = False):
     await ch.send(msg.replace('@', 'at'))
 
 
+async def post_error(ctx, msg):
+    #server id:
+    #secret channel ID:
+    serv = bot.get_guild(679614550286663721)
+    log_ch = serv.get_channel(708221304431444115)
+
+    ch = log_ch
+
+    await ch.send(msg)
+
+
 async def check_mod(ctx):
     """Checks if a user that sent a message has the role <Moderator>"""
     if('dmchannel' in ctx.channel.name.lower()):
@@ -1129,9 +1077,14 @@ async def check_mod(ctx):
 
 async def check_player(ctx):
     """Checks if a user that sent a message has the role <Player>"""
-    author = ctx.author
-    roles = author.roles
-    message = ctx.message.content
+
+    try:
+        author = ctx.author
+        roles = author.roles
+        message = ctx.message.content
+    except AttributeError:
+        await sendmsg(ctx, 'Only available on main server. Sorry! https://discord.gg/UsBEnvQ')
+        return
 
     if (await check_mod(ctx)):
         #If the user is a mod, it overrides needing the player role
