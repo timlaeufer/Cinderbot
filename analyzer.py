@@ -443,8 +443,8 @@ if('y' in inp):
 elif('e' in inp):
     #General, off-topic, creative, adults, open-play
     db = 'messages_pi.db'
-    time_step_in_min = 60
-    num_days = 7
+    time_step_in_min = 1440
+    num_days = 45
     ana = Analyzer(path + 'sql_statements.ini', path + db)
     dic = ana.get_serv_activity(time_step_in_min = time_step_in_min,
                                  last_x_days = num_days,
