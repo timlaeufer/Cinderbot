@@ -67,7 +67,8 @@ class db_handler:
 
         create_message
         """
-
+        ins = False
+        allowed = [679614550286663721] #mh2, lonesome town
         #Check if DM
         try:
             cat = message.channel.category
@@ -86,10 +87,13 @@ class db_handler:
                 self.insert_category(c, message.channel.category)
             except:
                 pass
+            for el in allowed:
+                if(message.guild.id == el):
+                    ins = True
             self.insert_channel(c, message.channel)
             
-        
-        self.insert_message(cursor = c, message_obj = message)
+        if(ins):
+            self.insert_message(cursor = c, message_obj = message)
         conn.commit()
         conn.close()
 
