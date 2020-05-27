@@ -77,6 +77,7 @@ class Analyzer:
                         pts_per_day = 24,
                         last_x_days = 7):
         """Returns a list of tuples (time, #msgs) of a certain channel"""
+        pass
         
 
 
@@ -97,29 +98,99 @@ class Analyzer:
                           server_id = 679614550286663721,
                           time_step_in_min = 120,
                           last_x_days = 7,
-                          days_ago = 0):
+                          days_ago = 0, extended = False):
         """Returns a list of tuples with (time, count_msg) grouped my time_steps"""
 
         #get end point for given time interval
         td_days_ago = datetime.timedelta(days=days_ago)
-        end = datetime.datetime.now() - td_days_ago
-        end.replace(hour = 0,
-                    minute = 0,
-                    second = 0,
-                    microsecond = 0)
+        end = self.norm_time(datetime.datetime.now() - td_days_ago)
 
         #get start point for given time interval
         td_last_x_days = datetime.timedelta(days = last_x_days)
         start = end - td_last_x_days
-        
-        query = self.sqls['get_serv_msg_by_range'].format(
-            serv_id = server_id,
-            end = self.get_time_as_db_string(end),
-            start = self.get_time_as_db_string(start))
+        start = self.norm_time(start)
+
+        if(extended):
+            query = self.sqls['get_serv_msg_by_range_ext'].format(
+                end = self.get_time_as_db_string(end),
+                start = self.get_time_as_db_string(start))
+        else:
+            query = self.ext_sql.format(
+                serv_id = server_id,
+                end = self.get_time_as_db_string(end),
+                start = self.get_time_as_db_string(start))
+
         rows = self.get_sql_res(query)
-        tups = self.count_msg_per_time(rows, time_step_in_min = time_step_in_min)
+        
+        if(extended):
+            #count how many categories are present in datased
+            return self.ana_extended(rows,
+                                     time_step_in_min = time_step_in_min)
+
+        else:
+            tups = self.count_msg_per_time(rows, time_step_in_min = time_step_in_min)
 
         return tups
+
+    def ana_extended(self, rows, time_step_in_min = 120):
+        #Create dicts with following:
+        """
+        cat_id ->
+            category_name(str),
+            channels (dict)
+                name(str),
+                tup(list of (time, amount) tuples),
+                rows(list of sqlite3 rows)
+            tup (list of rows)
+
+        Then, count individual channel times, save in tup
+        Then, add individ channel times and set in cat_id dict entry
+        """
+        dic = {}
+
+        for row in rows: #iterate every row
+            cat_id = row['category_id']
+            cat_name = row['category_name']
+            ch_id = row['channel_id']
+            ch_name = row['channel_name']
+            if(cat_id not in dic.keys()): #check if category in dic
+                dic[cat_id] = {}
+                dic[cat_id]['name'] = cat_name
+                dic[cat_id]['channels'] = {}
+                dic[cat_id]['rows'] = []
+                dic[cat_id]['tups'] = []
+            if(ch_id not in dic[cat_id]['channels'].keys()): #check if ch_id in cat channels list
+                dic[cat_id]['channels'][ch_id] = {}
+                dic[cat_id]['channels'][ch_id]['name'] = ch_name
+                dic[cat_id]['channels'][ch_id]['tups'] = []
+                dic[cat_id]['channels'][ch_id]['rows'] = []
+            
+            #add row into correct channel row list
+            dic[cat_id]['channels'][ch_id]['rows'].append(row)
+
+            #add row into category row list
+            dic[cat_id]['rows'].append(row)
+
+        #get tuples for every channel
+        for cat_id in dic.keys():
+            dic[cat_id]['tups'] = self.count_msg_per_time(
+                dic[cat_id]['rows'],
+                time_step_in_min = time_step_in_min)
+            print(str(dic[cat_id]['name'] + ' ' + str(len(dic[cat_id]['tups']))))
+            for ch_id in dic[cat_id]['channels'].keys():
+                dic[cat_id]['channels'][ch_id]['tups'] = self.count_msg_per_time(
+                    dic[cat_id]['channels'][ch_id]['rows'],
+                    time_step_in_min = time_step_in_min)
+                  
+                print('\t' + str(dic[cat_id]['channels'][ch_id]['name']) + str(len(dic[cat_id]['channels'][ch_id]['tups'])))
+
+        return dic
+
+    def norm_time(self, time_obj):
+        return time_obj.replace(
+            hour = 0,
+            minute = 0,
+            second = 0)
 
     def get_time_as_db_string(self, time_obj):
         """Returns a time obj as a >YYYY-MM-DD HH:MM:SS.mmmmmmUTC< format obj"""
@@ -172,7 +243,7 @@ class Analyzer:
         
         return new_time        
 
-    def count_msg_per_time(self, rows, time_step_in_min = 30):
+    def count_msg_per_time(self, rows, time_step_in_min = 30, id_filter = None):
         """Counts how many msg per time_step_in_min step were are in the rows"""
         #returns tuple (time, msg_counted_from_last_time)
         
@@ -180,7 +251,12 @@ class Analyzer:
         tup = []
 
         start_time = rows[0]['time']
+        #set time to start of day
+        #print('Starting time: ' + str(start_time))
+        start_time = self.parse_time_from_string(start_time)
+        start_time = self.get_time_as_db_string(self.norm_time(start_time))
         end_time = rows[-1]['time']
+        #print('Ending time: ' + str(end_time))
 
 
         next_time = self.get_next_time(start_time, time_step_in_min, as_str = True)
@@ -310,33 +386,95 @@ class Analyzer:
 
         plt.show()
 
+    def plot_extended(self, dic, time_step_in_min = 60, num_days = 7):
+        
+        hours = mdates.HourLocator()
+        hours_fmt = mdates.DateFormatter('%H')
+        days = mdates.DayLocator()
+        days_fmt = mdates.DateFormatter('%d')
+
+        plt.xlabel('Time in UTC')
+        plt.title('Time of MH2 Server per ' + str(time_step_in_min) + ' min.')
+
+        i = 0
+        for el in dic.keys():
+            i += 1
+            hundred = len(dic.keys())*100
+            plt.subplot(hundred + 10 + i)
+
+            #plot cat data
+            data = dic[el]['tups']
+            x_vals = [self.parse_time_from_string(i[0]) for i in data] #time values
+            y_vals = [i[1] for i in data] #sum values
+            plt.plot(x_vals, y_vals, label =str(dic[el]['name']))
+            plt.ylabel(str(dic[el]['name']) + ' category')
+            ax = plt.gca()
+            legend = ax.legend(loc = 'upper left', fontsize = 'xx-small')
+            
+            for ch_id in dic[el]['channels'].keys():
+                data = dic[el]['channels'][ch_id]['tups']
+                ch_name = str(dic[el]['channels'][ch_id]['name'])
+                x_vals = [self.parse_time_from_string(i[0]) for i in data] #time values
+                y_vals = [i[1] for i in data] #sum values
+                
+                plt.plot(x_vals, y_vals, label = ch_name)
+                ax = plt.gca()
+                legend = ax.legend(loc = 'upper left', fontsize = 'xx-small')
+
+        plt.tight_layout()
+
+        plt.show()
+
         
 
 path = 'logs/'
 dbs = [f for f in listdir(path) if isfile(join(path, f)) and
              '.db' in f]
-
-print('There are the following databases:')
-for el in dbs:
-    print('\t' + str(el) + '\n\t\t(' + str(getsize(path+el)/10000000) + 'mb)')
-db = input('What database (from ' + path + '...) would you like to analyze?')
-
-if('.db' not in db):
-    db = db + '.db'
-
-ana = Analyzer(path + 'sql_statements.ini', path + db)
-
 serv_id = 679614550286663721 #Lonesome Town = 695629497709494303
+inp = input('Fast(y)/Extended(e)?')
+if('y' in inp):
+    db = 'messages_pi.db'
+    ana = Analyzer(path + 'sql_statements.ini', path + db)
+    tups = ana.get_serv_activity(time_step_in_min = 60, last_x_days = 3, server_id = serv_id)
+    ana.plot_data(tups, x_label = 'time in UTC',
+              y_label = 'amount of messages per ' + str(60) + ' min',
+              title = 'Messages the last ' + str(3) + ' days, server_id = ' + str(serv_id))
 
-time_step = int(input("Which time step in minutes?"))
-if(time_step < 15):
-    time_step = 15
+elif('e' in inp):
+    #General, off-topic, creative, adults, open-play
+    db = 'messages_pi.db'
+    time_step_in_min = 60
+    num_days = 7
+    ana = Analyzer(path + 'sql_statements.ini', path + db)
+    dic = ana.get_serv_activity(time_step_in_min = time_step_in_min,
+                                 last_x_days = num_days,
+                                 server_id = serv_id,
+                                 extended = True)
+    ana.plot_extended(dic,
+                      time_step_in_min = time_step_in_min,
+                      num_days = num_days)
+ 
 
-last_x_days = int(input("How many days from now?"))
-if(last_x_days < 1):
-    last_x_days = 1
+else:
+    print('There are the following databases:')
+    for el in dbs:
+        print('\t' + str(el) + '\n\t\t(' + str(getsize(path+el)/10000000) + 'mb)')
+    db = input('What database (from ' + path + '...) would you like to analyze?')
 
-tups = ana.get_serv_activity(time_step_in_min = time_step, last_x_days = last_x_days, server_id = serv_id)
-ana.plot_data(tups, x_label = 'time in UTC',
-              y_label = 'amount of messages per ' + str(time_step) + ' min',
-              title = 'Messages the last ' + str(last_x_days) + ' days, server_id = ' + str(serv_id))
+    if('.db' not in db):
+        db = db + '.db'
+
+    ana = Analyzer(path + 'sql_statements.ini', path + db)
+
+    time_step = int(input("Which time step in minutes?"))
+    if(time_step < 15):
+        time_step = 15
+
+    last_x_days = int(input("How many days from now?"))
+    if(last_x_days < 1):
+        last_x_days = 1
+
+    tups = ana.get_serv_activity(time_step_in_min = time_step, last_x_days = last_x_days, server_id = serv_id)
+    ana.plot_data(tups, x_label = 'time in UTC',
+                  y_label = 'amount of messages per ' + str(time_step) + ' min',
+                  title = 'Messages the last ' + str(last_x_days) + ' days, server_id = ' + str(serv_id))
