@@ -64,6 +64,7 @@ async def on_ready():
     s = 'Bot is initialized after ' + str(str((b-a).seconds))
     s += '.' +  str((b-a).microseconds)[3:] + 's.'
     print(s)
+    await bot.get_user(314135917604503553).send('Active!')
     #printstats.start()
 
 @bot.command()
@@ -79,7 +80,48 @@ async def stats(ctx):
     else:
         await sendmsg(ctx, counter.get_stats())
 
+@bot.command()
+async def reload(ctx):
+    if(ctx.author.id != 314135917604503553):
+        return
+    global dic
+    global config
 
+    st = ''
+
+    try:
+        with open('moves.json', 'r') as f:
+            dic2 = json.load(f)
+        dic = dic2
+        st += 'Reloaded moves without issue!\n'
+    except Exception as ex:
+        s = '---------------------' + str(time()) + '----------'
+        s += '```'.join(traceback.format_exception(etype=type(ex),
+                                           value=ex, tb=ex.__traceback__))
+        s += '```'
+        await post_error(ctx, s) 
+
+    try:
+        config.read('bot.ini')
+
+        #Convert config to simple dict for ease of use:
+        strings = {}
+        for section in config.sections():
+            for tup in config.items(section):
+                strings.update({tup[0]: tup[1]})
+        st +='Reloaded ini without issue!'
+    except Exception as ex:
+        s = '---------------------' + str(time()) + '----------'
+        s += '```'.join(traceback.format_exception(etype=type(ex),
+                                           value=ex, tb=ex.__traceback__))
+        s += '```'
+        await post_error(ctx, s)
+
+    await sendmsg(ctx, st)
+    
+        
+        
+        
 @bot.command()
 async def joined(ctx, member:discord.Member):
     """Triggered if someone joins the server"""
@@ -166,8 +208,13 @@ async def on_command_error(ctx, error):
                                            value=ex, tb=ex.__traceback__))
     s += '```'
 
-    if('CommandNotFound' in s):
-        return
+
+    ignores = ['CommandNotFound', 'Missing Permission']
+
+    for ex in ignores:
+        if(ex in s):
+            return
+    print(s)
     await post_error(ctx, s)
 
 #-------------------Bot Commands ------------------------
@@ -385,7 +432,7 @@ async def confirm(ctx):
                 send_messages = True, speak = True, view_channel = True)
         #everyone: Send False, Speak False, View False
         if(everyone_role):
-            overwrites[everyone:role] = discord.PermissionOverwrite(
+            overwrites[everyone_role] = discord.PermissionOverwrite(
                 send_messages = False, speak = False, view_channel = False)
         #player: Send False, Speak False, View False
         if(player_role):
@@ -894,7 +941,8 @@ async def addnpc(ctx):
     with open('npcquestions.questions', 'r') as f:
         questions = f.readlines()
     num = len(questions) + 1
-    questions.append('\n' + ctx.message.content[8:].strip())
+    questions.append(
+        '\n' + ctx.message.content[8:].strip().replace("'", ""))
     with open('npcquestions.questions', 'w+') as f:
         f.writelines(questions)
 

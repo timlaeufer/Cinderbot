@@ -41,9 +41,9 @@ class counter:
         else:
             self.num_messages += 1
         
-        if((self.num_messages % 50) == 0):
-            s = self.get_stats()
-            print(s)
+        #if((self.num_messages % 50) == 0):
+        #    s = self.get_stats()
+        #    print(s)
             
 
 
