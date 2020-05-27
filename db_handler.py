@@ -91,7 +91,7 @@ class db_handler:
                 if(message.guild.id == el):
                     ins = True
             self.insert_channel(c, message.channel)
-            
+
         if(ins):
             self.insert_message(cursor = c, message_obj = message)
         conn.commit()
@@ -122,7 +122,7 @@ class db_handler:
             self.insert_message(c, message_before)
         except:
             pass
-        
+
         try:
             cat = message_obj.channel.category.name
             cat_id = message_obj.channel.category.id
@@ -212,8 +212,8 @@ class db_handler:
         cursor.execute(query)
         conn.commit()
         conn.close()
-        
-        
+
+
 
     def exists_in_db(self, cursor, table, element_id):
         # SELECT EXISTS(SELECT 1 FROM myTbl WHERE u_tag="tag");
@@ -367,7 +367,3 @@ class db_handler:
         lis = cursor.execute(sql).fetchall()
         conn.close()
         return lis
-        
-
-        
-    
