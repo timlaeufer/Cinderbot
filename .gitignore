@@ -8,3 +8,4 @@ __pycache__/constants.cpython-38.pyc
 *.json
 moves.json
 moves.json
+*.zip

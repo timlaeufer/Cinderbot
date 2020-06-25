@@ -115,7 +115,7 @@ class Analyzer:
                 end = self.get_time_as_db_string(end),
                 start = self.get_time_as_db_string(start))
         else:
-            query = self.ext_sql.format(
+            query = self.sqls['get_serv_msg_by_range'].format(
                 serv_id = server_id,
                 end = self.get_time_as_db_string(end),
                 start = self.get_time_as_db_string(start))
@@ -435,10 +435,10 @@ inp = input('Fast(y)/Extended(e)?')
 if('y' in inp):
     db = 'messages_pi.db'
     ana = Analyzer(path + 'sql_statements.ini', path + db)
-    tups = ana.get_serv_activity(time_step_in_min = 60, last_x_days = 3, server_id = serv_id)
+    tups = ana.get_serv_activity(time_step_in_min = 60, last_x_days = 14, server_id = serv_id)
     ana.plot_data(tups, x_label = 'time in UTC',
               y_label = 'amount of messages per ' + str(60) + ' min',
-              title = 'Messages the last ' + str(3) + ' days, server_id = ' + str(serv_id))
+              title = 'Messages the last ' + str(14) + ' days, server_id = ' + str(serv_id))
 
 elif('e' in inp):
     #General, off-topic, creative, adults, open-play
