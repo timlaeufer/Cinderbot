@@ -457,8 +457,7 @@ async def confirm(ctx):
         if(mod_role):
             overwrites[mod_role] = discord.PermissionOverwrite(
                 send_messages = True, speak = True, view_channel = True)
-        #everyone: Send False, Speak False, View False
-        if(everyone_role):
+        #everyone: Send False, Speak False, View False        if(everyone_role):
             overwrites[everyone_role] = discord.PermissionOverwrite(
                 send_messages = False, speak = False, view_channel = False)
         #player: Send False, Speak False, View True
@@ -1003,10 +1002,10 @@ async def helpme(ctx):
     await sendmsg(ctx, strings['general_help'].format(
         me = ctx.guild.me.mention,
         tim = bot.get_user(314135917604503553), #ID for tim
-        annie = bot.get_user(132240553013280768).name,
-        ollie = bot.get_user(131352795444936704).name,
-        taylor= bot.get_user(430181668666605570).name,
-        koifi = bot.get_user(698069648553410580).name))
+        Annie = "Annie",
+        Ollie = "Ollie",
+        Taylor= "Taylor",
+        Koifi = "Koifi"))
 
 @bot.command()
 async def opengamehelp(ctx):
